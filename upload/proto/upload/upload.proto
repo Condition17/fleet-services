@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package go.micro.service.upload;
+
+service Upload {
+	rpc Create(CreateRequest) returns (CreateResponse) {}
+	rpc UploadChunk(UploadChunkRequest) returns (Response) {}
+}
+
+message CreateRequest {
+	int64 fileSize = 1;
+}
+
+message CreateResponse {
+	string fileId = 1;
+}
+
+message UploadChunkRequest {}
+
+message Response {}
