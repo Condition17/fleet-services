@@ -16,8 +16,9 @@ func (s *Service) Create(ctx context.Context, req *pb.CreateRequest, res *pb.Cre
 	return nil
 }
 
-func (s *Service) UploadChunk(ctx context.Context, req *pb.UploadChunkRequest, res *pb.Response) error {
+func (s *Service) Chunk(ctx context.Context, req *pb.ChunkRequest, res *pb.Response) error {
 	log.Info("Upload chunk request")
+	log.Info(req.Chunk)
 	return nil
 }
 
