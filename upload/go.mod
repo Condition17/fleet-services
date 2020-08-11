@@ -12,8 +12,9 @@ replace (
 require (
 	cloud.google.com/go/storage v1.10.0
 	github.com/go-redis/redis/v8 v8.0.0-beta.7
+	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/golang/protobuf v1.4.2
-	github.com/joho/godotenv v1.3.0 // indirect
+	github.com/joho/godotenv v1.3.0
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/registry/mdns/v2 v2.9.1
 	github.com/micro/micro/v2 v2.9.2-0.20200728090142-c7f7e4a71077 // indirect

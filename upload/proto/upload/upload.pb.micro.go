@@ -42,8 +42,7 @@ func NewUploadEndpoints() []*api.Endpoint {
 // Client API for Upload service
 
 type UploadService interface {
-	Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error)
-	Chunk(ctx context.Context, in *ChunkRequest, opts ...client.CallOption) (*Response, error)
+	Create(ctx context.Context, in *File, opts ...client.CallOption) (*Response, error)
 }
 
 type uploadService struct {
@@ -58,18 +57,8 @@ func NewUploadService(name string, c client.Client) UploadService {
 	}
 }
 
-func (c *uploadService) Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error) {
+func (c *uploadService) Create(ctx context.Context, in *File, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "Upload.Create", in)
-	out := new(CreateResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *uploadService) Chunk(ctx context.Context, in *ChunkRequest, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "Upload.Chunk", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -81,14 +70,12 @@ func (c *uploadService) Chunk(ctx context.Context, in *ChunkRequest, opts ...cli
 // Server API for Upload service
 
 type UploadHandler interface {
-	Create(context.Context, *CreateRequest, *CreateResponse) error
-	Chunk(context.Context, *ChunkRequest, *Response) error
+	Create(context.Context, *File, *Response) error
 }
 
 func RegisterUploadHandler(s server.Server, hdlr UploadHandler, opts ...server.HandlerOption) error {
 	type upload interface {
-		Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error
-		Chunk(ctx context.Context, in *ChunkRequest, out *Response) error
+		Create(ctx context.Context, in *File, out *Response) error
 	}
 	type Upload struct {
 		upload
@@ -101,10 +88,6 @@ type uploadHandler struct {
 	UploadHandler
 }
 
-func (h *uploadHandler) Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error {
+func (h *uploadHandler) Create(ctx context.Context, in *File, out *Response) error {
 	return h.UploadHandler.Create(ctx, in, out)
-}
-
-func (h *uploadHandler) Chunk(ctx context.Context, in *ChunkRequest, out *Response) error {
-	return h.UploadHandler.Chunk(ctx, in, out)
 }

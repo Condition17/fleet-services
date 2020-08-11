@@ -1,12 +1,11 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
 	"upload/handler"
+	"upload/repository"
 
 	pb "upload/proto/upload"
 )
@@ -24,7 +23,7 @@ func main() {
 		micro.Version("latest"),
 	)
 
-	// Redis client
+	// Setup Redis client
 	rdb, err := CreateRedisConnection()
 
 	if err != nil {
@@ -33,13 +32,14 @@ func main() {
 		log.Info("Successfully connected to Redis")
 	}
 
+	var repo = &repository.FileRepository{DB: rdb}
 	// --- TRYing redis query
-
-	val, err := rdb.Get(context.Background(), "test").Result()
-	if err != nil {
-		log.Fatalf("Encountered error while querying Redis: %v", err)
-	}
-	fmt.Println("test => ", val)
+	//
+	//val, err := rdb.Get(context.Background(), "test").Result()
+	//if err != nil {
+	//	log.Fatalf("Encountered error while querying Redis: %v", err)
+	//}
+	//fmt.Println("test => ", val)
 
 	// ------------
 
@@ -84,7 +84,9 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	pb.RegisterUploadHandler(service.Server(), &handler.Service{})
+	if err := pb.RegisterUploadHandler(service.Server(), &handler.Service{Repo: repo}); err != nil {
+		log.Fatal(err)
+	}
 
 	// Run service
 	if err := service.Run(); err != nil {
