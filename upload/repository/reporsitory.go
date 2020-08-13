@@ -6,15 +6,16 @@ import (
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/gofrs/uuid"
+	"math"
 	pb "upload/proto/upload"
 )
 
 type File struct {
-	ID     string `json:"id"`
-	Name   string `json:"name"`
-	Size   int64  `json:"size"`
-	MaxChunkSize int32 `json:"maxChunkSize"`
-	Chunks Chunks `json:"chunks"`
+	ID                string `json:"id"`
+	Name              string `json:"name"`
+	Size              int64  `json:"size"`
+	MaxChunkSize      int64  `json:"maxChunkSize"`
+	ChunksStoresCount int64  `json:"chunksStoresCount"`
 }
 
 type Chunk struct {
@@ -35,29 +36,30 @@ type FileRepository struct {
 type CacheEntityType string
 
 const (
-	fileEntity CacheEntityType = "file"
-	listEntity CacheEntityType = "list"
+	fileEntity  CacheEntityType = "file"
+	storeEntity CacheEntityType = "store"
 )
+
 // --- Marshal/Unmarshal protobuf structs
 
 // Marshal/Unmarshall pb.File
 func MarshalFile(file *pb.File) *File {
 	return &File{
-		ID:     file.Id,
-		Name:   file.Name,
-		Size:   file.Size,
+		ID:           file.Id,
+		Name:         file.Name,
+		Size:         file.Size,
 		MaxChunkSize: file.MaxChunkSize,
-		Chunks: MarshalChunksCollection(file.Chunks),
+		ChunksStoresCount: file.ChunksStoresCount,
 	}
 }
 
 func UnmarshalFile(file *File) *pb.File {
 	return &pb.File{
-		Id: file.ID,
-		Name: file.Name,
-		Size: file.Size,
+		Id:           file.ID,
+		Name:         file.Name,
+		Size:         file.Size,
 		MaxChunkSize: file.MaxChunkSize,
-		Chunks: UnmarshalChunksCollection(file.Chunks),
+		ChunksStoresCount: file.ChunksStoresCount,
 	}
 }
 
@@ -72,7 +74,7 @@ func MarshalChunk(chunk *pb.Chunk) *Chunk {
 
 func UnmarshalChunk(chunk *Chunk) *pb.Chunk {
 	return &pb.Chunk{
-		Sha2: chunk.Sha2,
+		Sha2:     chunk.Sha2,
 		RefCount: chunk.RefCount,
 	}
 }
@@ -95,7 +97,6 @@ func UnmarshalChunksCollection(chunks []*Chunk) []*pb.Chunk {
 	return collection
 }
 
-
 // Marshal/Unmarshal of the previous object needed to store/retrieve them from Redis cache
 
 // Binary Marshal/Unmarshal for File struct
@@ -115,9 +116,19 @@ func (e *File) UnmarshalBinary(data []byte) error {
 func (r *FileRepository) Create(ctx context.Context, file *File) (*File, error) {
 	u, _ := uuid.NewV4()
 	file.ID = u.String()
-	key := fmt.Sprintf("%s-%s", fileEntity, file.ID)
+	key := fmt.Sprintf("%s:%s", fileEntity, file.ID)
+	maxStoreSize := int64(math.Pow(2, 32) - 1)
 
-	
+	// initialize needed chunk lists
+	totalChunksCount := int64(math.Floor(float64(file.Size) / float64(file.MaxChunkSize)))
+	neededStoresCount := int64(1)
+
+	if totalChunksCount > maxStoreSize {
+		neededStoresCount = int64(math.Floor(float64(totalChunksCount) / float64(maxStoreSize)))
+	}
+
+	// create Redis hash associated to file
+	file.ChunksStoresCount = neededStoresCount
 	if err := r.DB.HSet(ctx, key, file, 0).Err(); err != nil {
 		return nil, err
 	}

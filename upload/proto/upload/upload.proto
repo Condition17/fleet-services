@@ -15,8 +15,8 @@ message File {
 	string id = 1;
 	string name = 2;
 	int64 size = 3;
-	int32 maxChunkSize = 4;
-	repeated Chunk chunks = 5;
+	int64 maxChunkSize = 4;
+	int64 chunksStoresCount = 5;
 }
 
 message Response {
