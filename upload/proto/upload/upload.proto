@@ -4,6 +4,7 @@ package go.micro.service.upload;
 
 service Upload {
 	rpc Create(File) returns (Response) {}
+	rpc Read(File) returns (Response) {}
 }
 
 message Chunk {

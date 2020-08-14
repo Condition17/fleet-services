@@ -43,6 +43,7 @@ func NewUploadEndpoints() []*api.Endpoint {
 
 type UploadService interface {
 	Create(ctx context.Context, in *File, opts ...client.CallOption) (*Response, error)
+	Read(ctx context.Context, in *File, opts ...client.CallOption) (*Response, error)
 }
 
 type uploadService struct {
@@ -67,15 +68,27 @@ func (c *uploadService) Create(ctx context.Context, in *File, opts ...client.Cal
 	return out, nil
 }
 
+func (c *uploadService) Read(ctx context.Context, in *File, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Upload.Read", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Upload service
 
 type UploadHandler interface {
 	Create(context.Context, *File, *Response) error
+	Read(context.Context, *File, *Response) error
 }
 
 func RegisterUploadHandler(s server.Server, hdlr UploadHandler, opts ...server.HandlerOption) error {
 	type upload interface {
 		Create(ctx context.Context, in *File, out *Response) error
+		Read(ctx context.Context, in *File, out *Response) error
 	}
 	type Upload struct {
 		upload
@@ -90,4 +103,8 @@ type uploadHandler struct {
 
 func (h *uploadHandler) Create(ctx context.Context, in *File, out *Response) error {
 	return h.UploadHandler.Create(ctx, in, out)
+}
+
+func (h *uploadHandler) Read(ctx context.Context, in *File, out *Response) error {
+	return h.UploadHandler.Read(ctx, in, out)
 }

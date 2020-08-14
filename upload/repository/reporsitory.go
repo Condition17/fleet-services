@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/go-redis/redis/v8"
-	"github.com/gofrs/uuid"
 	"math"
 	pb "upload/proto/upload"
+
+	"github.com/go-redis/redis/v8"
+	"github.com/gofrs/uuid"
 )
 
 type File struct {
@@ -27,6 +28,7 @@ type Chunks []*Chunk
 
 type Repository interface {
 	Create(ctx context.Context, file *File) (*File, error)
+	Read(ctx context.Context, id string) (*File, error)
 }
 
 type FileRepository struct {
@@ -45,20 +47,20 @@ const (
 // Marshal/Unmarshall pb.File
 func MarshalFile(file *pb.File) *File {
 	return &File{
-		ID:           file.Id,
-		Name:         file.Name,
-		Size:         file.Size,
-		MaxChunkSize: file.MaxChunkSize,
+		ID:                file.Id,
+		Name:              file.Name,
+		Size:              file.Size,
+		MaxChunkSize:      file.MaxChunkSize,
 		ChunksStoresCount: file.ChunksStoresCount,
 	}
 }
 
 func UnmarshalFile(file *File) *pb.File {
 	return &pb.File{
-		Id:           file.ID,
-		Name:         file.Name,
-		Size:         file.Size,
-		MaxChunkSize: file.MaxChunkSize,
+		Id:                file.ID,
+		Name:              file.Name,
+		Size:              file.Size,
+		MaxChunkSize:      file.MaxChunkSize,
 		ChunksStoresCount: file.ChunksStoresCount,
 	}
 }
@@ -113,10 +115,24 @@ func (e *File) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
+func (r *FileRepository) Read(ctx context.Context, id string) (*File, error) {
+	fileKey := composeFileKey(id)
+	res := r.DB.Get(context.Background(), fileKey)
+	if err := res.Err(); err != nil {
+		return nil, res.Err()
+	}
+
+	b, _ := res.Bytes()
+	var file *File
+	json.Unmarshal(b, &file)
+
+	return file, nil
+}
+
 func (r *FileRepository) Create(ctx context.Context, file *File) (*File, error) {
 	u, _ := uuid.NewV4()
 	file.ID = u.String()
-	key := fmt.Sprintf("%s:%s", fileEntity, file.ID)
+	key := fmt.Sprintf(composeFileKey(file.ID))
 	maxStoreSize := int64(math.Pow(2, 32) - 1)
 
 	// initialize needed chunk lists
@@ -129,9 +145,13 @@ func (r *FileRepository) Create(ctx context.Context, file *File) (*File, error) 
 
 	// create Redis hash associated to file
 	file.ChunksStoresCount = neededStoresCount
-	if err := r.DB.HSet(ctx, key, file, 0).Err(); err != nil {
+	if err := r.DB.Set(ctx, key, file, 0).Err(); err != nil {
 		return nil, err
 	}
 
 	return file, nil
+}
+
+func composeFileKey(fileId string) string {
+	return fmt.Sprintf("%s:%s", fileEntity, fileId)
 }

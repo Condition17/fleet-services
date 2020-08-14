@@ -1,11 +1,12 @@
 package main
 
 import (
+	"upload/handler"
+	"upload/repository"
+
 	"github.com/joho/godotenv"
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
-	"upload/handler"
-	"upload/repository"
 
 	pb "upload/proto/upload"
 )
