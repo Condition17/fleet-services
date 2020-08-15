@@ -15,13 +15,13 @@ type File struct {
 	ID                string `redis:"id"`
 	Name              string `redis:"name"`
 	Size              int64  `redis:"size"`
-	MaxChunkSize      int64  `redis:"maxChunkSize"`
-	ChunksStoresCount int64  `redis:"chunksStoresCount"`
+	MaxChunkSize      uint32 `redis:"maxChunkSize"`
+	ChunksStoresCount uint32 `redis:"chunksStoresCount"`
 }
 
 type Chunk struct {
 	Sha2     string `json:"sha2"`
-	RefCount int64  `json:"ref_count"`
+	RefCount uint32 `json:"ref_count"`
 }
 
 type Chunks []*Chunk
@@ -122,10 +122,10 @@ func (r *FileRepository) Create(ctx context.Context, file *File) (*File, error) 
 
 	// initialize needed chunk lists
 	totalChunksCount := int64(math.Floor(float64(file.Size) / float64(file.MaxChunkSize)))
-	neededStoresCount := int64(1)
+	neededStoresCount := uint32(1)
 
 	if totalChunksCount > maxStoreSize {
-		neededStoresCount = int64(math.Floor(float64(totalChunksCount) / float64(maxStoreSize)))
+		neededStoresCount = uint32(math.Floor(float64(totalChunksCount) / float64(maxStoreSize)))
 	}
 
 	// create Redis hash associated to file

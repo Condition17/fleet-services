@@ -30,7 +30,7 @@ func main() {
 	// ensure that connection to Redis is always properly closed
 	defer redisConn.Close()
 
-	// test redis connectivity via PING d
+	// test redis connectivity via PING
 	if err := PingRedis(redisConn); err != nil {
 		log.Fatal(err)
 	} else {
