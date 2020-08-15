@@ -16,6 +16,7 @@ func (s *Service) Create(ctx context.Context, req *pb.File, res *pb.Response) er
 		return err
 	}
 	res.File = repository.UnmarshalFile(file)
+
 	return nil
 }
 
@@ -25,5 +26,6 @@ func (s *Service) Read(ctx context.Context, req *pb.File, res *pb.Response) erro
 		return err
 	}
 	res.File = repository.UnmarshalFile(file)
+
 	return nil
 }

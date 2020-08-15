@@ -13,8 +13,7 @@ import (
 
 func main() {
 	// Load environment variables
-	err := godotenv.Load()
-	if err != nil {
+	if err := godotenv.Load(); err != nil {
 		log.Fatalf("Error encountered while loading environment variables: %v", err)
 	}
 
@@ -25,15 +24,20 @@ func main() {
 	)
 
 	// Setup Redis client
-	rdb, err := CreateRedisConnection()
+	redisPool := CreateRedisPool()
+	redisConn := redisPool.Get()
 
-	if err != nil {
+	// ensure that connection to Redis is always properly closed
+	defer redisConn.Close()
+
+	// test redis connectivity via PING d
+	if err := PingRedis(redisConn); err != nil {
 		log.Fatal(err)
 	} else {
 		log.Info("Successfully connected to Redis")
 	}
 
-	var repo = &repository.FileRepository{DB: rdb}
+	var repo = &repository.FileRepository{DB: redisConn}
 	// --- TRYing redis query
 	//
 	//val, err := rdb.Get(context.Background(), "test").Result()

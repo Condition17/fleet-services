@@ -1,22 +1,40 @@
 package main
 
 import (
-	"context"
-	"github.com/go-redis/redis/v8"
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/gomodule/redigo/redis"
 )
 
-func CreateRedisConnection() (*redis.Client, error) {
-	ctx := context.Background()
-	db := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
-	_, err := db.Ping(ctx).Result()
+func CreateRedisPool() *redis.Pool {
+	return &redis.Pool{
+		MaxIdle:   50,
+		MaxActive: 10000,
+		Dial: func() (redis.Conn, error) {
+			conn, err := redis.Dial("tcp", os.Getenv("REDIS_URL"))
 
+			// Connection error handling
+			if err != nil {
+				log.Printf("ERROR: fail initializing the redis pool: %s", err.Error())
+				os.Exit(1)
+			}
+			return conn, err
+		},
+	}
+}
+
+func PingRedis(redisConn redis.Conn) error {
+	// Send PING command to Redis
+	// PING command returns a Redis "Simple String"
+	// Use redis.String to convert the interface type to string
+	s, err := redis.String(redisConn.Do("PING"))
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return db, nil
+	fmt.Printf("PING Response = %s\n", s)
+
+	return nil
 }
