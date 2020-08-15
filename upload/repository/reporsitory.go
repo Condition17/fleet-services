@@ -116,8 +116,7 @@ func (e *File) UnmarshalBinary(data []byte) error {
 }
 
 func (r *FileRepository) Read(ctx context.Context, id string) (*File, error) {
-	fileKey := composeFileKey(id)
-	res := r.DB.Get(context.Background(), fileKey)
+	res := r.DB.Get(context.Background(), composeFileKey(id))
 	if err := res.Err(); err != nil {
 		return nil, res.Err()
 	}

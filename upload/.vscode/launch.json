@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}",
-            "env": {"GOOGLE_APPLICATION_CREDENTIALS": "~/go/src/fleet/keys/gcs-client.json"},
+            "env": {},
             "envFile": "${workspaceFolder}/.env",
             "args": []
         }

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	pb "upload/proto/upload"
 	"upload/repository"
 )
@@ -12,7 +11,6 @@ type Service struct {
 }
 
 func (s *Service) Create(ctx context.Context, req *pb.File, res *pb.Response) error {
-	fmt.Println(repository.MarshalFile(req))
 	file, err := s.Repo.Create(context.Background(), repository.MarshalFile(req))
 	if err != nil {
 		return err
