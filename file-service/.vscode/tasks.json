@@ -10,17 +10,17 @@
       "group": "build",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "panel": "shared"
       }
     },
     {
       "label": "local:run",
       "type": "shell",
-      "command": "./upload-service",
+      "command": "./file-service",
       "group": "build",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "panel": "shared"
       }
     },
     {
@@ -30,17 +30,17 @@
       "group": "build",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "panel": "shared"
       }
     },
     {
       "label": "micro:kill",
       "type": "shell",
-      "command": "micro kill upload",
+      "command": "micro kill file-service",
       "group": "build",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "panel": "shared"
       }
     }
   ]

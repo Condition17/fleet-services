@@ -1,4 +1,4 @@
-module upload
+module file-service
 
 go 1.13
 
@@ -10,6 +10,7 @@ replace (
 )
 
 require (
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/gogo/protobuf v1.2.2-0.20190723190241-65acae22fc9d // indirect
 	github.com/golang/protobuf v1.4.2

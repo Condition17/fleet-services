@@ -1,14 +1,14 @@
 package main
 
 import (
-	"upload/handler"
-	"upload/repository"
+	"file-service/handler"
+	"file-service/repository"
 
 	"github.com/joho/godotenv"
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
 
-	pb "upload/proto/upload"
+	pb "file-service/proto/file-service"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 
 	// New Service
 	service := micro.NewService(
-		micro.Name("go.micro.api.upload"),
+		micro.Name("go.micro.api.file-service"),
 		micro.Version("latest"),
 	)
 
@@ -36,8 +36,6 @@ func main() {
 	} else {
 		log.Info("Successfully connected to Redis")
 	}
-
-	var repo = &repository.FileRepository{DB: redisConn}
 	// --- TRYing redis query
 	//
 	//val, err := rdb.Get(context.Background(), "test").Result()
@@ -89,7 +87,11 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	if err := pb.RegisterUploadHandler(service.Server(), &handler.Service{Repo: repo}); err != nil {
+	serviceHandler := handler.Service{
+		FileRepository:  repository.FileRepository{DB: redisConn},
+		ChunkRepository: repository.ChunkRepository{DB: redisConn},
+	}
+	if err := pb.RegisterFileServiceHandler(service.Server(), &serviceHandler); err != nil {
 		log.Fatal(err)
 	}
 

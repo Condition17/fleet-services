@@ -1,11 +1,11 @@
-# Upload Service
+# File Service
 
-This is the Upload service
+This is the File service
 
 Generated with
 
 ```
-micro new --namespace=go.micro --type=service upload
+micro new --namespace=go.micro --type=service file-service
 ```
 
 ## Getting Started
@@ -16,9 +16,9 @@ micro new --namespace=go.micro --type=service upload
 
 ## Configuration
 
-- FQDN: go.micro.service.upload
+- FQDN: go.micro.service.file-service
 - Type: service
-- Alias: upload
+- Alias: file-service
 
 ## Dependencies
 
@@ -46,7 +46,7 @@ make build
 
 Run the service
 ```
-./upload-service
+./file-service
 ```
 
 Build a docker image
