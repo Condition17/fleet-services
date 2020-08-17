@@ -1,28 +1,30 @@
 package main
 
 import (
-	"file-service/config"
-	"file-service/handler"
-	"file-service/repository"
+	"upload/handler"
+	"upload/repository"
 
+	"github.com/joho/godotenv"
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
 
-	pb "file-service/proto/file-service"
+	pb "upload/proto/upload"
 )
 
 func main() {
-	// Get configs
-	config := config.GetConfig()
+	// Load environment variables
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Error encountered while loading environment variables: %v", err)
+	}
 
 	// New Service
 	service := micro.NewService(
-		micro.Name(config.ServiceName),
+		micro.Name("go.micro.api.file-service"),
 		micro.Version("latest"),
 	)
 
 	// Setup Redis client
-	redisPool := CreateRedisPool(config.RedisUrl)
+	redisPool := CreateRedisPool()
 	redisConn := redisPool.Get()
 
 	// ensure that connection to Redis is always properly closed
@@ -86,11 +88,10 @@ func main() {
 
 	// Register Handler
 	serviceHandler := handler.Service{
-		Name:            config.ServiceName,
 		FileRepository:  repository.FileRepository{DB: redisConn},
 		ChunkRepository: repository.ChunkRepository{DB: redisConn},
 	}
-	if err := pb.RegisterFileServiceHandler(service.Server(), &serviceHandler); err != nil {
+	if err := pb.RegisterUploadHandler(service.Server(), &serviceHandler); err != nil {
 		log.Fatal(err)
 	}
 

@@ -8,12 +8,12 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
-func CreateRedisPool() *redis.Pool {
+func CreateRedisPool(redisUrl string) *redis.Pool {
 	return &redis.Pool{
 		MaxIdle:   50,
 		MaxActive: 10000,
 		Dial: func() (redis.Conn, error) {
-			conn, err := redis.Dial("tcp", os.Getenv("REDIS_URL"))
+			conn, err := redis.Dial("tcp", redisUrl)
 
 			// Connection error handling
 			if err != nil {
