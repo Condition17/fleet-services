@@ -4,9 +4,8 @@ import (
 	"context"
 	"file-service/model"
 	pb "file-service/proto/file-service"
-	"fmt"
 
-	"github.com/micro/go-micro/v2/errors"
+	"github.com/micro/go-micro/errors"
 )
 
 func (s *Service) CreateFile(ctx context.Context, req *pb.File, res *pb.Response) error {
@@ -20,14 +19,16 @@ func (s *Service) CreateFile(ctx context.Context, req *pb.File, res *pb.Response
 }
 
 func (s *Service) ReadFile(ctx context.Context, req *pb.File, res *pb.Response) error {
-	fmt.Println("File handler - readFile execution")
-	return errors.BadRequest(s.Name, "Ghinion fraiere")
-	// file, err := s.FileRepository.Read(ctx, model.MarshalFile(req).ID)
-	// if err != nil {
-	// 	return err
-	// }
+	file, err := s.FileRepository.Read(ctx, model.MarshalFile(req).ID)
+	if file == nil {
+		return errors.NotFound(s.Name, "File not found")
+	}
 
-	// res.File = model.UnmarshalFile(file)
+	if err != nil {
+		return err
+	}
 
-	// return nil
+	res.File = model.UnmarshalFile(file)
+
+	return nil
 }

@@ -18,6 +18,10 @@ type FileRepository struct {
 
 func (r *FileRepository) Read(ctx context.Context, id string) (*model.File, error) {
 	values, err := redis.Values(r.DB.Do("HGETALL", composeFileKey(id)))
+	if len(values) == 0 {
+		return nil, nil
+	}
+
 	if err != nil {
 		return nil, err
 	}
