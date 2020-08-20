@@ -5,20 +5,20 @@ import (
 )
 
 type Chunk struct {
-	Sha2     string `json:"sha2"`
-	RefCount uint32 `json:"ref_count"`
+	Sha2 string `redis:"sha2"`
+	Size int64  `redis:"size"`
 }
 
 func MarshalChunk(chunk *pb.Chunk) *Chunk {
 	return &Chunk{
-		Sha2:     chunk.Sha2,
-		RefCount: chunk.RefCount,
+		Sha2: chunk.Sha2,
+		Size: chunk.Size,
 	}
 }
 
 func UnmarshalChunk(chunk *Chunk) *pb.Chunk {
 	return &pb.Chunk{
-		Sha2:     chunk.Sha2,
-		RefCount: chunk.RefCount,
+		Sha2: chunk.Sha2,
+		Size: chunk.Size,
 	}
 }

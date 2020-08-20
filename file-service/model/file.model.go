@@ -10,6 +10,7 @@ type File struct {
 	Size              int64  `redis:"size"`
 	MaxChunkSize      uint32 `redis:"maxChunkSize"`
 	ChunksStoresCount uint32 `redis:"chunksStoresCount"`
+	TotalChunksCount  uint64 `redis:"totalChunksCount"`
 }
 
 func MarshalFile(file *pb.File) *File {
@@ -19,6 +20,7 @@ func MarshalFile(file *pb.File) *File {
 		Size:              file.Size,
 		MaxChunkSize:      file.MaxChunkSize,
 		ChunksStoresCount: file.ChunksStoresCount,
+		TotalChunksCount:  file.TotalChunksCount,
 	}
 }
 
@@ -29,5 +31,6 @@ func UnmarshalFile(file *File) *pb.File {
 		Size:              file.Size,
 		MaxChunkSize:      file.MaxChunkSize,
 		ChunksStoresCount: file.ChunksStoresCount,
+		TotalChunksCount:  file.TotalChunksCount,
 	}
 }
