@@ -13,13 +13,12 @@ func (s *Service) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.Em
 	}
 
 	file, err := s.FileRepository.Read(ctx, req.FileId)
+	if err != nil {
+		return err
+	}
 
 	if file == nil {
 		return errors.BadRequest(s.Name, "File not found.")
-	}
-
-	if err != nil {
-		return err
 	}
 
 	if req.Index >= file.TotalChunksCount {

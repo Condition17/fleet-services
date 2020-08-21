@@ -13,14 +13,14 @@ import (
 type FileRepository struct {
 	Repository
 
-	DB redis.Conn
+	DB *redis.Pool
 }
 
 func (r *FileRepository) Read(ctx context.Context, id string) (*model.File, error) {
-	values, err := redis.Values(r.DB.Do("HGETALL", composeFileKey(id)))
-	if len(values) == 0 {
-		return nil, nil
-	}
+	conn := r.DB.Get()
+	defer conn.Close()
+
+	values, err := redis.Values(conn.Do("HGETALL", composeFileKey(id)))
 
 	if err != nil {
 		return nil, err
@@ -36,13 +36,16 @@ func (r *FileRepository) Read(ctx context.Context, id string) (*model.File, erro
 }
 
 func (r *FileRepository) Create(ctx context.Context, file *model.File) (*model.File, error) {
+	conn := r.DB.Get()
+	defer conn.Close()
+
 	u, _ := uuid.NewV4()
 	file.ID = u.String()
 	key := fmt.Sprintf(composeFileKey(file.ID))
 	maxStoreSize := uint64(math.Pow(2, 32) - 1)
 
 	// initialize needed chunk lists
-	totalChunksCount := uint64(math.Floor(float64(file.Size) / float64(file.MaxChunkSize)))
+	totalChunksCount := uint64(math.Round(float64(file.Size)/float64(file.MaxChunkSize) + 0.5))
 	neededStoresCount := uint32(1)
 
 	if totalChunksCount > maxStoreSize {
@@ -52,7 +55,7 @@ func (r *FileRepository) Create(ctx context.Context, file *model.File) (*model.F
 	// create Redis hash associated to file
 	file.ChunksStoresCount = neededStoresCount
 	file.TotalChunksCount = totalChunksCount
-	if _, err := r.DB.Do("HSET", redis.Args{}.Add(key).AddFlat(file)...); err != nil {
+	if _, err := conn.Do("HSET", redis.Args{}.Add(key).AddFlat(file)...); err != nil {
 		return nil, err
 	}
 

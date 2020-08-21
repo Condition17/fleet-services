@@ -23,17 +23,17 @@ func main() {
 
 	// Setup Redis client
 	redisPool := CreateRedisPool(config.RedisUrl)
-	redisConn := redisPool.Get()
-
 	// ensure that connection to Redis is always properly closed
-	defer redisConn.Close()
 
 	// test redis connectivity via PING
-	if err := PingRedis(redisConn); err != nil {
+	conn := redisPool.Get()
+	if err := PingRedis(conn); err != nil {
 		log.Fatal(err)
 	} else {
 		log.Info("Successfully connected to Redis")
 	}
+	conn.Close()
+
 	// --- TRYing redis query
 	//
 	//val, err := rdb.Get(context.Background(), "test").Result()
@@ -87,8 +87,8 @@ func main() {
 	// Register Handler
 	serviceHandler := handler.Service{
 		Name:            config.ServiceName,
-		FileRepository:  repository.FileRepository{DB: redisConn},
-		ChunkRepository: repository.ChunkRepository{DB: redisConn},
+		FileRepository:  repository.FileRepository{DB: redisPool},
+		ChunkRepository: repository.ChunkRepository{DB: redisPool},
 	}
 	if err := pb.RegisterFileServiceHandler(service.Server(), &serviceHandler); err != nil {
 		log.Fatal(err)
