@@ -2,21 +2,22 @@ package main
 
 import (
 	"context"
-	"github.com/micro/go-micro/v2"
-	log "github.com/micro/go-micro/v2/logger"
 	"test-run/handler"
 	testrun "test-run/proto/test-run"
-	proto "github.com/Condition17/fleet-services/upload/proto/upload"
+
+	proto "github.com/Condition17/fleet-services/file-service/proto/file-service"
+	"github.com/micro/go-micro/v2"
+	log "github.com/micro/go-micro/v2/logger"
 )
 
 func main() {
 	// Connect to database
-	db, err := CreateConnection()
-	if err != nil {
-		log.Fatalf("Could not connect to DB: %v", err)
-	}
+	// db, err := CreateConnection()
+	// if err != nil {
+	// 	log.Fatalf("Could not connect to DB: %v", err)
+	// }
 
-	defer db.Close()
+	// defer db.Close()
 
 	// New Service
 	service := micro.NewService(
@@ -31,14 +32,14 @@ func main() {
 	testrun.RegisterTestRunHandler(service.Server(), new(handler.TestRun))
 
 	// Create clients for another services
-	uploadServiceClient := proto.NewUploadService("go.micro.api.upload", service.Client())
-	res, err := uploadServiceClient.Create(context.Background(), &proto.CreateRequest{FileSize: 1000})
+	fileServiceClient := proto.NewFileService("go.micro.api.file-service", service.Client())
+	res, err := fileServiceClient.CreateFile(context.Background(), &proto.File{Name: "testFile", Size: 1000000000000, MaxChunkSize: 100})
 	if err != nil {
-		log.Fatalf("Upload service create call error: %v", err)
+		log.Fatalf("File service create call error: %v", err)
 		return
 	}
 
-	log.Infof("Upload service create call RESPONSE: %v", res)
+	log.Infof("File service create call RESPONSE: %v", res)
 
 	// Run service
 	if err := service.Run(); err != nil {
