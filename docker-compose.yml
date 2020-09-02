@@ -18,12 +18,14 @@ services:
       MICRO_WEB_ADDRESS: ":8081"
 
   redis:
-    image: redis
+    image: redis:latest
+    command: redis-server --appendonly yes
+    hostname: redis
     volumes:
-      - ./data/db:/data/db # ensures data persistence between restarting
+      - redis-data:/data # ensures data persistence between restarting
     ports:
-      - 6379:6379
-  
+      - "6380:6379"
+
   file-service:
     restart: always
     build: ./file-service
@@ -39,4 +41,6 @@ services:
       - file-service
     environment:
       MICRO_SERVER_ADDRESS: ":50051"
-    
+
+volumes:
+  redis-data:
