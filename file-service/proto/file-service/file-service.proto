@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package go.micro.service.fileservice;
+
+service FileService {
+	rpc CreateChunk(ChunkSpec) returns (EmptyResponse) {}
+	rpc CreateFile(File) returns (Response) {}
+	rpc ReadFile(File) returns (Response) {}
+}
+
+message ChunkSpec {
+	string fileId = 1;
+	uint64 index = 2;
+	bytes data = 3;
+}
+
+message Chunk {
+	string sha2 = 1;
+	int64 size = 2;
+}
+
+message File {
+	string id = 1;
+	string name = 2;
+	int64 size = 3;
+	uint32 maxChunkSize = 4;
+	uint32 chunksStoresCount = 5;
+	uint64 totalChunksCount = 6;
+}
+
+message EmptyResponse {}
+
+message Response {
+	File file = 2;
+}
