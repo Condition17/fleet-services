@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  microapigateway:
+    image: micro/micro
+    command: api --handler=rpc --address=:8080
+    ports:
+      - "8080:8080"
+    environment:
+      MICRO_REGISTRY: "mdns"
+  
+  microweb:
+    image: micro/micro
+    command: web
+    ports:
+      - "8081:8081"
+    environment:
+      MICRO_WEB_ADDRESS: ":8081"
+
+  redis:
+    image: redis
+    volumes:
+      - ./data/db:/data/db # ensures data persistence between restarting
+    ports:
+      - 6379:6379
+  
+  file-service:
+    restart: always
+    build: ./file-service
+    depends_on:
+      - redis
+    environment:
+      MICRO_SERVER_ADDRESS: ":50051"
+  
+  test-run-service:
+    restart: always
+    build: ./test-run
+    depends_on:
+      - file-service
+    environment:
+      MICRO_SERVER_ADDRESS: ":50051"
+    

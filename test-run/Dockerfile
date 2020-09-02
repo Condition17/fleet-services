@@ -1,3 +1,26 @@
-FROM alpine
-ADD test-run-service /test-run-service
-ENTRYPOINT [ "/test-run-service" ]
+FROM golang:alpine as builder
+
+RUN apk update && apk upgrade && \
+    apk add --no-cache git
+
+RUN mkdir /app
+WORKDIR /app
+
+ENV GO111MODULE=on
+
+COPY . .
+
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o test-run *.go
+
+# Run container
+FROM alpine:latest
+
+RUN apk --no-cach add ca-certificates
+
+RUN mkdir /app
+WORKDIR /app
+
+COPY --from=builder /app .
+
+ENTRYPOINT ["./test-run"]
