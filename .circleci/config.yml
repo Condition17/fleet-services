@@ -9,7 +9,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build $IMAGE_NAME Docker image
+          name: Build file-service docker image
           command: docker build -t $IMAGE_NAME:latest ./file-service
   build-test-run-image:
     environment:
@@ -20,7 +20,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build $IMAGE_NAME Docker image
+          name: Build test-run docker image
           command: docker build -t $IMAGE_NAME:latest ./test-run
 workflows:
   version: 2
