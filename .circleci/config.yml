@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build-file-service-image:
-    working_directory: ../file-service
+    working_directory: /file-service
     environment:
       IMAGE_NAME: fleet-file-service
     docker:
@@ -13,7 +13,7 @@ jobs:
           name: Build $IMAGE_NAME Docker image
           command: docker build -t $IMAGE_NAME:latest .
   build-test-run-image:
-    working_directory: ../test-run
+    working_directory: /test-run
     environment:
       IMAGE_NAME: fleet-test-run
     docker:
