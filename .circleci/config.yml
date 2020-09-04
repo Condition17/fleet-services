@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build-file-service:
+    working_directory: ../file-service
+    environment:
+      IMAGE_NAME: fleet-file-service
+    docker: 
+      - image: circleci/
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build $IMAGE_NAME Docker image
+          command: docker build -t $IMAGE_NAME:latest .
+workflows:
+  version: 2
+  build-docker-images:
+    jobs:
+      - build-file-service:
+          filters:
+            branches: 
+              only: master
