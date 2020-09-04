@@ -4,7 +4,7 @@ jobs:
     working_directory: ../file-service
     environment:
       IMAGE_NAME: fleet-file-service
-    docker: 
+    docker:
       - image: circleci/buildpack-deps:stretch
     steps:
       - checkout
@@ -16,7 +16,7 @@ jobs:
     working_directory: ../test-run
     environment:
       IMAGE_NAME: fleet-test-run
-    docker: 
+    docker:
       - image: circleci/buildpack-deps:stretch
     steps:
       - checkout
@@ -28,7 +28,11 @@ workflows:
   version: 2
   build-docker-images:
     jobs:
-      - build-file-service:
+      - build-file-service-image:
           filters:
-            branches: 
+            branches:
+              only: master
+      - build-test-run-image:
+          filters:
+            branches:
               only: master
