@@ -21,13 +21,12 @@ jobs:
     machine: true
     environment:
       IMAGE_NAME: fleet-test-run
-      WORKDIR: ~/project/test-run
     steps:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          path: ~/project/file-service
-          docker-context: ~/project/file-service
+          path: ~/project/test-run
+          docker-context: ~/project/test-run
           image: $IMAGE_NAME
       - gcr/push-image:
           image: $IMAGE_NAME
