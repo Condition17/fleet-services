@@ -76,3 +76,7 @@ jobs:
       - gcr/push-image:
           image: $IMAGE_NAME
           tag: $CIRCLE_SHA1
+workflows:
+  build_and_upload_service_images:
+    jobs:
+      - build-push-file-service-image
