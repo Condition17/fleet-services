@@ -12,8 +12,8 @@ jobs:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          path: $WORKDIR
-          docker-context: $WORKDIR
+          path: {$WORKDIR}
+          docker-context: ${WORKDIR}
           image: $IMAGE_NAME
           tag: $CIRCLE_SHA1
       - gcr/push-image:
@@ -29,8 +29,8 @@ jobs:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          path: $WORKDIR
-          docker-context: $WORKDIR
+          path: ${WORKDIR}
+          docker-context: ${WORKDIR}
           image: $IMAGE_NAME
           tag: $CIRCLE_SHA1
       - gcr/push-image:
