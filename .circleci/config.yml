@@ -70,7 +70,6 @@ jobs:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          path: /project/file-service
           image: $IMAGE_NAME
           tag: $CIRCLE_SHA1
       - gcr/push-image:
@@ -79,4 +78,5 @@ jobs:
 workflows:
   build_and_upload_service_images:
     jobs:
-      - build-push-file-service-image
+      - build-push-file-service-image:
+          working_directory: ~/project/file-service
