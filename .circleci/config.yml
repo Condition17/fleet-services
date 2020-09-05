@@ -31,7 +31,7 @@ jobs:
       - run:
           name: Push docker images to GCR
           command: echo $GCLOUD_SERVICE_KEY | base64 --decode -i > ${HOME}/gcloud-service-key.json && \
-              gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json &&
+              gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
 workflows:
   version: 2
   build-docker-images:
