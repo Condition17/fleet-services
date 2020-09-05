@@ -70,7 +70,7 @@ jobs:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          docker-context: /file-service
+          docker-context: ./file-service
           image: $IMAGE_NAME
           tag: $CIRCLE_SHA1
       - gcr/push-image:
