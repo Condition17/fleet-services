@@ -59,7 +59,7 @@
 #               only: master
 version: 2.1
 orbs:
-  gcp-gcr: circleci/gcp-gcr@0.8.0
+  gcr: circleci/gcp-gcr@0.8.0
 jobs:
   build-push-file-service-image:
     description: Build and push file service image to GCR
