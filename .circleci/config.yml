@@ -24,11 +24,13 @@ jobs:
   #         command: docker build -t $IMAGE_NAME:latest ./test-run
   upload-images-to-gcloud:
     requires:
-      - build-file-service-image 
+      - build-file-service-image
     docker:
-      - image: google/cloud-sdk:latest
+      - image: google/cloud-sdk
     steps:
-      - run: |
+      - run:
+          name: Push docker images to GCR
+          command: |
             echo $GCLOUD_SERVICE_KEY | base64 --decode -i > ${HOME}/gcloud-service-key.json && \
             gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
 workflows:
