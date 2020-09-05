@@ -52,7 +52,7 @@
 #       #       branches:
 #       #         only: master
 #       - upload-images-to-gcloud:
-#           requires: 
+#           requires:
 #             - build-file-service-image
 #           filters:
 #             branches:
@@ -68,6 +68,7 @@ jobs:
       IMAGE_NAME: fleet-file-service
     steps:
       - checkout
+      - working_directory: ~/project/file-service
       - gcr/gcr-auth
       - gcr/build-image:
           image: $IMAGE_NAME
@@ -78,5 +79,4 @@ jobs:
 workflows:
   build_and_upload_service_images:
     jobs:
-      - build-push-file-service-image:
-          working_directory: ~/project/file-service
+      - build-push-file-service-image
