@@ -70,7 +70,7 @@ jobs:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          path: /file-service
+          path: /project/file-service
           image: $IMAGE_NAME
           tag: $CIRCLE_SHA1
       - gcr/push-image:
