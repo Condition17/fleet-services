@@ -27,12 +27,17 @@ jobs:
       - build-file-service-image
     docker:
       - image: google/cloud-sdk
+    environment:
+      GCLOUD_PROJECT_NAME: fleet-271114
+      GCLOUD_SDK_COMPUTE_ZONE: us-central1-c
     steps:
       - run:
-          name: Push docker images to GCR
+          name: Setup gcloud SDK
           command: |
             echo $GCLOUD_SERVICE_KEY | base64 --decode -i > ${HOME}/gcloud-service-key.json && \
-            gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+            gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json && \
+            gcloud config set project $GCLOUD_PROJECT_NAME && \
+            gcloud config set compute/zone $GCLOUD_SDK_COMPUTE_ZONE
 workflows:
   version: 2
   build-docker-images:
