@@ -17,7 +17,6 @@ jobs:
           tag: $CIRCLE_SHA1
       - gcr/push-image:
           image: $IMAGE_NAME
-          tag: $CIRCLE_SHA1
   build-push-test-run-image:
     description: Build and push test run service image to GCR
     machine: true
@@ -34,7 +33,6 @@ jobs:
           tag: $CIRCLE_SHA1
       - gcr/push-image:
           image: $IMAGE_NAME
-          tag: $CIRCLE_SHA1
 workflows:
   build_and_upload_service_images:
     jobs:
