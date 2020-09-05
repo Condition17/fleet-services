@@ -1,16 +1,16 @@
 version: 2
 jobs:
-  build-file-service-image:
-    environment:
-      IMAGE_NAME: fleet-file-service
-    docker:
-      - image: circleci/buildpack-deps:stretch
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build file-service docker image
-          command: docker build -t $IMAGE_NAME:latest ./file-service
+  # build-file-service-image:
+  #   environment:
+  #     IMAGE_NAME: fleet-file-service
+  #   docker:
+  #     - image: circleci/buildpack-deps:stretch
+  #   steps:
+  #     - checkout
+  #     - setup_remote_docker
+  #     - run:
+  #         name: Build file-service docker image
+  #         command: docker build -t $IMAGE_NAME:latest ./file-service
   # build-test-run-image:
   #   environment:
   #     IMAGE_NAME: fleet-test-run
@@ -36,11 +36,15 @@ workflows:
   version: 2
   build-docker-images:
     jobs:
-      - build-file-service-image:
-          filters:
-            branches:
-              only: master
-      - build-test-run-image:
-          filters:
-            branches:
-              only: master
+      # - build-file-service-image:
+      #     filters:
+      #       branches:
+      #         only: master
+      # - build-test-run-image:
+      #     filters:
+      #       branches:
+      #         only: master
+      - upload-images-to-gcloud:
+        filters:
+          branches:
+            only: master
