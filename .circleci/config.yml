@@ -23,8 +23,6 @@ jobs:
   #         name: Build test-run docker image
   #         command: docker build -t $IMAGE_NAME:latest ./test-run
   upload-images-to-gcloud:
-    requires:
-      - build-file-service-image
     docker:
       - image: google/cloud-sdk
     environment:
@@ -54,6 +52,8 @@ workflows:
       #       branches:
       #         only: master
       - upload-images-to-gcloud:
+          requires: 
+            - build-file-service-image
           filters:
             branches:
               only: master
