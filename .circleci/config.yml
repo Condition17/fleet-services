@@ -12,7 +12,7 @@ jobs:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          path: {$WORKDIR}
+          path: ${WORKDIR}
           docker-context: ${WORKDIR}
           image: $IMAGE_NAME
           tag: $CIRCLE_SHA1
