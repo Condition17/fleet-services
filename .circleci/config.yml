@@ -24,6 +24,7 @@ jobs:
     machine: true
     environment:
       IMAGE_NAME: fleet-test-run
+      WORKDIR: ~/project/test-run
     steps:
       - checkout
       - gcr/gcr-auth
