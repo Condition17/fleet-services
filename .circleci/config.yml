@@ -7,13 +7,12 @@ jobs:
     machine: true
     environment:
       IMAGE_NAME: fleet-file-service
-      WORKDIR: ~/project/file-service
     steps:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          path: ${WORKDIR}
-          docker-context: ${WORKDIR}
+          path: ~/project/file-service
+          docker-context: ~/project/file-service
           image: $IMAGE_NAME
           tag: $CIRCLE_SHA1
       - gcr/push-image:
@@ -29,8 +28,8 @@ jobs:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          path: ${WORKDIR}
-          docker-context: ${WORKDIR}
+          path: ~/project/file-service
+          docker-context: ~/project/file-service
           image: $IMAGE_NAME
           tag: $CIRCLE_SHA1
       - gcr/push-image:
