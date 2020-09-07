@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  clusterIP: None
+  ports:
+    - port: 6379
+      targetPort: 6379
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+spec:
+  serviceName: redis
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:latest
+          args:
+            ["--appendonly", "yes", "--save", "600", "1", "--save", "120", "2"]
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 6379
+              name: redis
+          volumeMounts:
+            - mountPath: /data
+              name: redis-persistent-storage
+      volumes:
+        - name: redis-persistent-storage
+          persistentVolumeClaim:
+            claimName: redis-volumeclaim
