@@ -1,13 +1,10 @@
 package main
 
 import (
-	"context"
 	"test-run/handler"
 	testrun "test-run/proto/test-run"
 
-	proto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/micro/go-micro/v2"
-	log "github.com/micro/go-micro/v2/logger"
 )
 
 func main() {
@@ -32,17 +29,17 @@ func main() {
 	testrun.RegisterTestRunHandler(service.Server(), new(handler.TestRun))
 
 	// Create clients for another services
-	fileServiceClient := proto.NewFileService("go.micro.api.file-service", service.Client())
-	res, err := fileServiceClient.CreateFile(context.Background(), &proto.File{Name: "testFile", Size: 1000000000000, MaxChunkSize: 100})
-	if err != nil {
-		log.Fatalf("File service create call error: %v", err)
-		return
-	}
+	// fileServiceClient := proto.NewFileService("go.micro.api.file-service", service.Client())
+	// res, err := fileServiceClient.CreateFile(context.Background(), &proto.File{Name: "testFile", Size: 1000000000000, MaxChunkSize: 100})
+	// if err != nil {
+	// 	log.Fatalf("File service create call error: %v", err)
+	// 	return
+	// }
 
-	log.Infof("File service create call RESPONSE: %v", res)
+	// log.Infof("File service create call RESPONSE: %v", res)
 
-	// Run service
-	if err := service.Run(); err != nil {
-		log.Fatal(err)
-	}
+	// // Run service
+	// if err := service.Run(); err != nil {
+	// 	log.Fatal(err)
+	// }
 }
