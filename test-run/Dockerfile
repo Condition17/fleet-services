@@ -23,4 +23,4 @@ WORKDIR /app
 
 COPY --from=builder /app .
 
-ENTRYPOINT ["./test-run"]
+CMD ["./test-run"]
