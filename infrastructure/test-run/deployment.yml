@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-run
+spec:
+  selector:
+    matchLabels:
+      app: test-run
+  template:
+    metadata:
+      labels:
+        app: test-run
+    spec:
+      containers:
+      - name: test-run
+        image: gcr.io/fleet-271114/fleet-test-run
+        imagePullPolicy: Always
+        command: [
+          "./test-run",
+          "--selector=static",
+          "--registry=kubernetes",
+          "--server_address=:8080"
+        ]
+        ports:
+        - containerPort: 8080
