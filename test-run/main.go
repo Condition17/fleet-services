@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"test-run/handler"
 	testrun "test-run/proto/test-run"
 
@@ -38,8 +39,8 @@ func main() {
 
 	// log.Infof("File service create call RESPONSE: %v", res)
 
-	// // Run service
-	// if err := service.Run(); err != nil {
-	// 	log.Fatal(err)
-	// }
+	// Run service
+	if err := service.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
