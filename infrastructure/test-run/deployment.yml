@@ -11,6 +11,7 @@ spec:
       labels:
         app: test-run
     spec:
+      serviceAccountName: micro-services
       containers:
       - name: test-run
         image: gcr.io/fleet-271114/fleet-test-run
