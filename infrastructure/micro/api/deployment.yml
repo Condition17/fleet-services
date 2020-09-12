@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-api
+  template:
+    metadata:
+      labels:
+        app: micro-api
+    spec:
+      containers:
+        - name: micro-api
+          image: micro/micro:v2.9.3
+          imagePullPolicy: Always
+          args:
+            - api
+            - --handler=rpc
+          env:
+            - name: MICRO_REGISTRY
+              value: "mdns"
+            - name: MICRO_API_ADDRESS
+              value: ":443"
+          ports:
+            - containerPort: 443
+              name: api-port
