@@ -7,6 +7,6 @@ spec:
   selector:
     app: micro-api
   ports:
-  - port: 443
+  - port: 80
     targetPort: "api-port"
     protocol: TCP

@@ -20,7 +20,9 @@ spec:
             - web
           env:
             - name: MICRO_REGISTRY
-              value: "mdns"
+              value: "etcd"
+            - name: MICRO_REGISTRY_ADDRESS
+              value: "etcd"
             - name: MICRO_WEB_ADDRESS
               value: ":8082"
           ports:

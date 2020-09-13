@@ -21,9 +21,11 @@ spec:
             - --handler=rpc
           env:
             - name: MICRO_REGISTRY
-              value: "mdns"
+              value: "etcd"
+            - name: MICRO_REGISTRY_ADDRESS
+              value: "etcd"
             - name: MICRO_API_ADDRESS
-              value: ":443"
+              value: ":80"
           ports:
-            - containerPort: 443
+            - containerPort: 80
               name: api-port

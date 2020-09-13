@@ -19,8 +19,12 @@ spec:
         command: [
           "./test-run",
           "--selector=static",
-          "--registry=kubernetes",
           "--server_address=:8080"
         ]
+        env:
+            - name: MICRO_REGISTRY
+              value: "etcd"
+            - name: MICRO_REGISTRY_ADDRESS
+              value: "etcd"
         ports:
         - containerPort: 8080
