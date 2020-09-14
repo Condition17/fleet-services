@@ -1,7 +1,6 @@
 package main
 
 import (
-	"file-service/config"
 	"file-service/handler"
 	"file-service/repository"
 
@@ -13,11 +12,11 @@ import (
 
 func main() {
 	// Get configs
-	config := config.GetConfig()
+	// config := config.GetConfig()
 
 	// New Service
 	service := micro.NewService(
-		micro.Name(config.ServiceName),
+		micro.Name("go.micro.api.file-service"),
 		micro.Version("latest"),
 	)
 
