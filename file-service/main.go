@@ -22,7 +22,7 @@ func main() {
 	)
 
 	// Setup Redis client
-	redisPool := CreateRedisPool(config.RedisUrl)
+	redisPool := CreateRedisPool("redis:6379")
 	// ensure that connection to Redis is always properly closed
 
 	// test redis connectivity via PING
@@ -86,7 +86,7 @@ func main() {
 
 	// Register Handler
 	serviceHandler := handler.Service{
-		Name:            config.ServiceName,
+		Name:            "go.micro.api.file-service",
 		FileRepository:  repository.FileRepository{DB: redisPool},
 		ChunkRepository: repository.ChunkRepository{DB: redisPool},
 	}
