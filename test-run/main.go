@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"test-run/handler"
 	testrun "test-run/proto/test-run"
 
