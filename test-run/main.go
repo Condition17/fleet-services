@@ -32,7 +32,7 @@ func main() {
 	testrun.RegisterTestRunHandler(service.Server(), new(handler.TestRun))
 
 	// Create clients for another services
-	fileServiceClient := proto.NewFileService("go.micro.api.file-service", service.Client())
+	fileServiceClient := proto.NewFileService("file-service:8080", service.Client())
 	res, err := fileServiceClient.CreateFile(context.Background(), &proto.File{Name: "testFile", Size: 1000000000000, MaxChunkSize: 100})
 	if err != nil {
 		log.Fatalf("File service create call error: %v", err)
