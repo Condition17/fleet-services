@@ -26,6 +26,7 @@ require (
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.9.1
+	github.com/micro/go-plugins/registry/etcd/v2 v2.9.1
 	github.com/micro/go-plugins/registry/kubernetes/v2 v2.9.1
 	github.com/micro/go-plugins/registry/mdns/v2 v2.9.1
 	github.com/miekg/dns v1.1.31 // indirect
