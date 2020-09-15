@@ -25,6 +25,6 @@ spec:
             - name: MICRO_REGISTRY
               value: "etcd"
             - name: MICRO_REGISTRY_ADDRESS
-              value: "etcd"
+              value: "etcd-client"
         ports:
         - containerPort: 8080

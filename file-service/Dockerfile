@@ -16,8 +16,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o file-service *.go
 # Run container
 FROM alpine:latest
 
-RUN apk --no-cach add ca-certificates
-
 RUN mkdir /app
 WORKDIR /app
 
