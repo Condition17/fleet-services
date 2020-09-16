@@ -1,6 +1,7 @@
 package main
 
 import (
+	"file-service/config"
 	"file-service/handler"
 	"file-service/repository"
 
@@ -12,11 +13,11 @@ import (
 
 func main() {
 	// Get configs
-	// config := config.GetConfig()
+	config := config.GetConfig()
 
 	// New Service
 	service := micro.NewService(
-		micro.Name("file-service"),
+		micro.Name(config.ServiceName),
 		micro.Version("latest"),
 	)
 
@@ -85,7 +86,7 @@ func main() {
 
 	// Register Handler
 	serviceHandler := handler.Service{
-		Name:            "file-service",
+		Name:            "go.micro.api.file-service",
 		FileRepository:  repository.FileRepository{DB: redisPool},
 		ChunkRepository: repository.ChunkRepository{DB: redisPool},
 	}

@@ -21,7 +21,7 @@ func main() {
 
 	// New Service
 	service := micro.NewService(
-		micro.Name("test-run"),
+		micro.Name("go.micro.api.test-run"),
 		micro.Version("latest"),
 	)
 
