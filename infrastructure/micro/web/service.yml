@@ -7,6 +7,6 @@ spec:
   selector:
     app: micro-web
   ports:
-  - port: 8082
+  - port: 80
     targetPort: "web-port"
     protocol: TCP

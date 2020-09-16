@@ -16,7 +16,7 @@ func main() {
 
 	// New Service
 	service := micro.NewService(
-		micro.Name("go.micro.api.file-service"),
+		micro.Name("file-service"),
 		micro.Version("latest"),
 	)
 
@@ -85,7 +85,7 @@ func main() {
 
 	// Register Handler
 	serviceHandler := handler.Service{
-		Name:            "go.micro.api.file-service",
+		Name:            "file-service",
 		FileRepository:  repository.FileRepository{DB: redisPool},
 		ChunkRepository: repository.ChunkRepository{DB: redisPool},
 	}
