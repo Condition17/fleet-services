@@ -1,9 +1,6 @@
 package config
 
 import (
-	"fmt"
-	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,37 +13,40 @@ type Config struct {
 	RedisUrl    string `json:"REDIS_URL"`
 }
 
-func getEnvironmentName() string {
-	env := os.Getenv("ENV_NAME")
-	if "" == env {
-		env = "local"
-	}
+type EnvironmentName string
 
-	return strings.ToLower(env)
+const (
+	localEnv EnvironmentName = "local"
+	prodEnv  EnvironmentName = "prod"
+)
+
+func getEnvironmentName() string {
+	return strings.ToLower(getEnvVar("ENV_NAME", string(localEnv)))
 }
 
-func getEnvFilePath() string {
-	files, err := ioutil.ReadDir("./")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, f := range files {
-		fmt.Println(f.Name())
-	}
-
+func getDefaultConfigFilePath() string {
 	workingDir, _ := os.Getwd()
-	return filepath.Join(workingDir, fmt.Sprintf("/env/%s_config.json", getEnvironmentName()))
+	return filepath.Join(workingDir, "/env/default.json")
+}
+
+func getEnvVar(key, defaultValue string) string {
+	envVar := os.Getenv(key)
+	if len(envVar) == 0 {
+		return defaultValue
+	}
+	return envVar
 }
 
 func GetConfig() Config {
-	config := Config{}
-	fileName := getEnvFilePath()
-	err := gonfig.GetConf(fileName, &config)
+	defaultConfig := Config{}
+	err := gonfig.GetConf(getDefaultConfigFilePath(), &defaultConfig)
 
 	if err != nil {
 		panic(err)
 	}
 
-	return config
+	return Config{
+		ServiceName: getEnvVar("SERVICE_NAME", defaultConfig.ServiceName),
+		RedisUrl:    getEnvVar("REDIS_URL", defaultConfig.RedisUrl),
+	}
 }

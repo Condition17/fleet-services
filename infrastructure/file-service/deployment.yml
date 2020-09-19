@@ -13,20 +13,22 @@ spec:
     spec:
       serviceAccountName: micro-services
       containers:
-      - name: file-service
-        image: gcr.io/fleet-271114/fleet-file-service
-        imagePullPolicy: Always
-        command: [
-          "./file-service",
-          "--selector=static",
-          "--server_address=:8080"
-        ]
-        env:
+        - name: file-service
+          image: gcr.io/fleet-271114/fleet-file-service
+          imagePullPolicy: Always
+          command:
+            ["./file-service", "--selector=static", "--server_address=:8080"]
+          env:
             - name: ENV_NAME
               value: "prod"
             - name: MICRO_REGISTRY
               value: "etcd"
             - name: MICRO_REGISTRY_ADDRESS
               value: "etcd-client"
-        ports:
-        - containerPort: 8080
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: file-service-secrets
+                  key: REDIS_URL
+          ports:
+            - containerPort: 8080
