@@ -2,6 +2,8 @@ package config
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -24,6 +26,15 @@ func getEnvironmentName() string {
 }
 
 func getEnvFilePath() string {
+	files, err := ioutil.ReadDir("./")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, f := range files {
+		fmt.Println(f.Name())
+	}
+
 	workingDir, _ := os.Getwd()
 	return filepath.Join(workingDir, fmt.Sprintf("/env/%s_config.json", getEnvironmentName()))
 }
