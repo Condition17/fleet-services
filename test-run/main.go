@@ -5,12 +5,16 @@ import (
 	"test-run/handler"
 	testrun "test-run/proto/test-run"
 
+	config "test-run/config"
+
 	proto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
 )
 
 func main() {
+	// Get configs
+	config := config.GetConfig()
 	// Connect to database
 	// db, err := CreateConnection()
 	// if err != nil {
@@ -21,7 +25,7 @@ func main() {
 
 	// New Service
 	service := micro.NewService(
-		micro.Name("go.micro.api.test-run"),
+		micro.Name(config.ServiceName),
 		micro.Version("latest"),
 	)
 

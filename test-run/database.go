@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	"os"
 )
 
 func CreateConnection() (*gorm.DB, error) {
