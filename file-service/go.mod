@@ -12,6 +12,7 @@ replace (
 
 require (
 	file-service v0.0.0-00010101000000-000000000000
+	github.com/Condition17/fleet-services v0.0.0-20200919195933-cc24213c8d8e
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect

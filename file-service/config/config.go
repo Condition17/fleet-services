@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	common "github.com/Condition17/fleet-services/common"
 	"github.com/tkanos/gonfig"
 )
 
@@ -13,15 +14,8 @@ type Config struct {
 	RedisUrl    string `json:"REDIS_URL"`
 }
 
-type EnvironmentName string
-
-const (
-	localEnv EnvironmentName = "local"
-	prodEnv  EnvironmentName = "prod"
-)
-
 func getEnvironmentName() string {
-	return strings.ToLower(getEnvVar("ENV_NAME", string(localEnv)))
+	return strings.ToLower(getEnvVar("ENV_NAME", string(common.LocalEnv)))
 }
 
 func getDefaultConfigFilePath() string {

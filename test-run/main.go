@@ -7,6 +7,7 @@ import (
 
 	config "test-run/config"
 
+	common "github.com/Condition17/fleet-services/common"
 	proto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
@@ -36,7 +37,7 @@ func main() {
 	testrun.RegisterTestRunHandler(service.Server(), new(handler.TestRun))
 
 	// Create clients for another services
-	fileServiceClient := proto.NewFileService("file-service:8080", service.Client())
+	fileServiceClient := proto.NewFileService(common.GetFullExternalServiceName("file-service:8080"), service.Client())
 	res, err := fileServiceClient.CreateFile(context.Background(), &proto.File{Name: "testFile", Size: 1000000000000, MaxChunkSize: 100})
 	if err != nil {
 		log.Fatalf("File service create call error: %v", err)

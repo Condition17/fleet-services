@@ -7,6 +7,7 @@ go 1.13
 replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 
 require (
+	github.com/Condition17/fleet-services v0.0.0-20200919195933-cc24213c8d8e
 	github.com/Condition17/fleet-services/file-service v0.0.0-20200902192511-2fa60a36c63c
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect

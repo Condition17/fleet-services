@@ -47,6 +47,8 @@ github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/Condition17/fleet-services v0.0.0-20200902192511-2fa60a36c63c h1:k0uqpAzDIZC8G7Htez0xMIJDnfm69MNBUFcFUNPynOU=
+github.com/Condition17/fleet-services v0.0.0-20200919195933-cc24213c8d8e h1:bRxRY7q18SSMTvolg6LkZr5IqMxlq7hVxsSBl7DVdMg=
+github.com/Condition17/fleet-services v0.0.0-20200919195933-cc24213c8d8e/go.mod h1:rPJHD8ud78ERtxP9moWFE+CJzYWrGGXX6dOgpKFxnPE=
 github.com/Condition17/fleet-services/file-service v0.0.0-20200902192511-2fa60a36c63c h1:tsU0MIkWPbt6cVlN0WZ1Nj4/6HbJ7lvk9YruZhGRIEE=
 github.com/Condition17/fleet-services/file-service v0.0.0-20200902192511-2fa60a36c63c/go.mod h1:NsQZ71Cwa6HG9cd4gvoHLf9w/eE2BWCYBjVmL5DNMXQ=
 github.com/DataDog/sketches-go v0.0.0-20190923095040-43f19ad77ff7/go.mod h1:Q5DbzQ+3AkgGwymQO7aZFNP7ns2lZKGtvRBzRXfdi60=

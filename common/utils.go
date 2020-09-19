@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-func getFullExternalServiceName(baseServiceName string) string {
-	if os.Getenv("ENV_NAME") == string(prodEnv) {
+func GetFullExternalServiceName(baseServiceName string) string {
+	if os.Getenv("ENV_NAME") == string(ProdEnv) {
 		return baseServiceName
 	}
 
