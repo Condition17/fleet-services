@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	common "github.com/Condition17/fleet-services/common"
+	"github.com/Condition17/fleet-services/common"
 	"github.com/tkanos/gonfig"
 )
 
