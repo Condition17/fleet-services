@@ -10,5 +10,5 @@ func GetFullExternalServiceName(baseServiceName string) string {
 		return baseServiceName
 	}
 
-	return fmt.Sprintf("go.micro.api.%s", baseServiceName)
+	return fmt.Sprintf("go.micro.api.%s:8080", baseServiceName)
 }

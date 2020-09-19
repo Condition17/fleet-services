@@ -10,8 +10,9 @@ import (
 )
 
 type Config struct {
-	ServiceName string `json:"SERVICE_NAME"`
-	RedisUrl    string `json:"REDIS_URL"`
+	ServiceName    string `json:"SERVICE_NAME"`
+	ServiceAddress string `json:"SERVICE_ADDRESS"`
+	RedisUrl       string `json:"REDIS_URL"`
 }
 
 func getEnvironmentName() string {
@@ -40,7 +41,8 @@ func GetConfig() Config {
 	}
 
 	return Config{
-		ServiceName: getEnvVar("SERVICE_NAME", defaultConfig.ServiceName),
-		RedisUrl:    getEnvVar("REDIS_URL", defaultConfig.RedisUrl),
+		ServiceName:    getEnvVar("SERVICE_NAME", defaultConfig.ServiceName),
+		ServiceAddress: getEnvVar("SERVICE_ADDRESS", defaultConfig.ServiceAddress),
+		RedisUrl:       getEnvVar("REDIS_URL", defaultConfig.RedisUrl),
 	}
 }

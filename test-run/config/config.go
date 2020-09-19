@@ -10,7 +10,8 @@ import (
 )
 
 type Config struct {
-	ServiceName string `json:"SERVICE_NAME"`
+	ServiceName    string `json:"SERVICE_NAME"`
+	ServiceAddress string `json:"SERVICE_ADDRESS"`
 }
 
 func getEnvironmentName() string {
@@ -39,6 +40,7 @@ func GetConfig() Config {
 	}
 
 	return Config{
-		ServiceName: getEnvVar("SERVICE_NAME", defaultConfig.ServiceName),
+		ServiceName:    getEnvVar("SERVICE_NAME", defaultConfig.ServiceName),
+		ServiceAddress: getEnvVar("SERVICE_ADDRESS", defaultConfig.ServiceAddress),
 	}
 }
