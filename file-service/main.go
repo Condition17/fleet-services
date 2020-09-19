@@ -7,7 +7,6 @@ import (
 
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
-	"github.com/micro/go-micro/v2/server"
 
 	pb "file-service/proto/file-service"
 )
@@ -20,12 +19,6 @@ func main() {
 	service := micro.NewService(
 		micro.Name(config.ServiceName),
 		micro.Version("latest"),
-		micro.Server(
-			server.NewServer(
-				server.Name(config.ServiceName),
-				server.Address(config.ServiceAddress),
-			),
-		),
 	)
 
 	// Setup Redis client

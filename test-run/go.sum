@@ -30,6 +30,10 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/Condition17/fleet-services/common v0.0.0-20200919201305-968d1cc27485 h1:GZl+0cTwuaMvRTCNxmehvZXfV16XCp6Kul42Hu/sTL8=
 github.com/Condition17/fleet-services/common v0.0.0-20200919201305-968d1cc27485/go.mod h1:XdWH9f8yXj2pth6P79ssOk51h8Fib20hjEk86HEdJVc=
+github.com/Condition17/fleet-services/common v0.0.0-20200919202808-880bb24e2847 h1:Z19X5xk2Vizgi+eIwqQEt5/VtrYlI11JoVZlYOpzAmg=
+github.com/Condition17/fleet-services/common v0.0.0-20200919202808-880bb24e2847/go.mod h1:XdWH9f8yXj2pth6P79ssOk51h8Fib20hjEk86HEdJVc=
+github.com/Condition17/fleet-services/common v0.0.0-20200919205711-d2a60ae78150 h1:ALcgOEE/HHDh5/I9AG8MBw+cHP0mNEFax6gnLvo7eCM=
+github.com/Condition17/fleet-services/common v0.0.0-20200919205711-d2a60ae78150/go.mod h1:XdWH9f8yXj2pth6P79ssOk51h8Fib20hjEk86HEdJVc=
 github.com/Condition17/fleet-services/file-service v0.0.0-20200902192511-2fa60a36c63c h1:tsU0MIkWPbt6cVlN0WZ1Nj4/6HbJ7lvk9YruZhGRIEE=
 github.com/Condition17/fleet-services/file-service v0.0.0-20200902192511-2fa60a36c63c/go.mod h1:NsQZ71Cwa6HG9cd4gvoHLf9w/eE2BWCYBjVmL5DNMXQ=
 github.com/Microsoft/go-winio v0.4.14/go.mod h1:qXqCSQ3Xa7+6tgxaGTIe4Kpcdsi+P8jBhyzoq1bpyYA=

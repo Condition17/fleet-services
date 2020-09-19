@@ -11,7 +11,6 @@ import (
 	proto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
-	"github.com/micro/go-micro/v2/server"
 )
 
 func main() {
@@ -29,12 +28,6 @@ func main() {
 	service := micro.NewService(
 		micro.Name(config.ServiceName),
 		micro.Version("latest"),
-		micro.Server(
-			server.NewServer(
-				server.Name(config.ServiceName),
-				server.Address(config.ServiceAddress),
-			),
-		),
 	)
 
 	// Initialise service

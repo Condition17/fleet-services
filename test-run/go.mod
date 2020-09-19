@@ -7,7 +7,7 @@ go 1.13
 replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 
 require (
-	github.com/Condition17/fleet-services/common v0.0.0-20200919201305-968d1cc27485
+	github.com/Condition17/fleet-services/common v0.0.0-20200919205711-d2a60ae78150
 	github.com/Condition17/fleet-services/file-service v0.0.0-20200902192511-2fa60a36c63c
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/golang/protobuf v1.4.2

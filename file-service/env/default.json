@@ -1,5 +1,4 @@
 {
   "SERVICE_NAME": "go.micro.api.file-service",
-  "SERVICE_ADDRESS": ":8080",
   "REDIS_URL": "localhost:6379"
 }
