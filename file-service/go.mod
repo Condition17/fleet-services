@@ -18,6 +18,7 @@ require (
 	github.com/gomodule/redigo v1.8.2
 	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.9.1
+	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
 	github.com/micro/go-plugins/registry/kubernetes/v2 v2.9.1
 	github.com/tkanos/gonfig v0.0.0-20181112185242-896f3d81fadf
 	google.golang.org/protobuf v1.25.0

@@ -5,7 +5,7 @@ import (
 	"file-service/model"
 	pb "file-service/proto/file-service"
 
-	"github.com/micro/go-micro/errors"
+	"github.com/micro/go-micro/v2/errors"
 )
 
 func (s *Service) CreateFile(ctx context.Context, req *pb.File, res *pb.Response) error {
@@ -14,6 +14,7 @@ func (s *Service) CreateFile(ctx context.Context, req *pb.File, res *pb.Response
 		return err
 	}
 	res.File = model.UnmarshalFile(file)
+	s.publishEvent()
 
 	return nil
 }

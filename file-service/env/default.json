@@ -1,4 +1,5 @@
 {
   "SERVICE_NAME": "go.micro.api.file-service",
-  "REDIS_URL": "localhost:6379"
+  "REDIS_URL": "localhost:6379",
+  "GOOGLEPUBSUB_PROJECT_ID": "fleet-271114"
 }

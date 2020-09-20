@@ -17,6 +17,12 @@
       "label": "local:run",
       "type": "shell",
       "command": "./file-service",
+      "options": {
+        "env": {
+          "MICRO_BROKER": "googlepubsub",
+          "GOOGLEPUBSUB_PROJECT_ID": "fleet-271114"
+        }
+      },
       "group": "build",
       "presentation": {
         "reveal": "always",

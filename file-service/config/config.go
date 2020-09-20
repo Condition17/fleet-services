@@ -10,8 +10,9 @@ import (
 )
 
 type Config struct {
-	ServiceName string `json:"SERVICE_NAME"`
-	RedisUrl    string `json:"REDIS_URL"`
+	ServiceName           string `json:"SERVICE_NAME"`
+	RedisUrl              string `json:"REDIS_URL"`
+	GooglePubSubProjectId string `json:"GOOGLEPUBSUB_PROJECT_ID"`
 }
 
 func getEnvironmentName() string {
@@ -42,5 +43,6 @@ func GetConfig() Config {
 	return Config{
 		ServiceName: getEnvVar("SERVICE_NAME", defaultConfig.ServiceName),
 		RedisUrl:    getEnvVar("REDIS_URL", defaultConfig.RedisUrl),
+		GooglePubSubProjectId: getEnvVar("GOOGLEPUBSUB_PROJECT_ID", defaultConfig.GooglePubSubProjectId)
 	}
 }

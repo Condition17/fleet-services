@@ -89,6 +89,7 @@ func main() {
 		Name:            config.ServiceName,
 		FileRepository:  repository.FileRepository{DB: redisPool},
 		ChunkRepository: repository.ChunkRepository{DB: redisPool},
+		PubSub:          service.Server().Options().Broker,
 	}
 	if err := pb.RegisterFileServiceHandler(service.Server(), &serviceHandler); err != nil {
 		log.Fatal(err)

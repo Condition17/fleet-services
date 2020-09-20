@@ -10,7 +10,10 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}",
-            "env": {},
+            "env": {
+                "MICRO_BROKER": "googlepubsub",
+                "GOOGLEPUBSUB_PROJECT_ID": "fleet-271114"
+            },
             "args": []
         }
     ]
