@@ -41,8 +41,8 @@ func GetConfig() Config {
 	}
 
 	return Config{
-		ServiceName: getEnvVar("SERVICE_NAME", defaultConfig.ServiceName),
-		RedisUrl:    getEnvVar("REDIS_URL", defaultConfig.RedisUrl),
-		GooglePubSubProjectId: getEnvVar("GOOGLEPUBSUB_PROJECT_ID", defaultConfig.GooglePubSubProjectId)
+		ServiceName:           getEnvVar("SERVICE_NAME", defaultConfig.ServiceName),
+		RedisUrl:              getEnvVar("REDIS_URL", defaultConfig.RedisUrl),
+		GooglePubSubProjectId: getEnvVar("GOOGLEPUBSUB_PROJECT_ID", defaultConfig.GooglePubSubProjectId),
 	}
 }
