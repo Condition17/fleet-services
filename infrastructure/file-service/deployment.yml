@@ -25,6 +25,8 @@ spec:
               value: "etcd"
             - name: MICRO_REGISTRY_ADDRESS
               value: "etcd-client"
+            - name: "MICRO_BROKER"
+              value: "googlepubsub" 
             - name: REDIS_URL
               valueFrom:
                 secretKeyRef:
