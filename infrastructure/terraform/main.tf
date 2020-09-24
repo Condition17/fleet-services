@@ -34,29 +34,18 @@ resource "google_project_iam_custom_role" "gcr_custom_admin" {
     "storage.objects.delete",
     "storage.objects.get",
     "storage.objects.list",
-    s"storage.objects.update"
+    "storage.objects.update"
   ]
 }
 
 # Create CircleCI service account
-
 resource "google_service_account" "circleci_service_account" {
   account_id   = "circleci"
   display_name = "Service account used by CircleCI"
 }
 
-
-resource "google_project_iam_policy" "project" {
-  project     = var.project_id
-  policy_data = data.google_iam_policy.admin.policy_data
-}
-
-data "google_iam_policy" "admin" {
-  binding {
-    role = "projects/fleet-271114/roles/gcrCustomAdmin"
-
-    members = [
-      "serviceAccount:${google_service_account.circleci_service_account.email}",
-    ]
-  }
+resource "google_project_iam_member" "project" {
+  project = var.project_id
+  role    = "projects/${var.project_id}/roles/${google_project_iam_custom_role.gcr_custom_admin.role_id}"
+  member  = "serviceAccount:${google_service_account.circleci_service_account.email}"
 }
