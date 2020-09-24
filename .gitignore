@@ -2,3 +2,6 @@
 /.circleci/gcs-service-account-key.json
 
 .DS_Store
+/infrastructure/terraform/terraform_service_account.json
+/infrastructure/terraform/*.tfstatete
+/infrastructure/terraform/*.tfvars

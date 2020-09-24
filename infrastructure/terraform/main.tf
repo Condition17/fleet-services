@@ -49,3 +49,55 @@ resource "google_project_iam_member" "project" {
   role    = "projects/${var.project_id}/roles/${google_project_iam_custom_role.gcr_custom_admin.role_id}"
   member  = "serviceAccount:${google_service_account.circleci_service_account.email}"
 }
+
+# Setup Pub/Sub
+
+# chunk-gcs-upload-subscription
+
+resource "google_pubsub_topic" "chunk_upload_topic" {
+  name = "chunk-gcs-upload"
+}
+
+resource "google_pubsub_subscription" "chunk_upload_topic_subscription" {
+  name  = "${google_pubsub_topic.chunk_upload_topic.name}-subscription"
+  topic = google_pubsub_topic.chunk_upload_topic.name
+}
+
+# Setup GKE
+
+resource "google_container_cluster" "primary_cluster" {
+  name = "${var.project_id}-cluster"
+  location = var.zone
+
+  remove_default_node_pool = true
+  initial_node_count = 1
+
+  master_auth {
+    username = ""
+    password = ""
+
+    client_certificate_config {
+      issue_client_certificate = false
+    }
+  }
+}
+
+# Managed Node pool
+
+resource "google_container_node_pool" "primary_cluster_nodes" {
+  name = "${google_container_cluster.primary_cluster.name}-node-pool"
+  location = var.zone
+  cluster = google_container_cluster.primary_cluster.name
+  node_count = 3
+
+  node_config {
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/pubsub",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+
+    machine_type = "e2-medium"
+  }
+}
