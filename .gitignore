@@ -3,5 +3,6 @@
 
 .DS_Store
 /infrastructure/terraform/terraform_service_account.json
-/infrastructure/terraform/*.tfstatete
+/infrastructure/terraform/*.tfstate
+/infrastructure/terraform/*.tfstate.*
 /infrastructure/terraform/*.tfvars
