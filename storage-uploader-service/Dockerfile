@@ -11,7 +11,7 @@ ENV GO111MODULE=on
 COPY . .
 
 RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o test-run *.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o storage-uploader-service *.go
 
 # Run container
 FROM alpine:latest

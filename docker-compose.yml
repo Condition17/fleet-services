@@ -42,5 +42,11 @@ services:
     environment:
       MICRO_SERVER_ADDRESS: ":50051"
 
+  storage-uploader-service:
+    restart: always
+    build: ./storage-uploader-service
+    environment:
+      MICRO_SERVER_ADDRESS: ":50051"
+
 volumes:
   redis-data:
