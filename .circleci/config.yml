@@ -34,7 +34,7 @@ jobs:
     description: Build and push Storage uploader service image to GCR
     machine: true
     environment:
-      IMAGE_NAME: storage-uploader-service
+      IMAGE_NAME: fleet-storage-uploader-service
     steps:
       - checkout
       - gcr/gcr-auth

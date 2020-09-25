@@ -46,7 +46,7 @@ make build
 
 Run the service
 ```
-./storage-uploader-service-service
+./storage-uploader-service
 ```
 
 Build a docker image
