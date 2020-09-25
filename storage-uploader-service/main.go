@@ -24,7 +24,7 @@ func main() {
 	storageuploaderservice.RegisterStorageUploaderServiceHandler(service.Server(), new(handler.StorageUploaderService))
 
 	// Register Struct as Subscriber
-	micro.RegisterSubscriber("go.micro.service.storage-uploader-service", service.Server(), new(subscriber.StorageUploaderService))
+	micro.RegisterSubscriber("chunk-gcs-upload", service.Server(), new(subscriber.StorageUploaderService))
 
 	// Run service
 	if err := service.Run(); err != nil {
