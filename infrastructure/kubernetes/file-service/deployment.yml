@@ -18,17 +18,10 @@ spec:
           imagePullPolicy: Always
           command:
             ["./file-service", "--selector=static", "--server_address=:8080"]
+          envFrom:
+          - configMapRef:
+              name: pod-base-env
           env:
-            - name: ENV_NAME
-              value: "prod"
-            - name: GOOGLEPUBSUB_PROJECT_ID
-              value: "fleet-271114"
-            - name: MICRO_REGISTRY
-              value: "etcd"
-            - name: MICRO_REGISTRY_ADDRESS
-              value: "etcd-client"
-            - name: "MICRO_BROKER"
-              value: "googlepubsub"
             - name: REDIS_URL
               valueFrom:
                 secretKeyRef:

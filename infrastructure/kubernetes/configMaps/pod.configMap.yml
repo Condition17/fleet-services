@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pod-base-env
+data:
+  ENV_NAME: prod
+  MICRO_REGISTRY: etcd
+  MICRO_REGISTRY_ADDRESS: etcd-client
+  MICRO_BROKER: googlepubsub
+  GOOGLEPUBSUB_PROJECT_ID: fleet-271114

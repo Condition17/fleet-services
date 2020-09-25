@@ -21,12 +21,8 @@ spec:
           "--selector=static",
           "--server_address=:8080"
         ]
-        env:
-            - name: ENV_NAME
-              value: "prod"
-            - name: MICRO_REGISTRY
-              value: "etcd"
-            - name: MICRO_REGISTRY_ADDRESS
-              value: "etcd-client"
+        envFrom:
+          - configMapRef:
+              name: pod-base-env
         ports:
         - containerPort: 8080
