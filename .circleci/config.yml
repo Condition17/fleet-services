@@ -30,6 +30,20 @@ jobs:
           image: $IMAGE_NAME
       - gcr/push-image:
           image: $IMAGE_NAME
+  build-push-storage-uploader-service-image:
+    description: Build and push Storage uploader service image to GCR
+    machine: true
+    environment:
+      IMAGE_NAME: storage-uploader-service
+    steps:
+      - checkout
+      - gcr/gcr-auth
+      - gcr/build-image:
+          path: ~/project/storage-uploader-service
+          docker-context: ~/project/storage-uploader-service
+          image: $IMAGE_NAME
+      - gcr/push-image:
+          image: $IMAGE_NAME
 workflows:
   build_and_upload_service_images:
     jobs:
@@ -41,3 +55,8 @@ workflows:
           filters:
             branches:
               only: master
+      - build-push-storage-uploader-service-image:
+          filters:
+            branches:
+              only: master
+    

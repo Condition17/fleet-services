@@ -1,10 +1,11 @@
 package main
 
 import (
-	log "github.com/micro/go-micro/v2/logger"
-	"github.com/micro/go-micro/v2"
 	"storage-uploader-service/handler"
 	"storage-uploader-service/subscriber"
+
+	"github.com/micro/go-micro/v2"
+	log "github.com/micro/go-micro/v2/logger"
 
 	storageuploaderservice "storage-uploader-service/proto/storage-uploader-service"
 )
