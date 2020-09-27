@@ -14,7 +14,6 @@ func (s *Service) CreateFile(ctx context.Context, req *pb.File, res *pb.Response
 		return err
 	}
 	res.File = model.UnmarshalFile(file)
-	s.publishEvent()
 
 	return nil
 }

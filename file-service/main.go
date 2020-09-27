@@ -3,6 +3,7 @@ package main
 import (
 	"file-service/config"
 	"file-service/handler"
+	"file-service/pubsub"
 	"file-service/repository"
 
 	"github.com/micro/go-micro/v2"
@@ -89,7 +90,7 @@ func main() {
 		Name:            config.ServiceName,
 		FileRepository:  repository.FileRepository{DB: redisPool},
 		ChunkRepository: repository.ChunkRepository{DB: redisPool},
-		PubSub:          service.Server().Options().Broker,
+		MessagesBroker:  pubsub.MessagesBroker{Broker: service.Server().Options().Broker},
 	}
 	if err := pb.RegisterFileServiceHandler(service.Server(), &serviceHandler); err != nil {
 		log.Fatal(err)

@@ -11,6 +11,7 @@ replace (
 )
 
 require (
+	cloud.google.com/go/pubsub v1.1.0
 	file-service v0.0.0-00010101000000-000000000000
 	github.com/Condition17/fleet-services/common v0.0.0-20200919205711-d2a60ae78150
 	github.com/gofrs/uuid v3.2.0+incompatible

@@ -2,10 +2,16 @@ package handler
 
 import (
 	"context"
+	"encoding/json"
 	pb "file-service/proto/file-service"
 
 	"github.com/micro/go-micro/errors"
 )
+
+type ChunkDataMessage struct {
+	Sha2 string `json:"sha2"`
+	Data []byte `json:"data"`
+}
 
 func (s *Service) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.EmptyResponse) error {
 	if len(req.Data) == 0 {
@@ -25,7 +31,13 @@ func (s *Service) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.Em
 		return errors.BadRequest(s.Name, "Invalid chunk index for file.")
 	}
 
-	if err := s.ChunkRepository.Create(ctx, req); err != nil {
+	chunkSHA2, err := s.ChunkRepository.Create(ctx, req)
+	if err != nil {
+		return err
+	}
+
+	message, _ := json.Marshal(&ChunkDataMessage{Sha2: chunkSHA2, Data: req.Data})
+	if err := s.MessagesBroker.PublishEvent(gcsUploadTopic, message); err != nil {
 		return err
 	}
 

@@ -16,7 +16,7 @@ type ChunkRepository struct {
 	DB *redis.Pool
 }
 
-func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) error {
+func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) (string, error) {
 	conn := r.DB.Get()
 	defer conn.Close()
 
@@ -26,19 +26,19 @@ func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) error 
 	// check if the chunk was already uploaded for the given file
 	alreadyUploaded, err := redis.Bool(conn.Do("EXISTS", composeFileChunkBindingKey(spec.FileId, sha2)))
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	if alreadyUploaded {
 		// chunk already updated for the current file - we no longe need to perform another operations
-		return nil
+		return "", nil
 	}
 
 	// the chunk was not already uploaded for the current file
 	// but we need to verify if the chunk was uploaded at all - DEDUPLICATION
 	alreadyCreated, err := redis.Bool(conn.Do("EXISTS", hashKey))
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	conn.Send("MULTI")
@@ -57,5 +57,9 @@ func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) error 
 	conn.Send("HSET", composeFileChunkStoreKey(spec.FileId, storeIndex), spec.Index, sha2)
 	_, err = conn.Do("EXEC")
 
-	return err
+	if err != nil {
+		return "", err
+	}
+
+	return sha2, nil
 }
