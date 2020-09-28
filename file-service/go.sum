@@ -327,8 +327,6 @@ github.com/micro/go-micro v1.18.0 h1:gP70EZVHpJuUIT0YWth192JmlIci+qMOEByHm83XE9E
 github.com/micro/go-micro v1.18.0/go.mod h1:klwUJL1gkdY1MHFyz+fFJXn52dKcty4hoe95Mp571AA=
 github.com/micro/go-micro/v2 v2.9.1 h1:+S9koIrNWARjpP6k2TZ7kt0uC9zUJtNXzIdZTZRms7Q=
 github.com/micro/go-micro/v2 v2.9.1/go.mod h1:x55ZM3Puy0FyvvkR3e0ha0xsE9DFwfPSUMWAIbFY0SY=
-github.com/micro/go-plugins/broker/googlepubsub v0.0.0-20200119172437-4fe21aa238fd h1:JGP4akcz8vyamW0pUyDSMM/WoBrbBOj0JzsQ4SV8uE8=
-github.com/micro/go-plugins/broker/googlepubsub v0.0.0-20200119172437-4fe21aa238fd/go.mod h1:z+WfTcYfqjtmgGA9SWREvP1q/l5tZGkFN8qU9gUyFtA=
 github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1 h1:tKYW3zAhLZT3c7+dvG7edNsFuyj3B1/PuKzsBojPA3s=
 github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1/go.mod h1:9gQyuX38kHqLfk3WQCaassTuUwvJ6pcz1En9BO5EuCY=
 github.com/micro/go-plugins/registry/kubernetes/v2 v2.9.1 h1:lHC7DaAOL0OA8nLKmb3DcRSYr8HpgUOW+Lpvhp+iZI4=
