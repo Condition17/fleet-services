@@ -19,6 +19,11 @@ message Chunk {
 	int64 size = 2;
 }
 
+message ChunkDataMessage {
+	string sha2 = 1;
+	bytes data = 2;
+}
+
 message File {
 	string id = 1;
 	string name = 2;

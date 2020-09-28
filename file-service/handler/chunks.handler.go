@@ -36,7 +36,7 @@ func (s *Service) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.Em
 		return err
 	}
 
-	message, _ := json.Marshal(&ChunkDataMessage{Sha2: chunkSHA2, Data: req.Data})
+	message, _ := json.Marshal(&pb.ChunkDataMessage{Sha2: chunkSHA2, Data: req.Data})
 	if err := s.MessagesBroker.PublishEvent(gcsUploadTopic, message); err != nil {
 		return err
 	}
