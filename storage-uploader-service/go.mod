@@ -11,6 +11,8 @@ replace (
 )
 
 require (
+	cloud.google.com/go/storage v1.0.0
+	github.com/Condition17/fleet-services/file-service v0.0.0-20200928220040-6ae6c4f52080
 	github.com/golang/protobuf v1.4.2
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
