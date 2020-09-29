@@ -1,8 +1,9 @@
 package handler
 
 import (
-	"file-service/pubsub"
-	"file-service/repository"
+	"github.com/Condition17/fleet-services/file-service/repository"
+
+	"github.com/Condition17/fleet-services/file-service/pubsub"
 )
 
 const gcsUploadTopic string = "chunk-gcs-upload"

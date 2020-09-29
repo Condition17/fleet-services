@@ -2,8 +2,10 @@ package handler
 
 import (
 	"context"
-	"file-service/model"
-	pb "file-service/proto/file-service"
+
+	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
+
+	"github.com/Condition17/fleet-services/file-service/model"
 
 	"github.com/micro/go-micro/v2/errors"
 )

@@ -3,7 +3,8 @@ package handler
 import (
 	"context"
 	"encoding/json"
-	pb "file-service/proto/file-service"
+
+	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
 
 	"github.com/micro/go-micro/errors"
 )

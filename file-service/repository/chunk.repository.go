@@ -3,9 +3,10 @@ package repository
 import (
 	"context"
 	"crypto/sha256"
-	"file-service/model"
-	pb "file-service/proto/file-service"
 	"fmt"
+
+	"github.com/Condition17/fleet-services/file-service/model"
+	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
 
 	"github.com/gomodule/redigo/redis"
 )

@@ -2,9 +2,10 @@ package repository
 
 import (
 	"context"
-	"file-service/model"
 	"fmt"
 	"math"
+
+	"github.com/Condition17/fleet-services/file-service/model"
 
 	"github.com/gofrs/uuid"
 	"github.com/gomodule/redigo/redis"

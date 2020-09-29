@@ -1,15 +1,15 @@
 package main
 
 import (
-	"file-service/config"
-	"file-service/handler"
-	"file-service/pubsub"
-	"file-service/repository"
+	"github.com/Condition17/fleet-services/file-service/config"
+	"github.com/Condition17/fleet-services/file-service/handler"
+	"github.com/Condition17/fleet-services/file-service/pubsub"
+	"github.com/Condition17/fleet-services/file-service/repository"
 
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
 
-	pb "file-service/proto/file-service"
+	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
 )
 
 func main() {

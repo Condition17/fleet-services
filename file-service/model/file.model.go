@@ -1,7 +1,7 @@
 package model
 
 import (
-	pb "file-service/proto/file-service"
+	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
 )
 
 type File struct {
