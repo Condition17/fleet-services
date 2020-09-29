@@ -18,7 +18,6 @@ provider "google" {
 resource "google_container_registry" "registry" {}
 
 # Create CircleCI role
-
 resource "google_project_iam_custom_role" "gcr_custom_admin" {
   project     = var.project_id
   role_id     = "gcrCustomAdmin"
@@ -58,11 +57,6 @@ resource "google_pubsub_topic" "chunk_upload_topic" {
   name = "chunk-gcs-upload"
 }
 
-resource "google_pubsub_subscription" "chunk_upload_topic_subscription" {
-  name  = "${google_pubsub_topic.chunk_upload_topic.name}-subscription"
-  topic = google_pubsub_topic.chunk_upload_topic.name
-}
-
 # Setup GKE
 
 resource "google_container_cluster" "primary_cluster" {
@@ -100,4 +94,10 @@ resource "google_container_node_pool" "primary_cluster_nodes" {
 
     machine_type = "e2-medium"
   }
+}
+
+# Create chunks storage bucket
+
+resource "google_storage_bucket" "chunks_bucket" {
+  name = "fleet-files-chunks"
 }

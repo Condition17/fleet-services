@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 
 	cloudstorage "storage-uploader-service/cloud-storage"
@@ -39,17 +38,13 @@ func main() {
 
 	// Subscribe to topic on the broker
 	_, err := msgBroker.Subscribe(gcsUploadTopic, func(p broker.Event) error {
-		log.Println("There is a message received on this topic")
-		log.Printf("%s\n", p.Message().Body)
-		var message fileServiceProto.ChunkDataMessage
+		var message *fileServiceProto.ChunkDataMessage
 		if err := json.Unmarshal(p.Message().Body, &message); err != nil {
 			return err
 		}
 
-		fmt.Printf("Value: %v\n", message)
-		fmt.Printf("Chunk name: %s - Chunk data: %s\n", message.Sha2, string(message.Data))
-		if err := storageClient.UploadChunk(message.Sha2, string(message.Data)); err != nil {
-			log.Fatalf("Error encountered on upload: %v", err)
+		if err := storageClient.UploadChunk(message.Sha2, message.Data); err != nil {
+			log.Fatalf("Error encountered on upload (chunk %v): %v", message.Sha2, err)
 			return err
 		}
 

@@ -36,6 +36,11 @@ func (s *Service) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.Em
 		return err
 	}
 
+	if chunkSHA2 == "" {
+		// This chunk has been already updated
+		return nil
+	}
+
 	message, _ := json.Marshal(&pb.ChunkDataMessage{Sha2: chunkSHA2, Data: req.Data})
 	if err := s.MessagesBroker.PublishEvent(gcsUploadTopic, message); err != nil {
 		return err
