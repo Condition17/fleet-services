@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 
-	cloudstorage "github.com/Condition17/fleet-services/storage-uploader-service/cloud-storage"
+	cloudstorage "github.com/Condition17/fleet-services/storage-uploader-service/storage"
 
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/micro/go-micro/v2"
