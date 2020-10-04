@@ -3,10 +3,10 @@ syntax = "proto3";
 package go.micro.service.userservice;
 
 service UserService {
-  rpc Create(User) returns (Response) {}
-  rpc Get(EmptyRequest) returns (Response) {}
-  rpc Authenticate(User) returns (Token) {}
-  rpc ValidateToken(Token) returns (Token) {}
+  rpc Create(User) returns (AuthResponse) {}
+  rpc GetProfile(EmptyRequest) returns (AuthResponse) {}
+  rpc Authenticate(User) returns (AuthResponse) {}
+  rpc ValidateToken(Token) returns (TokenValidationResponse) {}
 }
 
 message User {
@@ -19,17 +19,15 @@ message User {
 
 message EmptyRequest {};
 
-message Response {
+message AuthResponse {
   User user = 1;
+  Token token = 2;
+}
+
+message TokenValidationResponse {
+  bool valid = 1;
 }
 
 message Token {
   string token = 1;
-  bool valid = 2;
-  repeated Error errors = 3;
-}
-
-message Error {
-  int32 code = 1;
-  string description = 2;
 }

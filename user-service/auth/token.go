@@ -1,9 +1,9 @@
-package token
+package auth
 
 import (
 	"time"
 
-	proto "github.com/Condition17/fleet-services/user-service/proto"
+	proto "github.com/Condition17/fleet-services/user-service/proto/user-service"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -12,8 +12,7 @@ var key = []byte("mySuperSecretKey")
 // custom metadata which will be hashed
 // and sent as the second segment in our JWT
 type CustomClaims struct {
-	User   *proto.User
-	Issuer string
+	User *proto.User
 	jwt.StandardClaims
 }
 
@@ -22,7 +21,9 @@ type AuthChecker interface {
 	Encode(user *proto.User) (string, error)
 }
 
-type TokenService struct{}
+type TokenService struct {
+	Issuer string
+}
 
 // Decode a token string into a token object
 func (s *TokenService) Decode(tokenStr string) (*CustomClaims, error) {
@@ -44,7 +45,7 @@ func (s *TokenService) Decode(tokenStr string) (*CustomClaims, error) {
 
 // Encode a claim into a JWT
 func (s *TokenService) Encode(user *proto.User) (string, error) {
-	tokenExpireTime := time.Now().Add(time.Month * 12).Unix()
+	tokenExpireTime := time.Now().Add(time.Hour * 24 * 30 * 12).Unix()
 
 	// Create the Claims
 	claims := CustomClaims{

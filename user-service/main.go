@@ -1,15 +1,32 @@
 package main
 
 import (
+	"log"
+
+	"github.com/Condition17/fleet-services/user-service/auth"
 	"github.com/Condition17/fleet-services/user-service/handler"
+	"github.com/Condition17/fleet-services/user-service/repository"
+	"github.com/Condition17/fleet-services/user-service/storage/database"
 
 	"github.com/micro/go-micro/v2"
-	log "github.com/micro/go-micro/v2/logger"
 
-	userservice "github.com/Condition17/fleet-services/user-service/proto/user-service"
+	proto "github.com/Condition17/fleet-services/user-service/proto/user-service"
 )
 
 func main() {
+	// Create database connection
+	db, err := database.CreateConnection()
+
+	if err != nil {
+		log.Fatalf("Error encountered while connectiong to DB: %v", err)
+	}
+
+	defer db.Close()
+
+	// Automatically migrates the user struct
+	// into database columns/types etc.
+	db.AutoMigrate(&proto.User{})
+
 	// New Service
 	service := micro.NewService(
 		micro.Name("go.micro.api.user-service"),
@@ -20,7 +37,12 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	userservice.RegisterUserServiceHandler(service.Server(), new(handler.UserService))
+	serviceHandler := handler.Service{
+		Name:           "go.micro.api.user-service",
+		UserRepository: repository.UserRepository{DB: db},
+		TokenService:   &auth.TokenService{Issuer: "go.micro.api.user-service"},
+	}
+	proto.RegisterUserServiceHandler(service.Server(), &serviceHandler)
 
 	// Run service
 	if err := service.Run(); err != nil {

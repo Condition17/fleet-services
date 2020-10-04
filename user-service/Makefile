@@ -10,7 +10,7 @@ proto:
 .PHONY: build
 build: proto
 
-	go build -o user-service-service *.go
+	go build -o user-service *.go
 
 .PHONY: test
 test:
@@ -18,4 +18,4 @@ test:
 
 .PHONY: docker
 docker:
-	docker build . -t user-service-service:latest
+	docker build . -t user-service:latest
