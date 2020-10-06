@@ -21,6 +21,8 @@ spec:
           envFrom:
           - configMapRef:
               name: pod-base-env
+          - configMapRef:
+              name: pubsub-config
           env:
             - name: REDIS_URL
               valueFrom:

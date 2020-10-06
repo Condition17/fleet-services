@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pubsub-config
+data:
+  MICRO_BROKER: googlepubsub
+  GOOGLEPUBSUB_PROJECT_ID: fleet-271114
