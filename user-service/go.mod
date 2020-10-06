@@ -9,6 +9,7 @@ replace (
 )
 
 require (
+	github.com/Condition17/fleet-services/common v0.0.0-20201006201526-a3474ae68cb6
 	github.com/Condition17/fleet-services/user-service v0.0.0-20201004170504-061a0231c0d2
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
@@ -27,6 +28,7 @@ require (
 	github.com/nats-io/nats.go v1.10.0 // indirect
 	github.com/nats-io/nkeys v0.2.0 // indirect
 	github.com/satori/go.uuid v1.2.0
+	github.com/tkanos/gonfig v0.0.0-20181112185242-896f3d81fadf
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0 // indirect
 	golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0

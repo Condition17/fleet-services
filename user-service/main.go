@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/Condition17/fleet-services/user-service/auth"
+	"github.com/Condition17/fleet-services/user-service/config"
 	"github.com/Condition17/fleet-services/user-service/handler"
 	"github.com/Condition17/fleet-services/user-service/model"
 	"github.com/Condition17/fleet-services/user-service/repository"
@@ -15,6 +16,7 @@ import (
 )
 
 func main() {
+	configs := config.GetConfig()
 	// Create database connection
 	db, err := database.CreateConnection()
 
@@ -28,7 +30,7 @@ func main() {
 
 	// New Service
 	service := micro.NewService(
-		micro.Name("go.micro.api.user-service"),
+		micro.Name(configs.ServiceName),
 		micro.Version("latest"),
 	)
 
@@ -37,9 +39,9 @@ func main() {
 
 	// Register Handler
 	serviceHandler := handler.Service{
-		Name:           "go.micro.api.user-service",
+		Name:           configs.ServiceName,
 		UserRepository: repository.UserRepository{DB: db},
-		TokenService:   &auth.TokenService{Issuer: "go.micro.api.user-service"},
+		TokenService:   &auth.TokenService{Issuer: configs.ServiceName},
 	}
 	proto.RegisterUserServiceHandler(service.Server(), &serviceHandler)
 
