@@ -44,6 +44,20 @@ jobs:
           image: $IMAGE_NAME
       - gcr/push-image:
           image: $IMAGE_NAME
+  build-push-user-service-image:
+    description: Build and push User service image to GCR
+    machine: true
+    environment:
+      IMAGE_NAME: fleet-user-service
+    steps:
+      - checkout
+      - gcr/gcr-auth
+      - gcr/build-image:
+          path: ~/project/user-service
+          docker-context: ~/project/user-service
+          image: $IMAGE_NAME
+      - gcr/push-image:
+          image: $IMAGE_NAME
 workflows:
   build_and_upload_service_images:
     jobs:
@@ -56,6 +70,10 @@ workflows:
             branches:
               only: master
       - build-push-storage-uploader-service-image:
+          filters:
+            branches:
+              only: master
+      - build-push-user-service-image:
           filters:
             branches:
               only: master
