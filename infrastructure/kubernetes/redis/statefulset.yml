@@ -18,7 +18,7 @@ spec:
           image: redis:latest
           args:
             ["--appendonly", "yes", "--save", "600", "1", "--save", "120", "2"]
-          imagePullPolicy: Always
+          imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 6379
               name: redis
