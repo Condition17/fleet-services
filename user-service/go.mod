@@ -20,6 +20,7 @@ require (
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/jinzhu/gorm v1.9.16
 	github.com/lib/pq v1.8.0 // indirect
+	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/miekg/dns v1.1.31 // indirect
 	github.com/nats-io/jwt v1.0.1 // indirect

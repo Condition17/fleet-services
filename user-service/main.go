@@ -5,6 +5,7 @@ import (
 
 	"github.com/Condition17/fleet-services/user-service/auth"
 	"github.com/Condition17/fleet-services/user-service/handler"
+	"github.com/Condition17/fleet-services/user-service/model"
 	"github.com/Condition17/fleet-services/user-service/repository"
 	"github.com/Condition17/fleet-services/user-service/storage/database"
 
@@ -21,11 +22,9 @@ func main() {
 		log.Fatalf("Error encountered while connectiong to DB: %v", err)
 	}
 
-	defer db.Close()
-
 	// Automatically migrates the user struct
 	// into database columns/types etc.
-	db.AutoMigrate(&proto.User{})
+	db.AutoMigrate(&model.User{})
 
 	// New Service
 	service := micro.NewService(

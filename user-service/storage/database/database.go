@@ -3,8 +3,8 @@ package database
 import (
 	"fmt"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func CreateConnection() (*gorm.DB, error) {
@@ -12,8 +12,8 @@ func CreateConnection() (*gorm.DB, error) {
 	// user := os.Getenv("DB_USER")
 	// dbName := os.Getenv("DB_NAME")
 	// password := os.Getenv("DB_PASSWORD")
-	conn := fmt.Sprintf("host=%s user=%s dbname=%s password=%s sslmode=disable", "127.0.0.1", "postgres", "fleet", "root")
-	db, err := gorm.Open("postgres", conn)
+	dsn := fmt.Sprintf("host=%s user=%s dbname=%s password=%s sslmode=disable", "127.0.0.1", "postgres", "fleet", "root")
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}

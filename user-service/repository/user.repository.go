@@ -1,9 +1,9 @@
 package repository
 
 import (
+	"github.com/Condition17/fleet-services/user-service/model"
 	proto "github.com/Condition17/fleet-services/user-service/proto/user-service"
-	"github.com/jinzhu/gorm"
-	uuid "github.com/satori/go.uuid"
+	"gorm.io/gorm"
 )
 
 type UserRepository struct {
@@ -12,8 +12,7 @@ type UserRepository struct {
 	DB *gorm.DB
 }
 
-func (r *UserRepository) Create(user *proto.User) error {
-	user.Id = uuid.NewV4().String()
+func (r *UserRepository) Create(user *model.User) error {
 	if err := r.DB.Create(user).Error; err != nil {
 		return err
 	}
