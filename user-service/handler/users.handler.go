@@ -30,6 +30,7 @@ func (s *Service) Create(ctx context.Context, req *proto.User, res *proto.AuthRe
 	if err := s.UserRepository.Create(model.MarshalUser(req)); err != nil {
 		return microErrors.InternalServerError(s.Name, fmt.Sprintf("%v", err))
 	}
+	req.Password = ""
 	res.User = req
 
 	// Create JWT token
@@ -53,7 +54,7 @@ func (s *Service) Authenticate(ctx context.Context, req *proto.User, res *proto.
 		return microErrors.Unauthorized(s.Name, "Invalid password.")
 	}
 
-	if res.Token, err = s.generateToken(req); err != nil {
+	if res.Token, err = s.generateToken(model.UnmarshalUser(user)); err != nil {
 		return microErrors.InternalServerError(s.Name, fmt.Sprintf("%v", err))
 	}
 
@@ -62,13 +63,11 @@ func (s *Service) Authenticate(ctx context.Context, req *proto.User, res *proto.
 
 func (s *Service) ValidateToken(ctx context.Context, req *proto.Token, res *proto.TokenValidationResponse) error {
 	_, err := s.TokenService.Decode(req.Token)
-
 	if err != nil {
 		res.Valid = false
 		return err
-	} else {
-		res.Valid = true
 	}
+	res.Valid = true
 
 	return nil
 }
