@@ -25,7 +25,7 @@ func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		log.Println("Authenticating with token: ", token)
 
 		// Auth here
-		userServiceClient := proto.NewUserService(common.GetFullExternalServiceName("user"), client.DefaultClient)
+		userServiceClient := proto.NewUserService(common.GetFullExternalServiceName("user-service"), client.DefaultClient)
 		_, err := userServiceClient.ValidateToken(context.Background(), &proto.Token{Token: token})
 
 		if err != nil {
