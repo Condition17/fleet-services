@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 
 	"github.com/micro/go-micro/v2/client"
 	microErrors "github.com/micro/go-micro/v2/errors"
@@ -21,10 +20,8 @@ func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		if !ok {
 			return errors.New("no auth meta-data found in request")
 		}
-		log.Println()
 		// don't know why is uppercase
 		token := meta["Token"]
-		log.Println("Authenticating with token: ", token)
 
 		// Auth here
 		userServiceClient := proto.NewUserService(common.GetFullExternalServiceName("user-service"), client.DefaultClient)
