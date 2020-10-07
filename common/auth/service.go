@@ -3,9 +3,11 @@ package auth
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/micro/go-micro/v2/client"
+	microErrors "github.com/micro/go-micro/v2/errors"
 	"github.com/micro/go-micro/v2/metadata"
 	"github.com/micro/go-micro/v2/server"
 
@@ -26,14 +28,10 @@ func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 
 		// Auth here
 		userServiceClient := proto.NewUserService(common.GetFullExternalServiceName("user-service"), client.DefaultClient)
-		_, err := userServiceClient.ValidateToken(context.Background(), &proto.Token{Token: token})
-
-		if err != nil {
-			return err
+		if _, err := userServiceClient.ValidateToken(context.Background(), &proto.Token{Token: token}); err != nil {
+			return microErrors.Unauthorized(common.GetFullExternalServiceName("user-service"), fmt.Sprintf("Invalid token. Details: %v", err))
 		}
 
-		err = fn(ctx, req, resp)
-
-		return err
+		return fn(ctx, req, resp)
 	}
 }
