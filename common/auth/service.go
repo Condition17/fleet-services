@@ -29,7 +29,7 @@ func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		// Auth here
 		userServiceClient := proto.NewUserService(common.GetFullExternalServiceName("user-service"), client.DefaultClient)
 		if _, err := userServiceClient.ValidateToken(context.Background(), &proto.Token{Token: token}); err != nil {
-			return microErrors.Unauthorized(common.GetFullExternalServiceName("user-service"), fmt.Sprintf("Invalid token. Details: %v", err))
+			return microErrors.Unauthorized(common.GetFullExternalServiceName("user-service"), fmt.Sprintf("%v", err))
 		}
 
 		return fn(ctx, req, resp)
