@@ -11,7 +11,7 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/common v0.0.0-20200919205711-d2a60ae78150
+	github.com/Condition17/fleet-services/common v0.0.0-20201007210529-bf9d8fabed21
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/golang/protobuf v1.4.2
 	github.com/gomodule/redigo v1.8.2

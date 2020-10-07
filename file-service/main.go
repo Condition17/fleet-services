@@ -9,6 +9,7 @@ import (
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
 
+	"github.com/Condition17/fleet-services/common/auth"
 	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
 )
 
@@ -20,6 +21,8 @@ func main() {
 	service := micro.NewService(
 		micro.Name(config.ServiceName),
 		micro.Version("latest"),
+		// auth middleware
+		micro.WrapHandler(auth.ServiceAuthWrapper),
 	)
 
 	// Setup Redis client
