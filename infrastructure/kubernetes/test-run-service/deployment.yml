@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-run-service
+spec:
+  selector:
+    matchLabels:
+      app: test-run-service
+  template:
+    metadata:
+      labels:
+        app: test-run-service
+    spec:
+      serviceAccountName: micro-services
+      containers:
+      - name: test-run-service
+        image: gcr.io/fleet-271114/fleet-test-run-service
+        imagePullPolicy: Always
+        command: [
+          "./test-run-service",
+          "--selector=static",
+          "--server_address=:8080"
+        ]
+        envFrom:
+          - configMapRef:
+              name: pod-base-env
+        ports:
+        - containerPort: 8080

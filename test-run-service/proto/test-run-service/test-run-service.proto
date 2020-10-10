@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package go.micro.service.testrunservice;
+
+service TestRunService {
+	rpc Create(TestRun) returns (TestRun) {}
+	rpc GetAll(EmptyRequest) returns (GetAllResponse) {}
+}
+
+message TestRun {
+	uint32 id = 1;
+	string name = 2;
+}
+
+message GetAllResponse {
+	repeated TestRun testRuns = 1;
+}
+
+message EmptyRequest {};

@@ -16,17 +16,17 @@ jobs:
           image: $IMAGE_NAME
       - gcr/push-image:
           image: $IMAGE_NAME
-  build-push-test-run-image:
+  build-push-test-run-service-image:
     description: Build and push test run service image to GCR
     machine: true
     environment:
-      IMAGE_NAME: fleet-test-run
+      IMAGE_NAME: fleet-test-run-service
     steps:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          path: ~/project/test-run
-          docker-context: ~/project/test-run
+          path: ~/project/test-run-service
+          docker-context: ~/project/test-run-service
           image: $IMAGE_NAME
       - gcr/push-image:
           image: $IMAGE_NAME
@@ -65,7 +65,7 @@ workflows:
           filters:
             branches:
               only: master
-      - build-push-test-run-image:
+      - build-push-test-run-service-image:
           filters:
             branches:
               only: master
