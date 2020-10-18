@@ -19,6 +19,7 @@ type CustomClaims struct {
 type AuthChecker interface {
 	Decode(token string) (*CustomClaims, error)
 	Encode(user *proto.User) (string, error)
+	ValidateToken(token string) error
 }
 
 type TokenService struct {
