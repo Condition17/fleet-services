@@ -24,6 +24,7 @@ func MarshalUser(user *proto.User) *User {
 
 func UnmarshalUser(user *User) *proto.User {
 	return &proto.User{
+		Id:       uint32(user.ID),
 		Name:     user.Name,
 		Email:    user.Email,
 		Company:  user.Company,
