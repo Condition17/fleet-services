@@ -14,14 +14,12 @@ import (
 
 func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, resp interface{}) error {
-		// Auth here
 		userServiceClient := proto.NewUserService(common.GetFullExternalServiceName("user-service"), client.DefaultClient)
 		res, err := userServiceClient.GetProfile(ctx, &proto.EmptyRequest{})
 		if err != nil {
 			return microErrors.Unauthorized(common.GetFullExternalServiceName("user-service"), fmt.Sprintf("%v", err))
 		}
-		fmt.Printf("%v\n", res)
 
-		return fn(ctx, req, resp)
+		return fn(context.WithValue(ctx, "User", res.User), req, resp)
 	}
 }

@@ -78,7 +78,6 @@ func (s *Service) GetProfile(ctx context.Context, req *proto.EmptyRequest, res *
 		return microErrors.InternalServerError(s.Name, "Could not parse request headers (context metadata).")
 	}
 	token := meta["Token"]
-	fmt.Printf("%v\n", token)
 	claims, err := s.TokenService.Decode(token)
 
 	if err != nil {

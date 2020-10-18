@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/Condition17/fleet-services/common/auth"
 	"github.com/Condition17/fleet-services/test-run-service/config"
 	"github.com/Condition17/fleet-services/test-run-service/handler"
 	"github.com/Condition17/fleet-services/test-run-service/model"
@@ -30,6 +31,8 @@ func main() {
 	service := micro.NewService(
 		micro.Name(configs.ServiceName),
 		micro.Version("latest"),
+		// auth middleware
+		micro.WrapHandler(auth.ServiceAuthWrapper),
 	)
 
 	// Initialise service

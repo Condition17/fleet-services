@@ -33,10 +33,16 @@ github.com/Condition17/fleet-services v0.0.0-20201010123938-c45c2dee5d72 h1:/x3W
 github.com/Condition17/fleet-services/common v0.0.0-20201006230311-7c30ed4c66b2/go.mod h1:XdWH9f8yXj2pth6P79ssOk51h8Fib20hjEk86HEdJVc=
 github.com/Condition17/fleet-services/common v0.0.0-20201010123938-c45c2dee5d72 h1:h6iDUulFy/G4+0fGl9saMnoPW+EK9EXdvdhz0Xp0ltU=
 github.com/Condition17/fleet-services/common v0.0.0-20201010123938-c45c2dee5d72/go.mod h1:uV+z+bre1Z6NlwKObRL/G/4nkH9dgdbhmV3TUHY3W3o=
+github.com/Condition17/fleet-services/common v0.0.0-20201010143702-442442dc7311 h1:2/vWmp/NicpQbWHBuhfznPECLAGouuGGDjFxhEa8R38=
+github.com/Condition17/fleet-services/common v0.0.0-20201010143702-442442dc7311/go.mod h1:uV+z+bre1Z6NlwKObRL/G/4nkH9dgdbhmV3TUHY3W3o=
+github.com/Condition17/fleet-services/common v0.0.0-20201010144058-47f3268329d2 h1:iDqjBi35apaI3lC6FVs/YJTihjt6XsSeihnD0XHWRyo=
+github.com/Condition17/fleet-services/common v0.0.0-20201010144058-47f3268329d2/go.mod h1:uV+z+bre1Z6NlwKObRL/G/4nkH9dgdbhmV3TUHY3W3o=
 github.com/Condition17/fleet-services/test-run v0.0.0-20201007214920-b7e532aea126 h1:SbAFBoPBI5f8JfvuCmh+Pw6YCoymf+fNRfIGS5xtz6w=
 github.com/Condition17/fleet-services/test-run v0.0.0-20201010123938-c45c2dee5d72 h1:0LzJxnclvAFs1wX5/PqCQCbfQMAXKZOp7u6P0OE+7/U=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201007203348-e24ac06cccf8 h1:Pdum1Sie1Je6xJVmOsWllgSMF6y9HDVpQiHtmny5OW0=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201007203348-e24ac06cccf8/go.mod h1:hIxGNh1zYEbZa7tzb9OKzu9ycmEAmiZbK/dgZ8JXujg=
+github.com/Condition17/fleet-services/user-service v0.0.0-20201010144058-47f3268329d2 h1:pFl83n9K+frQmxpzq6tOdAn7I/mR2O4wWryh4EjXXYM=
+github.com/Condition17/fleet-services/user-service v0.0.0-20201010144058-47f3268329d2/go.mod h1:OwoicKhYveKQ1h8SYXQn17myP9PRR4qDVeWaj/nuFsM=
 github.com/Microsoft/go-winio v0.4.15-0.20190919025122-fc70bd9a86b5/go.mod h1:tTuCMEN+UleMWgg9dVx4Hu52b1bJo+59jBh3ajtinzw=
 github.com/Microsoft/hcsshim v0.8.7-0.20191101173118-65519b62243c/go.mod h1:7xhjOwRV2+0HXGmM0jxaEu+ZiXJFoVZOTfL/dmqbrD8=
 github.com/OpenDNS/vegadns2client v0.0.0-20180418235048-a3fa4a771d87/go.mod h1:iGLljf5n9GjT6kc0HBvyI1nOKnGQbNB66VzSNbK5iks=
