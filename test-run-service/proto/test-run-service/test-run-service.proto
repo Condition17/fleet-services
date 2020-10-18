@@ -3,8 +3,10 @@ syntax = "proto3";
 package go.micro.service.testrunservice;
 
 service TestRunService {
-	rpc Create(TestRun) returns (TestRun) {}
-	rpc GetAll(EmptyRequest) returns (GetAllResponse) {}
+	rpc Create(TestRun) returns (TestRunDetails) {}
+	rpc Get(TestRun) returns (TestRunDetails) {}
+	rpc List(EmptyRequest) returns (ListResponse) {}
+	rpc Delete(TestRun) returns (EmptyResponse) {}
 }
 
 message TestRun {
@@ -12,8 +14,14 @@ message TestRun {
 	string name = 2;
 }
 
-message GetAllResponse {
+message TestRunDetails {
+	TestRun testRun = 1;
+}
+
+message ListResponse {
 	repeated TestRun testRuns = 1;
 }
 
 message EmptyRequest {};
+
+message EmptyResponse {};

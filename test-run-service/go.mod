@@ -11,10 +11,11 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/common v0.0.0-20201010144058-47f3268329d2
-	github.com/Condition17/fleet-services/test-run-service v0.0.0-00010101000000-000000000000
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201010144058-47f3268329d2
-	github.com/golang/protobuf v1.4.2
+	github.com/Condition17/fleet-services/common v0.0.0-20201018155612-56b589f33375
+	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201018140155-bea1c2e00e55
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201018163922-13bdc97f8b6e
+	github.com/golang/protobuf v1.4.3
+	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/tkanos/gonfig v0.0.0-20181112185242-896f3d81fadf
 	google.golang.org/protobuf v1.25.0

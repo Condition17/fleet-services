@@ -8,8 +8,8 @@ import (
 
 type TestRun struct {
 	gorm.Model
-	Name   string `gorm:"not null"`
-	UserID uint
+	Name   string `gorm:"not null;type:varchar(100);default:null"`
+	UserID uint32
 	User   userModels.User
 }
 
@@ -25,4 +25,12 @@ func UnmarshalTestRun(testRun *TestRun) *proto.TestRun {
 		Id:   uint32(testRun.ID),
 		Name: testRun.Name,
 	}
+}
+
+func UnmarshalTestRunsCollection(testRuns []*TestRun) []*proto.TestRun {
+	collection := make([]*proto.TestRun, 0)
+	for _, run := range testRuns {
+		collection = append(collection, UnmarshalTestRun(run))
+	}
+	return collection
 }

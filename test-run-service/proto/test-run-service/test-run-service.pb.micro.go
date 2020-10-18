@@ -42,8 +42,10 @@ func NewTestRunServiceEndpoints() []*api.Endpoint {
 // Client API for TestRunService service
 
 type TestRunService interface {
-	Create(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRun, error)
-	GetAll(ctx context.Context, in *EmptyRequest, opts ...client.CallOption) (*GetAllResponse, error)
+	Create(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRunDetails, error)
+	Get(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRunDetails, error)
+	List(ctx context.Context, in *EmptyRequest, opts ...client.CallOption) (*ListResponse, error)
+	Delete(ctx context.Context, in *TestRun, opts ...client.CallOption) (*EmptyResponse, error)
 }
 
 type testRunService struct {
@@ -58,9 +60,9 @@ func NewTestRunService(name string, c client.Client) TestRunService {
 	}
 }
 
-func (c *testRunService) Create(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRun, error) {
+func (c *testRunService) Create(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRunDetails, error) {
 	req := c.c.NewRequest(c.name, "TestRunService.Create", in)
-	out := new(TestRun)
+	out := new(TestRunDetails)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -68,9 +70,29 @@ func (c *testRunService) Create(ctx context.Context, in *TestRun, opts ...client
 	return out, nil
 }
 
-func (c *testRunService) GetAll(ctx context.Context, in *EmptyRequest, opts ...client.CallOption) (*GetAllResponse, error) {
-	req := c.c.NewRequest(c.name, "TestRunService.GetAll", in)
-	out := new(GetAllResponse)
+func (c *testRunService) Get(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRunDetails, error) {
+	req := c.c.NewRequest(c.name, "TestRunService.Get", in)
+	out := new(TestRunDetails)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testRunService) List(ctx context.Context, in *EmptyRequest, opts ...client.CallOption) (*ListResponse, error) {
+	req := c.c.NewRequest(c.name, "TestRunService.List", in)
+	out := new(ListResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testRunService) Delete(ctx context.Context, in *TestRun, opts ...client.CallOption) (*EmptyResponse, error) {
+	req := c.c.NewRequest(c.name, "TestRunService.Delete", in)
+	out := new(EmptyResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -81,14 +103,18 @@ func (c *testRunService) GetAll(ctx context.Context, in *EmptyRequest, opts ...c
 // Server API for TestRunService service
 
 type TestRunServiceHandler interface {
-	Create(context.Context, *TestRun, *TestRun) error
-	GetAll(context.Context, *EmptyRequest, *GetAllResponse) error
+	Create(context.Context, *TestRun, *TestRunDetails) error
+	Get(context.Context, *TestRun, *TestRunDetails) error
+	List(context.Context, *EmptyRequest, *ListResponse) error
+	Delete(context.Context, *TestRun, *EmptyResponse) error
 }
 
 func RegisterTestRunServiceHandler(s server.Server, hdlr TestRunServiceHandler, opts ...server.HandlerOption) error {
 	type testRunService interface {
-		Create(ctx context.Context, in *TestRun, out *TestRun) error
-		GetAll(ctx context.Context, in *EmptyRequest, out *GetAllResponse) error
+		Create(ctx context.Context, in *TestRun, out *TestRunDetails) error
+		Get(ctx context.Context, in *TestRun, out *TestRunDetails) error
+		List(ctx context.Context, in *EmptyRequest, out *ListResponse) error
+		Delete(ctx context.Context, in *TestRun, out *EmptyResponse) error
 	}
 	type TestRunService struct {
 		testRunService
@@ -101,10 +127,18 @@ type testRunServiceHandler struct {
 	TestRunServiceHandler
 }
 
-func (h *testRunServiceHandler) Create(ctx context.Context, in *TestRun, out *TestRun) error {
+func (h *testRunServiceHandler) Create(ctx context.Context, in *TestRun, out *TestRunDetails) error {
 	return h.TestRunServiceHandler.Create(ctx, in, out)
 }
 
-func (h *testRunServiceHandler) GetAll(ctx context.Context, in *EmptyRequest, out *GetAllResponse) error {
-	return h.TestRunServiceHandler.GetAll(ctx, in, out)
+func (h *testRunServiceHandler) Get(ctx context.Context, in *TestRun, out *TestRunDetails) error {
+	return h.TestRunServiceHandler.Get(ctx, in, out)
+}
+
+func (h *testRunServiceHandler) List(ctx context.Context, in *EmptyRequest, out *ListResponse) error {
+	return h.TestRunServiceHandler.List(ctx, in, out)
+}
+
+func (h *testRunServiceHandler) Delete(ctx context.Context, in *TestRun, out *EmptyResponse) error {
+	return h.TestRunServiceHandler.Delete(ctx, in, out)
 }
