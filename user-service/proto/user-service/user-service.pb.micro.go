@@ -42,7 +42,7 @@ func NewUserServiceEndpoints() []*api.Endpoint {
 // Client API for UserService service
 
 type UserService interface {
-	Create(ctx context.Context, in *User, opts ...client.CallOption) (*AuthResponse, error)
+	Create(ctx context.Context, in *User, opts ...client.CallOption) (*EmptyResponse, error)
 	GetProfile(ctx context.Context, in *EmptyRequest, opts ...client.CallOption) (*AuthResponse, error)
 	Authenticate(ctx context.Context, in *User, opts ...client.CallOption) (*AuthResponse, error)
 	ValidateToken(ctx context.Context, in *Token, opts ...client.CallOption) (*TokenValidationResponse, error)
@@ -60,9 +60,9 @@ func NewUserService(name string, c client.Client) UserService {
 	}
 }
 
-func (c *userService) Create(ctx context.Context, in *User, opts ...client.CallOption) (*AuthResponse, error) {
+func (c *userService) Create(ctx context.Context, in *User, opts ...client.CallOption) (*EmptyResponse, error) {
 	req := c.c.NewRequest(c.name, "UserService.Create", in)
-	out := new(AuthResponse)
+	out := new(EmptyResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -103,7 +103,7 @@ func (c *userService) ValidateToken(ctx context.Context, in *Token, opts ...clie
 // Server API for UserService service
 
 type UserServiceHandler interface {
-	Create(context.Context, *User, *AuthResponse) error
+	Create(context.Context, *User, *EmptyResponse) error
 	GetProfile(context.Context, *EmptyRequest, *AuthResponse) error
 	Authenticate(context.Context, *User, *AuthResponse) error
 	ValidateToken(context.Context, *Token, *TokenValidationResponse) error
@@ -111,7 +111,7 @@ type UserServiceHandler interface {
 
 func RegisterUserServiceHandler(s server.Server, hdlr UserServiceHandler, opts ...server.HandlerOption) error {
 	type userService interface {
-		Create(ctx context.Context, in *User, out *AuthResponse) error
+		Create(ctx context.Context, in *User, out *EmptyResponse) error
 		GetProfile(ctx context.Context, in *EmptyRequest, out *AuthResponse) error
 		Authenticate(ctx context.Context, in *User, out *AuthResponse) error
 		ValidateToken(ctx context.Context, in *Token, out *TokenValidationResponse) error
@@ -127,7 +127,7 @@ type userServiceHandler struct {
 	UserServiceHandler
 }
 
-func (h *userServiceHandler) Create(ctx context.Context, in *User, out *AuthResponse) error {
+func (h *userServiceHandler) Create(ctx context.Context, in *User, out *EmptyResponse) error {
 	return h.UserServiceHandler.Create(ctx, in, out)
 }
 

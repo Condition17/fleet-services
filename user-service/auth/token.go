@@ -62,3 +62,13 @@ func (s *TokenService) Encode(user *proto.User) (string, error) {
 	// Sign token and return
 	return token.SignedString(key)
 }
+
+// Validate token
+// Returns nil if the passed token is valid
+// Error otherwise
+func (s *TokenService) ValidateToken(tokenStr string) error {
+	if _, err := s.Decode(tokenStr); err != nil {
+		return err
+	}
+	return nil
+}
