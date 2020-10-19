@@ -33,6 +33,8 @@ github.com/Condition17/fleet-services/common v0.0.0-20201018140155-bea1c2e00e55 
 github.com/Condition17/fleet-services/common v0.0.0-20201018140155-bea1c2e00e55/go.mod h1:uV+z+bre1Z6NlwKObRL/G/4nkH9dgdbhmV3TUHY3W3o=
 github.com/Condition17/fleet-services/common v0.0.0-20201018193600-efea9cd081be h1:VinkdSQCaAkUUhciIoR6h9fwzWq6hpdrlIKj4j+DbWk=
 github.com/Condition17/fleet-services/common v0.0.0-20201018193600-efea9cd081be/go.mod h1:Doe/4z+XI9tMS4d2nGpJw1uvQQqP7cifUONf8SOWw54=
+github.com/Condition17/fleet-services/common v0.0.0-20201018193752-8e3b03f94d53 h1:TRDMZFb4OUPkooHtJnntzHknDwsaFTkciwuryLXXicU=
+github.com/Condition17/fleet-services/common v0.0.0-20201018193752-8e3b03f94d53/go.mod h1:Doe/4z+XI9tMS4d2nGpJw1uvQQqP7cifUONf8SOWw54=
 github.com/Microsoft/go-winio v0.4.15-0.20190919025122-fc70bd9a86b5/go.mod h1:tTuCMEN+UleMWgg9dVx4Hu52b1bJo+59jBh3ajtinzw=
 github.com/Microsoft/hcsshim v0.8.7-0.20191101173118-65519b62243c/go.mod h1:7xhjOwRV2+0HXGmM0jxaEu+ZiXJFoVZOTfL/dmqbrD8=
 github.com/OpenDNS/vegadns2client v0.0.0-20180418235048-a3fa4a771d87/go.mod h1:iGLljf5n9GjT6kc0HBvyI1nOKnGQbNB66VzSNbK5iks=

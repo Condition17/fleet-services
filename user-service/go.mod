@@ -9,7 +9,7 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/common v0.0.0-20201018193600-efea9cd081be
+	github.com/Condition17/fleet-services/common v0.0.0-20201018193752-8e3b03f94d53
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
