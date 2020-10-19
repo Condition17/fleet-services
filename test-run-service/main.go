@@ -12,10 +12,11 @@ import (
 	"github.com/Condition17/fleet-services/test-run-service/storage/database"
 
 	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-micro/v2/client"
 	log "github.com/micro/go-micro/v2/logger"
 
-	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	proto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"
+	userServiceProto "github.com/Condition17/fleet-services/user-service/proto/user-service"
 )
 
 func main() {
@@ -49,10 +50,10 @@ func main() {
 	}
 	proto.RegisterTestRunServiceHandler(service.Server(), &serviceHandler)
 
-	fileService := fileServiceProto.NewFileService(common.GetFullExternalServiceName("file-service"), service.Client())
-	res, err := fileService.CreateFile(context.Background(), &fileServiceProto.File{Name: "testFile", Size: 1000000000000, MaxChunkSize: 100})
+	userServiceClient := userServiceProto.NewUserService(common.GetFullExternalServiceName("user-service"), client.DefaultClient)
+	res, err := userServiceClient.Create(context.Background(), &userServiceProto.User{Email: "Asdfa@dev.test", Password: "asdafdsfas12"})
 	if err != nil {
-		log.Fatalf("File service create call error: %v", err)
+		log.Fatalf("User service create call error: %v", err)
 		return
 	}
 
