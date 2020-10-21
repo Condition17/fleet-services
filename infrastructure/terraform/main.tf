@@ -57,6 +57,12 @@ resource "google_pubsub_topic" "chunk_upload_topic" {
   name = "chunk-gcs-upload"
 }
 
+# test-run-state
+
+resource "google_pubsub_topic" "test-run-state" {
+  name = "test-run-state"
+}
+
 # Setup GKE
 
 resource "google_container_cluster" "primary_cluster" {
