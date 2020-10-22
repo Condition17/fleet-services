@@ -26,3 +26,19 @@ func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		return fn(context.WithValue(ctx, "User", user), req, resp)
 	}
 }
+
+func GetUserBytesFromContext(ctx context.Context) []byte {
+	var usrBytes []byte
+	usrBytes, _ = ctx.Value("User").([]byte)
+
+	return usrBytes
+}
+
+func GetUserFromContext(ctx context.Context) (*proto.User, error) {
+	var user *proto.User
+	if err := json.Unmarshal(GetUserBytesFromContext(ctx), &user); err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
