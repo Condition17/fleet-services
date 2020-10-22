@@ -31,6 +31,8 @@ type Event struct {
 	unknownFields protoimpl.UnknownFields
 
 	Type string `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	User string `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	Data string `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
 }
 
 func (x *Event) Reset() {
@@ -72,6 +74,75 @@ func (x *Event) GetType() string {
 	return ""
 }
 
+func (x *Event) GetUser() string {
+	if x != nil {
+		return x.User
+	}
+	return ""
+}
+
+func (x *Event) GetData() string {
+	if x != nil {
+		return x.Data
+	}
+	return ""
+}
+
+type TestRunCreatedEventData struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id   uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (x *TestRunCreatedEventData) Reset() {
+	*x = TestRunCreatedEventData{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *TestRunCreatedEventData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TestRunCreatedEventData) ProtoMessage() {}
+
+func (x *TestRunCreatedEventData) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TestRunCreatedEventData.ProtoReflect.Descriptor instead.
+func (*TestRunCreatedEventData) Descriptor() ([]byte, []int) {
+	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *TestRunCreatedEventData) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *TestRunCreatedEventData) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 var File_proto_run_controller_service_run_controller_service_proto protoreflect.FileDescriptor
 
 var file_proto_run_controller_service_run_controller_service_proto_rawDesc = []byte{
@@ -81,10 +152,17 @@ var file_proto_run_controller_service_run_controller_service_proto_rawDesc = []b
 	0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x25, 0x67, 0x6f, 0x2e,
 	0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x72, 0x75,
 	0x6e, 0x63, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x6c, 0x65, 0x72, 0x73, 0x65, 0x72, 0x76, 0x69,
-	0x63, 0x65, 0x22, 0x1b, 0x0a, 0x05, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x74,
-	0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x32,
-	0x16, 0x0a, 0x14, 0x52, 0x75, 0x6e, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x6c, 0x65, 0x72,
-	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x63, 0x65, 0x22, 0x43, 0x0a, 0x05, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x74,
+	0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12,
+	0x12, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x75,
+	0x73, 0x65, 0x72, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x3d, 0x0a, 0x17, 0x54, 0x65, 0x73, 0x74, 0x52,
+	0x75, 0x6e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44, 0x61,
+	0x74, 0x61, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x02,
+	0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x32, 0x16, 0x0a, 0x14, 0x52, 0x75, 0x6e, 0x43, 0x6f, 0x6e,
+	0x74, 0x72, 0x6f, 0x6c, 0x6c, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -99,9 +177,10 @@ func file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(
 	return file_proto_run_controller_service_run_controller_service_proto_rawDescData
 }
 
-var file_proto_run_controller_service_run_controller_service_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_proto_run_controller_service_run_controller_service_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_run_controller_service_run_controller_service_proto_goTypes = []interface{}{
-	(*Event)(nil), // 0: go.micro.service.runcontrollerservice.Event
+	(*Event)(nil),                   // 0: go.micro.service.runcontrollerservice.Event
+	(*TestRunCreatedEventData)(nil), // 1: go.micro.service.runcontrollerservice.TestRunCreatedEventData
 }
 var file_proto_run_controller_service_run_controller_service_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -129,6 +208,18 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 				return nil
 			}
 		}
+		file_proto_run_controller_service_run_controller_service_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TestRunCreatedEventData); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -136,7 +227,7 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_proto_run_controller_service_run_controller_service_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
