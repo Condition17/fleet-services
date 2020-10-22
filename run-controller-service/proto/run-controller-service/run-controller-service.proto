@@ -6,8 +6,8 @@ service RunControllerService {}
 
 message Event {
 	string type = 1;
-	string user = 2;
-	string data = 3;
+	bytes user = 2;
+	bytes data = 3;
 }
 
 message TestRunCreatedEventData {
