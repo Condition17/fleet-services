@@ -2,15 +2,22 @@ package handler
 
 import (
 	"github.com/Condition17/fleet-services/file-service/repository"
-
-	"github.com/Condition17/fleet-services/file-service/pubsub"
+	baseservice "github.com/Condition17/fleet-services/lib/base-service"
+	"github.com/micro/go-micro/v2"
 )
 
 const gcsUploadTopic string = "chunk-gcs-upload"
 
-type Service struct {
-	Name            string
+type Handler struct {
+	baseservice.BaseHandler
 	FileRepository  repository.FileRepository
 	ChunkRepository repository.ChunkRepository
-	MessagesBroker  pubsub.MessagesBroker
+}
+
+func NewHandler(service micro.Service, fileRepo repository.FileRepository, chunksRepo repository.ChunkRepository) Handler {
+	return Handler{
+		BaseHandler:     baseservice.NewBaseHandler(service),
+		FileRepository:  fileRepo,
+		ChunkRepository: chunksRepo,
+	}
 }

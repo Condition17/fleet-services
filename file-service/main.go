@@ -3,14 +3,13 @@ package main
 import (
 	"github.com/Condition17/fleet-services/file-service/config"
 	"github.com/Condition17/fleet-services/file-service/handler"
-	"github.com/Condition17/fleet-services/file-service/pubsub"
 	"github.com/Condition17/fleet-services/file-service/repository"
 
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
 
-	"github.com/Condition17/fleet-services/lib/auth"
 	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
+	"github.com/Condition17/fleet-services/lib/auth"
 )
 
 func main() {
@@ -42,12 +41,7 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	serviceHandler := handler.Service{
-		Name:            config.ServiceName,
-		FileRepository:  repository.FileRepository{DB: redisPool},
-		ChunkRepository: repository.ChunkRepository{DB: redisPool},
-		MessagesBroker:  pubsub.MessagesBroker{Broker: service.Server().Options().Broker},
-	}
+	serviceHandler := handler.NewHandler(service, repository.FileRepository{DB: redisPool}, repository.ChunkRepository{DB: redisPool})
 	if err := pb.RegisterFileServiceHandler(service.Server(), &serviceHandler); err != nil {
 		log.Fatal(err)
 	}

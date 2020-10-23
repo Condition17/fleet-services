@@ -10,8 +10,8 @@ import (
 	"github.com/micro/go-micro/v2/errors"
 )
 
-func (s *Service) CreateFile(ctx context.Context, req *pb.File, res *pb.Response) error {
-	file, err := s.FileRepository.Create(context.Background(), model.MarshalFile(req))
+func (h *Handler) CreateFile(ctx context.Context, req *pb.File, res *pb.Response) error {
+	file, err := h.FileRepository.Create(context.Background(), model.MarshalFile(req))
 	if err != nil {
 		return err
 	}
@@ -20,10 +20,10 @@ func (s *Service) CreateFile(ctx context.Context, req *pb.File, res *pb.Response
 	return nil
 }
 
-func (s *Service) ReadFile(ctx context.Context, req *pb.File, res *pb.Response) error {
-	file, err := s.FileRepository.Read(ctx, model.MarshalFile(req).ID)
+func (h *Handler) ReadFile(ctx context.Context, req *pb.File, res *pb.Response) error {
+	file, err := h.FileRepository.Read(ctx, model.MarshalFile(req).ID)
 	if file == nil {
-		return errors.NotFound(s.Name, "File not found")
+		return errors.NotFound(h.Service.Name(), "File not found")
 	}
 
 	if err != nil {
