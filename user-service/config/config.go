@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Condition17/fleet-services/common"
+	"github.com/Condition17/fleet-services/lib"
 	"github.com/tkanos/gonfig"
 )
 
@@ -18,7 +18,7 @@ type Config struct {
 }
 
 func getEnvironmentName() string {
-	return strings.ToLower(getEnvVar("ENV_NAME", string(common.LocalEnv)))
+	return strings.ToLower(getEnvVar("ENV_NAME", string(lib.LocalEnv)))
 }
 
 func getDefaultConfigFilePath() string {

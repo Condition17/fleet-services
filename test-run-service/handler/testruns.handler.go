@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/Condition17/fleet-services/common/auth"
+	"github.com/Condition17/fleet-services/lib/auth"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"github.com/Condition17/fleet-services/test-run-service/model"
 	proto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	baseservice "github.com/Condition17/fleet-services/common/base-service"
+	baseservice "github.com/Condition17/fleet-services/lib/base-service"
 	"github.com/Condition17/fleet-services/test-run-service/repository"
 	"github.com/micro/go-micro/v2"
 )

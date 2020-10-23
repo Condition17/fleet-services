@@ -9,7 +9,7 @@ import (
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
 
-	"github.com/Condition17/fleet-services/common/auth"
+	"github.com/Condition17/fleet-services/lib/auth"
 	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
 )
 

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Condition17/fleet-services/common/auth"
+	"github.com/Condition17/fleet-services/lib/auth"
 	"github.com/Condition17/fleet-services/test-run-service/config"
 	"github.com/Condition17/fleet-services/test-run-service/handler"
 	"github.com/Condition17/fleet-services/test-run-service/model"

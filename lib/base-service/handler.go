@@ -3,7 +3,6 @@ package baseservice
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 
 	"github.com/Condition17/fleet-services/lib/auth"
@@ -26,7 +25,6 @@ func NewBaseHandler(service micro.Service) BaseHandler {
 func (h *BaseHandler) SendRunStateEvent(ctx context.Context, eventType string, data []byte) {
 	var usrDetails []byte = auth.GetUserBytesFromContext(ctx)
 	msgBody, _ := json.Marshal(&runControllerProto.Event{Type: eventType, User: usrDetails, Data: data})
-	fmt.Printf("Sending run state event on topic %s - Body: %v\n", runStateTopic, msgBody)
 
 	if err := h.MessagesBroker.Publish(runStateTopic, &broker.Message{Body: msgBody}); err != nil {
 		log.Printf("[Messages Broker] Failed to publish message on create. Encountered error: %v", err)
