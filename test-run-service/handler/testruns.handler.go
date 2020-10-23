@@ -26,7 +26,7 @@ func (h *Handler) Create(ctx context.Context, req *proto.TestRun, res *proto.Tes
 
 	// send test run created event
 	eventData, _ := json.Marshal(&runControllerProto.TestRunCreatedEventData{Id: uint32(createdTestRun.ID), Name: createdTestRun.Name})
-	h.sendRunStateEvent(ctx, "test-run.created", string(eventData))
+	h.SendRunStateEvent(ctx, "test-run.created", eventData)
 
 	return nil
 }
