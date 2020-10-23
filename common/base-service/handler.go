@@ -14,16 +14,16 @@ import (
 
 const runStateTopic = "test-run-state"
 
-type BaseHandler struct {
+type Handler struct {
 	Service        micro.Service
 	MessagesBroker broker.Broker
 }
 
-func NewBaseHandler(service micro.Service) BaseHandler {
-	return BaseHandler{Service: service, MessagesBroker: service.Server().Options().Broker}
+func New(service micro.Service) Handler {
+	return Handler{Service: service, MessagesBroker: service.Server().Options().Broker}
 }
 
-func (h *BaseHandler) sendRunStateEvent(ctx context.Context, eventType string, data string) {
+func (h *Handler) sendRunStateEvent(ctx context.Context, eventType string, data string) {
 	var usrDetails string = string(auth.GetUserBytesFromContext(ctx))
 	msgBody, _ := json.Marshal(&runControllerProto.Event{Type: eventType, User: usrDetails, Data: data})
 	fmt.Printf("Sending run state event on topic %s - Body: %v\n", runStateTopic, msgBody)
