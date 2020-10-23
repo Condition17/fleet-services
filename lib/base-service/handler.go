@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/Condition17/fleet-services/lib/auth"
-	"github.com/Condition17/fleet-services/lib/communication"
+	topics "github.com/Condition17/fleet-services/lib/communication"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/broker"
@@ -24,10 +24,10 @@ func NewBaseHandler(service micro.Service) BaseHandler {
 func (h *BaseHandler) SendRunStateEvent(ctx context.Context, eventType string, data []byte) {
 	var usrDetails []byte = auth.GetUserBytesFromContext(ctx)
 	msgBody, _ := json.Marshal(&runControllerProto.Event{Type: eventType, User: usrDetails, Data: data})
-	h.publishMessage(topics.RunStateTopic, &broker.Message{Body: msgBody});
+	h.publishMessage(topics.RunStateTopic, &broker.Message{Body: msgBody})
 }
 
-func (h *BaseHandler) SendChunkDataToUploadQueue(ctx context.Context data []byte) {
+func (h *BaseHandler) SendChunkDataToUploadQueue(ctx context.Context, data []byte) {
 	h.publishMessage(topics.ChunksUploadQueueTopic, &broker.Message{Body: data})
 }
 
