@@ -19,7 +19,7 @@ type Handler struct {
 	MessagesBroker broker.Broker
 }
 
-func New(service micro.Service) Handler {
+func NewHandler(service micro.Service) Handler {
 	return Handler{Service: service, MessagesBroker: service.Server().Options().Broker}
 }
 
