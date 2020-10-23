@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/Condition17/fleet-services/lib/auth"
-	"github.com/Condition17/fleet-services/lib/topics"
+	"github.com/Condition17/fleet-services/lib/communication"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/broker"
