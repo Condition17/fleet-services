@@ -23,8 +23,8 @@ func New(service micro.Service) Handler {
 	return Handler{Service: service, MessagesBroker: service.Server().Options().Broker}
 }
 
-func (h *Handler) sendRunStateEvent(ctx context.Context, eventType string, data string) {
-	var usrDetails string = string(auth.GetUserBytesFromContext(ctx))
+func (h *Handler) sendRunStateEvent(ctx context.Context, eventType string, data []byte) {
+	var usrDetails []byte = auth.GetUserBytesFromContext(ctx)
 	msgBody, _ := json.Marshal(&runControllerProto.Event{Type: eventType, User: usrDetails, Data: data})
 	fmt.Printf("Sending run state event on topic %s - Body: %v\n", runStateTopic, msgBody)
 
