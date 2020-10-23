@@ -1,4 +1,4 @@
-module github.com/Condition17/fleet-services/common
+module github.com/Condition17/fleet-services/lib
 
 go 1.14
 
