@@ -12,6 +12,7 @@ require (
 	github.com/Condition17/fleet-services/lib v0.0.0-20201023200655-da5a0a50b457
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang/protobuf v1.4.3
+	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/tkanos/gonfig v0.0.0-20181112185242-896f3d81fadf
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897

@@ -38,11 +38,7 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	serviceHandler := handler.Service{
-		Name:           configs.ServiceName,
-		UserRepository: repository.UserRepository{DB: db},
-		TokenService:   &auth.TokenService{Issuer: configs.ServiceName},
-	}
+	serviceHandler := handler.NewHandler(service, repository.UserRepository{DB: db}, &auth.TokenService{Issuer: configs.ServiceName})
 	proto.RegisterUserServiceHandler(service.Server(), &serviceHandler)
 
 	// Run service
