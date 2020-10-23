@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/Condition17/fleet-services/common/auth"
 	"github.com/Condition17/fleet-services/test-run-service/config"
 	"github.com/Condition17/fleet-services/test-run-service/handler"
@@ -9,7 +11,6 @@ import (
 	"github.com/Condition17/fleet-services/test-run-service/storage/database"
 
 	"github.com/micro/go-micro/v2"
-	log "github.com/micro/go-micro/v2/logger"
 
 	proto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"
 )
@@ -39,10 +40,7 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	serviceHandler := handler.Service{
-		Name:              configs.ServiceName,
-		TestRunRepository: repository.TestRunRepository{DB: db},
-	}
+	serviceHandler := handler.NewHandler(service, repository.TestRunRepository{DB: db})
 	proto.RegisterTestRunServiceHandler(service.Server(), &serviceHandler)
 
 	// Run service

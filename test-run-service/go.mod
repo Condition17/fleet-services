@@ -11,15 +11,17 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/common v0.0.0-20201018213019-6857638ba994
+	github.com/Condition17/fleet-services/common v0.0.0-20201022071921-53c7170550d4
 	github.com/Condition17/fleet-services/file-service v0.0.0-20201018213019-6857638ba994
-	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201018213019-6857638ba994
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201018213019-6857638ba994
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201022071921-53c7170550d4
+	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201022071921-53c7170550d4
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201022071921-53c7170550d4
+	github.com/go-delve/delve v1.5.0
 	github.com/golang/protobuf v1.4.3
 	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/tkanos/gonfig v0.0.0-20181112185242-896f3d81fadf
 	google.golang.org/protobuf v1.25.0
-	gorm.io/driver/postgres v1.0.2
-	gorm.io/gorm v1.20.2
+	gorm.io/driver/postgres v1.0.4
+	gorm.io/gorm v1.20.4
 )
