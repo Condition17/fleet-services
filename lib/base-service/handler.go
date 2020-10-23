@@ -31,8 +31,8 @@ func (h *BaseHandler) SendChunkDataToUploadQueue(ctx context.Context, data []byt
 	h.publishMessage(topics.ChunksUploadQueueTopic, &broker.Message{Body: data})
 }
 
-func (h *baseHandler) publishMessage(topic string, message *broker.Message) {
-	if err := h.MessagesBroker.Publish(topics.RunStateTopic, &broker.Message{Body: msgBody}); err != nil {
+func (h *BaseHandler) publishMessage(topic string, message *broker.Message) {
+	if err := h.MessagesBroker.Publish(topic, message); err != nil {
 		log.Printf("[Messages Broker] Failed to publish message on create. Encountered error: %v", err)
 	}
 }
