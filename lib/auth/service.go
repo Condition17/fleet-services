@@ -36,14 +36,15 @@ func GetUserBytesFromContext(ctx context.Context) []byte {
 }
 
 func GetTokenBytesFromContext(ctx context.Context) []byte {
-	var tokenBytesFromMeta []byte
+	var tokenBytesFromMeta, tokenBytesFromContextValues []byte
 	meta, _ := metadata.FromContext(ctx)
 
-	if tokenBytesFromMeta = []byte(meta["Token"]); tokenBytesFromMeta != nil || len(tokenBytesFromMeta) > 0 {
+	if tokenBytesFromMeta = []byte(meta["Token"]); tokenBytesFromMeta != nil && len(tokenBytesFromMeta) > 0 {
 		return tokenBytesFromMeta
 	}
+	tokenBytesFromContextValues, _ = ctx.Value("Token").([]byte)
 
-	return ctx.Value("Token").([]byte)
+	return tokenBytesFromContextValues
 }
 
 func GetUserFromContext(ctx context.Context) (*proto.User, error) {
