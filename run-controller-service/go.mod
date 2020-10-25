@@ -18,6 +18,7 @@ require (
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-git/go-git/v5 v5.2.0 // indirect
 	github.com/gogo/protobuf v1.3.1 // indirect
+	github.com/golang/protobuf v1.4.3
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
@@ -40,5 +41,6 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20201021134325-0d71844de594 // indirect
 	google.golang.org/grpc v1.33.1 // indirect
+	google.golang.org/protobuf v1.25.0
 	honnef.co/go/tools v0.0.1-2020.1.6 // indirect
 )

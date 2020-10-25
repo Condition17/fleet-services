@@ -4,10 +4,15 @@ package go.micro.service.runcontrollerservice;
 
 service RunControllerService {}
 
+message EventMetadata {
+	bytes user = 1;
+	bytes token = 2;
+}
+
 message Event {
 	string type = 1;
-	bytes user = 2;
-	bytes data = 3;
+	EventMetadata meta = 2;
+	bytes data = 4;
 }
 
 message TestRunCreatedEventData {
