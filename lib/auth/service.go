@@ -17,7 +17,6 @@ import (
 func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, resp interface{}) error {
 		// Auth here
-		fmt.Printf("Auth wrapper entry:\n%v", GetTokenBytesFromContext(ctx))
 		userServiceClient := proto.NewUserService(lib.GetFullExternalServiceName("user-service"), client.DefaultClient)
 		res, err := userServiceClient.GetProfile(ctx, &proto.EmptyRequest{})
 		if err != nil {
@@ -37,16 +36,9 @@ func GetUserBytesFromContext(ctx context.Context) []byte {
 }
 
 func GetTokenBytesFromContext(ctx context.Context) []byte {
-	var tokenBytesFromMeta, tokenBytesFromContextValues []byte
 	meta, _ := metadata.FromContext(ctx)
 
-	if tokenBytesFromMeta = []byte(meta["Token"]); tokenBytesFromMeta != nil && len(tokenBytesFromMeta) > 0 {
-		return tokenBytesFromMeta
-	}
-	tokenBytesFromContextValues, _ = ctx.Value("Token").([]byte)
-	fmt.Printf("Token bytes from context values: %v\n", tokenBytesFromContextValues)
-
-	return tokenBytesFromContextValues
+	return []byte(meta["Token"])
 }
 
 func GetUserFromContext(ctx context.Context) (*proto.User, error) {
