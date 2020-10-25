@@ -43,6 +43,7 @@ func GetTokenBytesFromContext(ctx context.Context) []byte {
 		return tokenBytesFromMeta
 	}
 	tokenBytesFromContextValues, _ = ctx.Value("Token").([]byte)
+	fmt.Printf("Token bytes from context values: %v\n", tokenBytesFromContextValues)
 
 	return tokenBytesFromContextValues
 }
