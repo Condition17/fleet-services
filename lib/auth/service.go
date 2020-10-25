@@ -17,6 +17,7 @@ import (
 func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, resp interface{}) error {
 		// Auth here
+		fmt.Printf("Auth wrapper entry:\n%v", GetTokenBytesFromContext(ctx))
 		userServiceClient := proto.NewUserService(lib.GetFullExternalServiceName("user-service"), client.DefaultClient)
 		res, err := userServiceClient.GetProfile(ctx, &proto.EmptyRequest{})
 		if err != nil {
