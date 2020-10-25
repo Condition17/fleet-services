@@ -15,7 +15,18 @@ message Event {
 	bytes data = 4;
 }
 
-message TestRunCreatedEventData {
+message TestRunSpec {
 	uint32 id = 1;
 	string name = 2;
+}
+
+message FileSpec {
+	string name = 1;
+	int64 size = 2;
+	uint32 maxChunkSize = 3;
+}
+
+message TestRunCreatedEventData {
+	TestRunSpec testRunSpec = 1;
+	FileSpec	fileSpec = 2;
 }
