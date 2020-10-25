@@ -9,9 +9,8 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/common v0.0.0-20201010123938-c45c2dee5d72 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20201025124251-378b9f3827a1
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025124251-378b9f3827a1 // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201025142808-89bce418f084
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025142808-89bce418f084 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang/protobuf v1.4.3
 	github.com/micro/go-micro v1.18.0

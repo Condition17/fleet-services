@@ -12,9 +12,9 @@ replace (
 
 require (
 	cloud.google.com/go/pubsub v1.8.2 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20201025124251-378b9f3827a1
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025124251-378b9f3827a1 // indirect
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201025124251-378b9f3827a1 // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201025130724-a13bbe51623b
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025130724-a13bbe51623b // indirect
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201025130724-a13bbe51623b // indirect
 	github.com/gofrs/uuid v3.3.0+incompatible
 	github.com/golang/protobuf v1.4.3
 	github.com/gomodule/redigo v1.8.2
@@ -22,12 +22,7 @@ require (
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
 	github.com/micro/go-plugins/registry/kubernetes/v2 v2.9.1
-	github.com/miekg/dns v1.1.35 // indirect
 	github.com/tkanos/gonfig v0.0.0-20181112185242-896f3d81fadf
-	github.com/xanzy/ssh-agent v0.3.0 // indirect
-	golang.org/x/net v0.0.0-20201024042810-be3efd7ff127 // indirect
-	golang.org/x/sys v0.0.0-20201024232916-9f70ab9862d5 // indirect
 	golang.org/x/tools v0.0.0-20201023174141-c8cfbd0f21e6 // indirect
-	google.golang.org/genproto v0.0.0-20201022181438-0ff5f38871d5 // indirect
 	google.golang.org/protobuf v1.25.0
 )
