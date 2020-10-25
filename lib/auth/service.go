@@ -7,6 +7,7 @@ import (
 
 	"github.com/micro/go-micro/v2/client"
 	microErrors "github.com/micro/go-micro/v2/errors"
+	"github.com/micro/go-micro/v2/metadata"
 	"github.com/micro/go-micro/v2/server"
 
 	"github.com/Condition17/fleet-services/lib"
@@ -32,6 +33,14 @@ func GetUserBytesFromContext(ctx context.Context) []byte {
 	usrBytes, _ = ctx.Value("User").([]byte)
 
 	return usrBytes
+}
+
+func GetTokenBytesFromContext(ctx context.Context) []byte {
+	var tokenBytes []byte
+	meta, _ := metadata.FromContext(ctx)
+	tokenBytes = []byte(meta["Token"])
+
+	return tokenBytes
 }
 
 func GetUserFromContext(ctx context.Context) (*proto.User, error) {
