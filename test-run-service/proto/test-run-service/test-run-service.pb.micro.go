@@ -42,7 +42,7 @@ func NewTestRunServiceEndpoints() []*api.Endpoint {
 // Client API for TestRunService service
 
 type TestRunService interface {
-	Create(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRunDetails, error)
+	Create(ctx context.Context, in *CreateTestRunRequest, opts ...client.CallOption) (*TestRunDetails, error)
 	Get(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRunDetails, error)
 	List(ctx context.Context, in *EmptyRequest, opts ...client.CallOption) (*ListResponse, error)
 	Delete(ctx context.Context, in *TestRun, opts ...client.CallOption) (*EmptyResponse, error)
@@ -61,7 +61,7 @@ func NewTestRunService(name string, c client.Client) TestRunService {
 	}
 }
 
-func (c *testRunService) Create(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRunDetails, error) {
+func (c *testRunService) Create(ctx context.Context, in *CreateTestRunRequest, opts ...client.CallOption) (*TestRunDetails, error) {
 	req := c.c.NewRequest(c.name, "TestRunService.Create", in)
 	out := new(TestRunDetails)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -114,7 +114,7 @@ func (c *testRunService) AssignFile(ctx context.Context, in *AssignRequest, opts
 // Server API for TestRunService service
 
 type TestRunServiceHandler interface {
-	Create(context.Context, *TestRun, *TestRunDetails) error
+	Create(context.Context, *CreateTestRunRequest, *TestRunDetails) error
 	Get(context.Context, *TestRun, *TestRunDetails) error
 	List(context.Context, *EmptyRequest, *ListResponse) error
 	Delete(context.Context, *TestRun, *EmptyResponse) error
@@ -123,7 +123,7 @@ type TestRunServiceHandler interface {
 
 func RegisterTestRunServiceHandler(s server.Server, hdlr TestRunServiceHandler, opts ...server.HandlerOption) error {
 	type testRunService interface {
-		Create(ctx context.Context, in *TestRun, out *TestRunDetails) error
+		Create(ctx context.Context, in *CreateTestRunRequest, out *TestRunDetails) error
 		Get(ctx context.Context, in *TestRun, out *TestRunDetails) error
 		List(ctx context.Context, in *EmptyRequest, out *ListResponse) error
 		Delete(ctx context.Context, in *TestRun, out *EmptyResponse) error
@@ -140,7 +140,7 @@ type testRunServiceHandler struct {
 	TestRunServiceHandler
 }
 
-func (h *testRunServiceHandler) Create(ctx context.Context, in *TestRun, out *TestRunDetails) error {
+func (h *testRunServiceHandler) Create(ctx context.Context, in *CreateTestRunRequest, out *TestRunDetails) error {
 	return h.TestRunServiceHandler.Create(ctx, in, out)
 }
 

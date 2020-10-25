@@ -11,9 +11,9 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/lib v0.0.0-20201025141226-ebff8e7b144b
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025141226-ebff8e7b144b
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201025141226-ebff8e7b144b
+	github.com/Condition17/fleet-services/lib v0.0.0-20201025193838-e8762a675f52
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025193838-e8762a675f52
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201025193838-e8762a675f52
 	github.com/golang/protobuf v1.4.3
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/tkanos/gonfig v0.0.0-20181112185242-896f3d81fadf

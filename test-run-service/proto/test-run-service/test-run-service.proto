@@ -3,11 +3,22 @@ syntax = "proto3";
 package go.micro.service.testrunservice;
 
 service TestRunService {
-	rpc Create(TestRun) returns (TestRunDetails) {}
+	rpc Create(CreateTestRunRequest) returns (TestRunDetails) {}
 	rpc Get(TestRun) returns (TestRunDetails) {}
 	rpc List(EmptyRequest) returns (ListResponse) {}
 	rpc Delete(TestRun) returns (EmptyResponse) {}
 	rpc AssignFile(AssignRequest) returns (EmptyResponse) {}
+}
+
+message CreateTestRunRequest {
+	TestRun testRun = 1;
+	FileSpec fileSpec = 2;
+}
+
+message FileSpec {
+	string name = 2;
+	int64 size = 3;
+	uint32 maxChunkSize = 4;
 }
 
 message TestRun {

@@ -14,9 +14,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func (h *Handler) Create(ctx context.Context, req *proto.TestRun, res *proto.TestRunDetails) error {
+func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, res *proto.TestRunDetails) error {
 	user, _ := auth.GetUserFromContext(ctx)
-	newTestRun := model.MarshalTestRun(req)
+	newTestRun := model.MarshalTestRun(req.TestRun)
 	newTestRun.UserID = user.Id
 	createdTestRun, err := h.TestRunRepository.Create(newTestRun)
 	if err != nil {
@@ -25,7 +25,19 @@ func (h *Handler) Create(ctx context.Context, req *proto.TestRun, res *proto.Tes
 	res.TestRun = model.UnmarshalTestRun(createdTestRun)
 
 	// send test run created event
-	eventData, _ := json.Marshal(&runControllerProto.TestRunCreatedEventData{Id: uint32(createdTestRun.ID), Name: createdTestRun.Name})
+	eventData, _ := json.Marshal(
+		&runControllerProto.TestRunCreatedEventData{
+			TestRunSpec: &runControllerProto.TestRunSpec{
+				Id:   uint32(createdTestRun.ID),
+				Name: createdTestRun.Name,
+			},
+			FileSpec: &runControllerProto.FileSpec{
+				Name:         req.FileSpec.Name,
+				Size:         req.FileSpec.Size,
+				MaxChunkSize: req.FileSpec.MaxChunkSize,
+			},
+		},
+	)
 	h.SendRunStateEvent(ctx, "test-run.created", eventData)
 
 	return nil
