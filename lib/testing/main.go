@@ -24,7 +24,10 @@ func main() {
 
 	// Test getTokenBytesFromContext
 	var ctx context.Context
+	var vals []byte
+
 	ctx = context.WithValue(context.Background(), "Token", []byte("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7ImlkIjo3LCJuYW1lIjoiR2lnaWVsIFRlc3QiLCJjb21wYW55IjoiQWxwaGFiZXQgSW5jLiIsImVtYWlsIjoiZ2lnZWwuZW1haWxAZ21haWwuY29tIn0sImV4cCI6MTYzNDE1NDE5MiwiaXNzIjoiZ28ubWljcm8uYXBpLnVzZXItc2VydmljZSJ9.93BX3wcbjeTYszsR8UvpFLG1v1XS8GzQ7n7RzQcF3rU"))
-	fmt.Printf("%v", ctx)
-	fmt.Print(len(auth.GetTokenBytesFromContext(ctx)))
+	vals = ctx.Value("Token").([]byte)
+	fmt.Print(vals)
+	fmt.Print(auth.GetTokenBytesFromContext(ctx))
 }
