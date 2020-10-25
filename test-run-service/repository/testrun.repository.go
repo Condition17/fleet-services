@@ -18,6 +18,13 @@ func (r *TestRunRepository) Create(testRun *model.TestRun) (*model.TestRun, erro
 	return testRun, nil
 }
 
+func (r *TestRunRepository) Update(newTestRun *model.TestRun) error {
+	if err := r.DB.Save(newTestRun).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *TestRunRepository) GetAll(userId uint32) ([]*model.TestRun, error) {
 	var testRuns []*model.TestRun
 	if err := r.DB.Where("user_id = ?", userId).Find(&testRuns).Error; err != nil {

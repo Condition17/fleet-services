@@ -7,11 +7,13 @@ service TestRunService {
 	rpc Get(TestRun) returns (TestRunDetails) {}
 	rpc List(EmptyRequest) returns (ListResponse) {}
 	rpc Delete(TestRun) returns (EmptyResponse) {}
+	rpc AssignFile(AssignRequest) returns (EmptyResponse) {}
 }
 
 message TestRun {
 	uint32 id = 1;
 	string name = 2;
+	string fileId = 3;
 }
 
 message TestRunDetails {
@@ -20,6 +22,11 @@ message TestRunDetails {
 
 message ListResponse {
 	repeated TestRun testRuns = 1;
+}
+
+message AssignRequest {
+	uint32 testRunId = 1;
+	string fileId = 2;
 }
 
 message EmptyRequest {};

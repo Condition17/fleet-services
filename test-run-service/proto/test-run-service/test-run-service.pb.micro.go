@@ -46,6 +46,7 @@ type TestRunService interface {
 	Get(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRunDetails, error)
 	List(ctx context.Context, in *EmptyRequest, opts ...client.CallOption) (*ListResponse, error)
 	Delete(ctx context.Context, in *TestRun, opts ...client.CallOption) (*EmptyResponse, error)
+	AssignFile(ctx context.Context, in *AssignRequest, opts ...client.CallOption) (*EmptyResponse, error)
 }
 
 type testRunService struct {
@@ -100,6 +101,16 @@ func (c *testRunService) Delete(ctx context.Context, in *TestRun, opts ...client
 	return out, nil
 }
 
+func (c *testRunService) AssignFile(ctx context.Context, in *AssignRequest, opts ...client.CallOption) (*EmptyResponse, error) {
+	req := c.c.NewRequest(c.name, "TestRunService.AssignFile", in)
+	out := new(EmptyResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for TestRunService service
 
 type TestRunServiceHandler interface {
@@ -107,6 +118,7 @@ type TestRunServiceHandler interface {
 	Get(context.Context, *TestRun, *TestRunDetails) error
 	List(context.Context, *EmptyRequest, *ListResponse) error
 	Delete(context.Context, *TestRun, *EmptyResponse) error
+	AssignFile(context.Context, *AssignRequest, *EmptyResponse) error
 }
 
 func RegisterTestRunServiceHandler(s server.Server, hdlr TestRunServiceHandler, opts ...server.HandlerOption) error {
@@ -115,6 +127,7 @@ func RegisterTestRunServiceHandler(s server.Server, hdlr TestRunServiceHandler, 
 		Get(ctx context.Context, in *TestRun, out *TestRunDetails) error
 		List(ctx context.Context, in *EmptyRequest, out *ListResponse) error
 		Delete(ctx context.Context, in *TestRun, out *EmptyResponse) error
+		AssignFile(ctx context.Context, in *AssignRequest, out *EmptyResponse) error
 	}
 	type TestRunService struct {
 		testRunService
@@ -141,4 +154,8 @@ func (h *testRunServiceHandler) List(ctx context.Context, in *EmptyRequest, out 
 
 func (h *testRunServiceHandler) Delete(ctx context.Context, in *TestRun, out *EmptyResponse) error {
 	return h.TestRunServiceHandler.Delete(ctx, in, out)
+}
+
+func (h *testRunServiceHandler) AssignFile(ctx context.Context, in *AssignRequest, out *EmptyResponse) error {
+	return h.TestRunServiceHandler.AssignFile(ctx, in, out)
 }

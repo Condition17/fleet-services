@@ -12,11 +12,11 @@ replace (
 
 require (
 	github.com/Condition17/fleet-services/common v0.0.0-20201018193752-8e3b03f94d53 // indirect
-	github.com/Condition17/fleet-services/file-service v0.0.0-20201018213019-6857638ba994
-	github.com/Condition17/fleet-services/lib v0.0.0-20201025124251-378b9f3827a1
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025124251-378b9f3827a1
-	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201025124251-378b9f3827a1
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201025124251-378b9f3827a1
+	github.com/Condition17/fleet-services/file-service v0.0.0-20201025124251-378b9f3827a1
+	github.com/Condition17/fleet-services/lib v0.0.0-20201025124424-42d2ecdfbbfc
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025124424-42d2ecdfbbfc
+	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201025124424-42d2ecdfbbfc
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201025124424-42d2ecdfbbfc
 	github.com/go-delve/delve v1.5.0
 	github.com/golang/protobuf v1.4.3
 	github.com/micro/go-micro v1.18.0
