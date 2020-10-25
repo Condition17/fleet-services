@@ -7,10 +7,10 @@ import (
 
 	"gorm.io/gorm"
 
+	"github.com/Condition17/fleet-services/lib/auth"
 	"github.com/Condition17/fleet-services/user-service/model"
 	proto "github.com/Condition17/fleet-services/user-service/proto/user-service"
 	microErrors "github.com/micro/go-micro/v2/errors"
-	"github.com/micro/go-micro/v2/metadata"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -65,12 +65,8 @@ func (h *Handler) ValidateToken(ctx context.Context, req *proto.Token, res *prot
 }
 
 func (h *Handler) GetProfile(ctx context.Context, req *proto.EmptyRequest, res *proto.AuthResponse) error {
-	meta, ok := metadata.FromContext(ctx)
-	if !ok {
-		return microErrors.InternalServerError(h.Service.Name(), "Could not parse request headers (context metadata).")
-	}
-	token := meta["Token"]
-	claims, err := h.TokenService.Decode(token)
+	var tokenBytes []byte = auth.GetTokenBytesFromContext(ctx)
+	claims, err := h.TokenService.Decode(string(tokenBytes))
 
 	if err != nil {
 		return microErrors.Unauthorized(h.Service.Name(), "Invalid token")
