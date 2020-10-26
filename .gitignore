@@ -6,3 +6,4 @@
 /infrastructure/terraform/*.tfstate
 /infrastructure/terraform/*.tfstate.*
 /infrastructure/terraform/*.tfvars
+/wss/node_modules
