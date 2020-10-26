@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wss-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: wss
+  ports:
+  - port: 80
+    targetPort: "wss-port"
+    protocol: TCP
