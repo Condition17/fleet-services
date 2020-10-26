@@ -58,6 +58,20 @@ jobs:
           image: $IMAGE_NAME
       - gcr/push-image:
           image: $IMAGE_NAME
+  build-push-wss-image:
+    description: Build and push WSS image to GCR
+    machine: true
+    environment:
+      IMAGE_NAME: fleet-wss
+    steps:
+      - checkout
+      - gcr/gcr-auth
+      - gcr/build-image:
+          path: ~/project/wss
+          docker-context: ~/project/wss
+          image: $IMAGE_NAME
+      - gcr/push-image:
+          image: $IMAGE_NAME
 workflows:
   build_and_upload_service_images:
     jobs:
@@ -77,4 +91,7 @@ workflows:
           filters:
             branches:
               only: master
-    
+      - build-push-wss-image:
+          filters:
+            branches:
+              only: master
