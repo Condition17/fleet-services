@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: wss-deployment
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: wss
@@ -15,6 +16,9 @@ spec:
         - name: wss
           image: gcr.io/fleet-271114/fleet-wss
           imagePullPolicy: Always
+          env:
+            - name: NODE_ENV
+              value: "prod"
           ports:
             - containerPort: 3001
               name: wss-port
