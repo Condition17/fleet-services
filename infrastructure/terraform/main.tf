@@ -63,6 +63,16 @@ resource "google_pubsub_topic" "test-run-state" {
   name = "test-run-state"
 }
 
+# wss-events
+resource "google_pubsub_topic" "wss-events" {
+  name = "wss-events"
+}
+
+resource "google_pubsub_subscription" "wss-subscription" {
+  name = "wss-subscription"
+  topic = google_pubsub_topic.wss-events.name
+}
+
 # Setup GKE
 
 resource "google_container_cluster" "primary_cluster" {
