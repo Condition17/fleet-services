@@ -43,6 +43,7 @@ func (h *BaseHandler) SendDataToWssQueue(ctx context.Context, data []byte) {
 }
 
 func (h *BaseHandler) publishMessage(topic string, message *broker.Message) {
+	log.Printf("Writing to topic %s: %s", topic, string(message.Body))
 	if err := h.MessagesBroker.Publish(topic, message); err != nil {
 		log.Printf("[Messages Broker] Failed to publish message on create. Encountered error: %v", err)
 	}
