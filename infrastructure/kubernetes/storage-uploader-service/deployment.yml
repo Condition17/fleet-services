@@ -19,7 +19,8 @@ spec:
         command: [
           "./storage-uploader-service",
           "--selector=static",
-          "--server_address=:8080"
+          "--server_address=:8080",
+          "--broker=googlepubsub"
         ]
         envFrom:
           - configMapRef:

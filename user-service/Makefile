@@ -10,7 +10,7 @@ proto:
 .PHONY: build
 build: proto
 
-	go build -o user-service *.go
+	go build -o service *.go
 
 .PHONY: test
 test:

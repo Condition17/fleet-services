@@ -1,4 +1,0 @@
-{
-  "SERVICE_NAME": "go.micro.api.file-service",
-  "REDIS_URL": "localhost:6379"
-}

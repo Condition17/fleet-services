@@ -13,6 +13,7 @@ import (
 	"github.com/micro/go-micro/v2"
 
 	proto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"
+	"github.com/micro/go-plugins/broker/googlepubsub/v2"
 )
 
 func main() {
@@ -28,9 +29,11 @@ func main() {
 	// into database columns/types etc.
 	db.AutoMigrate(&model.TestRun{})
 
+	pubsub := googlepubsub.NewBroker(googlepubsub.ProjectID(configs.GoogleProjectID))
 	// New Service
 	service := micro.NewService(
 		micro.Name(configs.ServiceName),
+		micro.Broker(pubsub),
 		micro.Version("latest"),
 		// auth middleware
 		micro.WrapHandler(auth.ServiceAuthWrapper),

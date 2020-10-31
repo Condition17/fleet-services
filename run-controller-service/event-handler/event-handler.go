@@ -3,13 +3,16 @@ package eventHandler
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/Condition17/fleet-services/lib"
+	baseservice "github.com/Condition17/fleet-services/lib/base-service"
 	"github.com/Condition17/fleet-services/run-controller-service/events"
 	proto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	testRunServiceProto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"
+	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/broker"
 	"github.com/micro/go-micro/v2/client"
 	"github.com/micro/go-micro/v2/metadata"
@@ -18,6 +21,7 @@ import (
 type handlerFunc = func(broker.Event) error
 
 type eventHandler struct {
+	baseservice.BaseHandler
 	FileService    fileServiceProto.FileService
 	TestRunService testRunServiceProto.TestRunService
 }
@@ -47,6 +51,8 @@ func (h eventHandler) HandleTestRunCreated(event *proto.Event) {
 		log.Printf("File service error on create: %v", err)
 		return
 	}
+	fmt.Println("Send file entry created to wss queue")
+	h.SendDataToWssQueue(context.Background(), []byte("File entity created --- ready for upload"))
 
 	// assign the created file to the current test run
 	var assignmentDetails testRunServiceProto.AssignRequest = testRunServiceProto.AssignRequest{
@@ -59,6 +65,7 @@ func (h eventHandler) HandleTestRunCreated(event *proto.Event) {
 		log.Printf("Assign file error: %v", err)
 		return
 	}
+	h.SendDataToWssQueue(context.Background(), []byte("File assigned to current test run --- ready for upload"))
 }
 
 func handleEvent(handler eventHandler, event *proto.Event) {
@@ -70,15 +77,16 @@ func handleEvent(handler eventHandler, event *proto.Event) {
 	}
 }
 
-func newEventHandler() eventHandler {
+func newEventHandler(service micro.Service) eventHandler {
 	return eventHandler{
+		BaseHandler:    baseservice.NewBaseHandler(service),
 		FileService:    fileServiceProto.NewFileService(lib.GetFullExternalServiceName("file-service"), client.DefaultClient),
 		TestRunService: testRunServiceProto.NewTestRunService(lib.GetFullExternalServiceName("test-run-service"), client.DefaultClient),
 	}
 }
 
-func New() handlerFunc {
-	var handler eventHandler = newEventHandler()
+func NewHandler(service micro.Service) handlerFunc {
+	var handler eventHandler = newEventHandler(service)
 
 	return func(e broker.Event) error {
 		var event *proto.Event

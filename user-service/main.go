@@ -13,6 +13,7 @@ import (
 	"github.com/micro/go-micro/v2"
 
 	proto "github.com/Condition17/fleet-services/user-service/proto/user-service"
+	"github.com/micro/go-plugins/broker/googlepubsub/v2"
 )
 
 func main() {
@@ -32,6 +33,7 @@ func main() {
 	service := micro.NewService(
 		micro.Name(configs.ServiceName),
 		micro.Version("latest"),
+		micro.Broker(googlepubsub.NewBroker(googlepubsub.ProjectID(configs.GoogleProjectID))),
 	)
 
 	// Initialise service

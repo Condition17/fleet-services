@@ -17,12 +17,17 @@ spec:
           image: gcr.io/fleet-271114/fleet-file-service
           imagePullPolicy: Always
           command:
-            ["./file-service", "--selector=static", "--server_address=:8080"]
+            [
+              "./file-service",
+              "--selector=static",
+              "--server_address=:8080",
+              "--broker=googlepubsub",
+            ]
           envFrom:
-          - configMapRef:
-              name: pod-base-env
-          - configMapRef:
-              name: pubsub-config
+            - configMapRef:
+                name: pod-base-env
+            - configMapRef:
+                name: pubsub-config
           env:
             - name: REDIS_URL
               valueFrom:

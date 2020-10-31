@@ -7,16 +7,20 @@ import (
 	cloudstorage "github.com/Condition17/fleet-services/storage-uploader-service/storage"
 
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
+	"github.com/Condition17/fleet-services/storage-uploader-service/config"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/broker"
+	"github.com/micro/go-plugins/broker/googlepubsub/v2"
 )
 
 const gcsUploadTopic string = "chunk-gcs-upload"
 
 func main() {
+	configs := config.GetConfig()
 	// New Service
 	service := micro.NewService(
 		micro.Name("go.micro.api.storage-uploader-service"),
+		micro.Broker(googlepubsub.NewBroker(googlepubsub.ProjectID(configs.GoogleProjectID))),
 		micro.Version("latest"),
 	)
 

@@ -1,0 +1,2 @@
+SERVICE_NAME: "go.micro.api.storage-uploader-service"
+GOOGLE_PROJECT_ID: "fleet-271114"

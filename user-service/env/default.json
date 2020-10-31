@@ -1,7 +1,0 @@
-{
-  "SERVICE_NAME": "go.micro.api.user-service",
-  "DB_HOST": "127.0.0.1",
-  "DB_USER": "postgres",
-  "DB_NAME": "fleet",
-  "DB_PASSWORD": "root"
-}

@@ -12,7 +12,7 @@ replace (
 
 require (
 	cloud.google.com/go/pubsub v1.8.2 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20201025130724-a13bbe51623b
+	github.com/Condition17/fleet-services/lib v0.0.0-20201031183420-a99aa12d16c6
 	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025130724-a13bbe51623b // indirect
 	github.com/Condition17/fleet-services/user-service v0.0.0-20201025130724-a13bbe51623b // indirect
 	github.com/gofrs/uuid v3.3.0+incompatible

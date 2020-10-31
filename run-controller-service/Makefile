@@ -11,7 +11,7 @@ proto:
 .PHONY: build
 build: proto
 
-	go build -o run-controller-service *.go
+	go build -o service *.go
 
 .PHONY: test
 test:

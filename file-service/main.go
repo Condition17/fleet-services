@@ -10,6 +10,7 @@ import (
 
 	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/Condition17/fleet-services/lib/auth"
+	"github.com/micro/go-plugins/broker/googlepubsub/v2"
 )
 
 func main() {
@@ -19,6 +20,7 @@ func main() {
 	// New Service
 	service := micro.NewService(
 		micro.Name(config.ServiceName),
+		micro.Broker(googlepubsub.NewBroker(googlepubsub.ProjectID(config.GoogleProjectID))),
 		micro.Version("latest"),
 		// auth middleware
 		micro.WrapHandler(auth.ServiceAuthWrapper),

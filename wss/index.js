@@ -1,23 +1,16 @@
-const {REDIS_HOST, REDIS_PORT} = require("./environment");
 const app = require('express')();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http)
-const redisAdapter = require('socket.io-redis');
+const server = require('http').createServer(app);
+const eventsSubscriber = require("./src/subscribers/EventsSubscriber");
+const socketStreamHandler = require("./src/handlers/SocketStreamHandler");
 
-io.adapter(redisAdapter({host: REDIS_HOST, port: REDIS_PORT}))
+socketStreamHandler.init(server);
+eventsSubscriber.init();
 
-app.get('/', (req, res) => {
-  res.send({testKey: "value"});
+eventsSubscriber.onEventReceived((event) => {
+  console.log("Precessing '", event,"' externally");
+  socketStreamHandler.sendMessage(event);
 });
 
-io.on('connection', (socket) => {
-  console.log('a user is connected')
-  io.emit('msg', "this is a test message that should be displayed in front-end app")
-  socket.on("initialized", (msg) => {
-    console.log("[Socket][Client]:", msg)
-  })
-});
-
-http.listen(3001, () => {
+server.listen(3001, () => {
   console.log('listening on *:3001');
 });
