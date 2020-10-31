@@ -12,5 +12,7 @@ replace (
 require (
 	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025103716-bc8e68e1010b
 	github.com/Condition17/fleet-services/user-service v0.0.0-20201025103716-bc8e68e1010b
+	github.com/ghodss/yaml v1.0.0
+	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.9.1
 )
