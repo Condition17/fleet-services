@@ -24,7 +24,7 @@ services:
     volumes:
       - redis-data:/data # ensures data persistence between restarting
     ports:
-      - "6380:6379"
+      - "6379:6379"
 
   file-service:
     restart: always
@@ -36,9 +36,12 @@ services:
   
   test-run-service:
     restart: always
-    build: ./test-run
+    build: ./test-run-service
     depends_on:
+      - pg-database
       - file-service
+    links:
+      - pg-database
     environment:
       MICRO_SERVER_ADDRESS: ":50051"
 
@@ -47,6 +50,20 @@ services:
     build: ./storage-uploader-service
     environment:
       MICRO_SERVER_ADDRESS: ":50051"
+
+  run-controller-service:
+    restart: always
+    build: ./run-controller-service
+    environment:
+      MICRO_SERVER_ADDRESS: ":50051"
+
+  pg-database:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+    ports:
+      - 5432:5432
 
 volumes:
   redis-data:
