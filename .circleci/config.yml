@@ -67,7 +67,7 @@ jobs:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          path: ~/project/user-service
+          path: ~/project/run-controller-service
           docker-context: ~/project/run-controller-service
           image: $IMAGE_NAME
       - gcr/push-image:
