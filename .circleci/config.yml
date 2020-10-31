@@ -58,7 +58,7 @@ jobs:
           image: $IMAGE_NAME
       - gcr/push-image:
           image: $IMAGE_NAME
-  build-push-run-constroller-service-image:
+  build-push-run-controller-service-image:
     description: Build and push run controller service image to GCR
     machine: true
     environment:
