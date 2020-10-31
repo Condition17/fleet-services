@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: storage-uploader-service
+  name: run-controller-service
 spec:
   selector:
     matchLabels:
-      app: storage-uploader-service
+      app: run-controller-service
   template:
     metadata:
       labels:
-        app: storage-uploader-service
+        app: run-controller-service
     spec:
       serviceAccountName: micro-services
       containers:
-      - name: storage-uploader-service
-        image: gcr.io/fleet-271114/fleet-storage-uploader-service
+      - name: run-controller-service
+        image: gcr.io/fleet-271114/fleet-run-controller-service
         imagePullPolicy: Always
         command: [
           "./service",
@@ -25,7 +25,5 @@ spec:
         envFrom:
           - configMapRef:
               name: pod-base-env
-          - configMapRef:
-              name: pubsub-config
         ports:
         - containerPort: 8080

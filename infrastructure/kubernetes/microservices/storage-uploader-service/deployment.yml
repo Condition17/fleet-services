@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage-uploader-service
+spec:
+  selector:
+    matchLabels:
+      app: storage-uploader-service
+  template:
+    metadata:
+      labels:
+        app: storage-uploader-service
+    spec:
+      serviceAccountName: micro-services
+      containers:
+      - name: storage-uploader-service
+        image: gcr.io/fleet-271114/fleet-storage-uploader-service
+        imagePullPolicy: Always
+        command: [
+          "./service",
+          "--selector=static",
+          "--server_address=:8080",
+          "--broker=googlepubsub"
+        ]
+        envFrom:
+          - configMapRef:
+              name: pod-base-env
+        ports:
+        - containerPort: 8080
