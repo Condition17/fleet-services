@@ -8,4 +8,3 @@
 /infrastructure/terraform/*.tfvars
 /wss/node_modules
 /*/service
-/*/env/prod.yml

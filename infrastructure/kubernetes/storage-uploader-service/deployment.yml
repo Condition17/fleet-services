@@ -17,7 +17,7 @@ spec:
         image: gcr.io/fleet-271114/fleet-storage-uploader-service
         imagePullPolicy: Always
         command: [
-          "./storage-uploader-service",
+          "./service",
           "--selector=static",
           "--server_address=:8080",
           "--broker=googlepubsub"

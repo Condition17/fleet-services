@@ -1,0 +1,4 @@
+"DB_HOST": "postgres"
+"DB_USER": "postgres"
+"DB_NAME": "fleet-prod"
+"DB_PASSWORD": "root"

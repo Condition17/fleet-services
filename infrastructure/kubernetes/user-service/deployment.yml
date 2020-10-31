@@ -17,7 +17,7 @@ spec:
         image: gcr.io/fleet-271114/fleet-user-service
         imagePullPolicy: Always
         command: [
-          "./user-service",
+          "./service",
           "--selector=static",
           "--server_address=:8080",
           "--broker=googlepubsub"

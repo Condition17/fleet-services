@@ -18,7 +18,7 @@ spec:
           imagePullPolicy: Always
           command:
             [
-              "./file-service",
+              "./service",
               "--selector=static",
               "--server_address=:8080",
               "--broker=googlepubsub",
@@ -28,7 +28,7 @@ spec:
                 name: pod-base-env
             - configMapRef:
                 name: pubsub-config
-          env:
+          env:              
             - name: REDIS_URL
               valueFrom:
                 secretKeyRef:
