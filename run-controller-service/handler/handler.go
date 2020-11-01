@@ -1,4 +1,4 @@
-package eventHandler
+package handler
 
 import (
 	"context"
@@ -18,23 +18,49 @@ import (
 	"github.com/micro/go-micro/v2/metadata"
 )
 
-type handlerFunc = func(broker.Event) error
-
-type eventHandler struct {
+type EventHandler struct {
 	baseservice.BaseHandler
 	FileService    fileServiceProto.FileService
 	TestRunService testRunServiceProto.TestRunService
 }
 
-func (h eventHandler) buildCallContext(event *proto.Event) context.Context {
+func NewHandler(service micro.Service) func(broker.Event) error {
+	var handler EventHandler = EventHandler{
+		BaseHandler:    baseservice.NewBaseHandler(service),
+		FileService:    fileServiceProto.NewFileService(lib.GetFullExternalServiceName("file-service"), client.DefaultClient),
+		TestRunService: testRunServiceProto.NewTestRunService(lib.GetFullExternalServiceName("test-run-service"), client.DefaultClient),
+	}
+
+	return func(e broker.Event) error {
+		var event *proto.Event
+
+		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
+			return err
+		}
+		handler.HandleEvent(event)
+
+		return nil
+	}
+}
+
+func (h EventHandler) HandleEvent(event *proto.Event) {
+	switch event.Type {
+	case events.TEST_RUN_CREATED:
+		h.handleTestRunCreated(event)
+	default:
+		log.Printf("The event with type '%s' is not a recognized fleet test run pipeline event", event.Type)
+	}
+}
+
+func (h EventHandler) buildCallContext(event *proto.Event) context.Context {
 	return metadata.Set(context.Background(), "Token", string(event.Meta.Token))
 }
 
-func (h eventHandler) sendErrorToWssQueue(err error) {
+func (h EventHandler) sendErrorToWssQueue(err error) {
 	h.SendEventToWssQueue(context.Background(), events.WSS_ERROR, []byte(err.Error()))
 }
 
-func (h eventHandler) HandleTestRunCreated(event *proto.Event) {
+func (h EventHandler) handleTestRunCreated(event *proto.Event) {
 	// unmarshal event speciffic data
 	var eventData *proto.TestRunCreatedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
@@ -70,36 +96,4 @@ func (h eventHandler) HandleTestRunCreated(event *proto.Event) {
 		FileId:    assignmentDetails.FileId,
 	})
 	h.SendEventToWssQueue(context.Background(), events.WSS_FILE_ENTITY_CREATED, wssEventData)
-}
-
-func handleEvent(handler eventHandler, event *proto.Event) {
-	switch event.Type {
-	case events.TEST_RUN_CREATED:
-		handler.HandleTestRunCreated(event)
-	default:
-		log.Printf("The event with type '%s' is not a recognized fleet test run pipeline event", event.Type)
-	}
-}
-
-func newEventHandler(service micro.Service) eventHandler {
-	return eventHandler{
-		BaseHandler:    baseservice.NewBaseHandler(service),
-		FileService:    fileServiceProto.NewFileService(lib.GetFullExternalServiceName("file-service"), client.DefaultClient),
-		TestRunService: testRunServiceProto.NewTestRunService(lib.GetFullExternalServiceName("test-run-service"), client.DefaultClient),
-	}
-}
-
-func NewHandler(service micro.Service) handlerFunc {
-	var handler eventHandler = newEventHandler(service)
-
-	return func(e broker.Event) error {
-		var event *proto.Event
-
-		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
-			return err
-		}
-		handleEvent(handler, event)
-
-		return nil
-	}
 }

@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/Condition17/fleet-services/run-controller-service/config"
-	eventHandler "github.com/Condition17/fleet-services/run-controller-service/event-handler"
+	handler "github.com/Condition17/fleet-services/run-controller-service/handler"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-plugins/broker/googlepubsub/v2"
 )
@@ -30,7 +30,7 @@ func main() {
 	}
 
 	// Subscribe run state topic
-	_, err := msgBroker.Subscribe(topic, eventHandler.NewHandler(service))
+	_, err := msgBroker.Subscribe(topic, handler.NewHandler(service))
 
 	if err != nil {
 		log.Fatal(err)
