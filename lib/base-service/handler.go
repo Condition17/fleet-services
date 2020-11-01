@@ -38,11 +38,7 @@ func (h *BaseHandler) SendChunkDataToUploadQueue(ctx context.Context, data []byt
 	h.publishMessage(topics.ChunksUploadQueueTopic, &broker.Message{Body: data})
 }
 
-func (h BaseHandler) SendNotificationToWssQueue(ctx context.Context, data []byte) {
-	h.sendEventToWssQueue(context.Background(), "notification", data)
-}
-
-func (h *BaseHandler) sendEventToWssQueue(ctx context.Context, eventType string, data []byte) {
+func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string, data []byte) {
 	msgBody, _ := json.Marshal(
 		&runControllerProto.WssEvent{
 			Type: eventType,
