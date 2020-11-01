@@ -38,8 +38,13 @@ func (h *BaseHandler) SendChunkDataToUploadQueue(ctx context.Context, data []byt
 	h.publishMessage(topics.ChunksUploadQueueTopic, &broker.Message{Body: data})
 }
 
-func (h *BaseHandler) SendDataToWssQueue(ctx context.Context, data []byte) {
-	h.publishMessage(topics.WssTopic, &broker.Message{Body: data})
+func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string, data []byte) {
+	msgBody, _ := json.Marshal(
+		&runControllerProto.WssEvent{
+			Type: eventType,
+			Data: data,
+		})
+	h.publishMessage(topics.RunStateTopic, &broker.Message{Body: msgBody})
 }
 
 func (h *BaseHandler) publishMessage(topic string, message *broker.Message) {
