@@ -31,7 +31,7 @@ func (h *BaseHandler) SendRunStateEvent(ctx context.Context, eventType string, d
 			},
 			Data: data,
 		})
-	h.publishMessage(topics.RunStateTopic, &broker.Message{Body: msgBody})
+	h.publishMessage(topics.WssTopic, &broker.Message{Body: msgBody})
 }
 
 func (h *BaseHandler) SendChunkDataToUploadQueue(ctx context.Context, data []byte) {
