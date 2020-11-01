@@ -30,3 +30,20 @@ message TestRunCreatedEventData {
 	TestRunSpec testRunSpec = 1;
 	FileSpec	fileSpec = 2;
 }
+
+// Events sent to WSS
+
+message WssEvent {
+	string type = 1;
+	bytes data = 2;
+}
+
+message WssErrorMessageData {
+	string type = 1;
+	string message = 2;
+}
+
+message FileEntityCreatedEventData {
+	uint32 testRunId = 1;
+	string fileId = 2;
+}
