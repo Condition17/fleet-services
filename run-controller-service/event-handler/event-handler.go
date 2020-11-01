@@ -3,12 +3,12 @@ package eventHandler
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/Condition17/fleet-services/lib"
 	baseservice "github.com/Condition17/fleet-services/lib/base-service"
+	"github.com/Condition17/fleet-services/run-controller-service/errors"
 	"github.com/Condition17/fleet-services/run-controller-service/events"
 	proto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	testRunServiceProto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"
@@ -30,11 +30,15 @@ func (h eventHandler) buildCallContext(event *proto.Event) context.Context {
 	return metadata.Set(context.Background(), "Token", string(event.Meta.Token))
 }
 
+func (h eventHandler) sendErrorToWssQueue(err error) {
+	h.SendEventToWssQueue(context.Background(), events.WSS_ERROR, []byte(err.Error()))
+}
+
 func (h eventHandler) HandleTestRunCreated(event *proto.Event) {
 	// unmarshal event speciffic data
 	var eventData *proto.TestRunCreatedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
-		log.Printf("Event (type: '%s') data unmarshall error: %v\n", event.Type, err)
+		log.Println(errors.EventUnmarshalError(event))
 		return
 	}
 
@@ -46,13 +50,9 @@ func (h eventHandler) HandleTestRunCreated(event *proto.Event) {
 	}
 	createFileResp, err := h.FileService.CreateFile(h.buildCallContext(event), &fileSpec)
 	if err != nil {
-		// send a ws event in this case
-		// include failure details
-		log.Printf("File service error on create: %v", err)
+		h.sendErrorToWssQueue(errors.FileCreationError(eventData.TestRunSpec))
 		return
 	}
-	fmt.Println("Send file entry created to wss queue")
-	h.SendDataToWssQueue(context.Background(), []byte("File entity created --- ready for upload"))
 
 	// assign the created file to the current test run
 	var assignmentDetails testRunServiceProto.AssignRequest = testRunServiceProto.AssignRequest{
@@ -60,12 +60,16 @@ func (h eventHandler) HandleTestRunCreated(event *proto.Event) {
 		FileId:    createFileResp.File.Id,
 	}
 	if _, err := h.TestRunService.AssignFile(h.buildCallContext(event), &assignmentDetails); err != nil {
-		// send a ws event in this case
-		// include failure details
-		log.Printf("Assign file error: %v", err)
+		h.sendErrorToWssQueue(errors.FileCreationError(eventData.TestRunSpec))
 		return
 	}
-	h.SendDataToWssQueue(context.Background(), []byte("File assigned to current test run --- ready for upload"))
+
+	// send informations to the client through WS service
+	wssEventData, _ := json.Marshal(&proto.FileEntityCreatedEventData{
+		TestRunId: assignmentDetails.TestRunId,
+		FileId:    assignmentDetails.FileId,
+	})
+	h.SendEventToWssQueue(context.Background(), events.WSS_FILE_ENTITY_CREATED, wssEventData)
 }
 
 func handleEvent(handler eventHandler, event *proto.Event) {

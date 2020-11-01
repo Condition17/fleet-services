@@ -38,9 +38,10 @@ message WssEvent {
 	bytes data = 2;
 }
 
-message WssErrorMessageData {
+message WssErrorEventData {
 	string type = 1;
-	string message = 2;
+	string displayMessage = 2;
+	string details = 3;
 }
 
 message FileEntityCreatedEventData {
