@@ -50,6 +50,7 @@ func (h *Handler) Authenticate(ctx context.Context, req *proto.User, res *proto.
 	if res.Token, err = h.generateToken(model.UnmarshalUser(user)); err != nil {
 		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
 	}
+	res.User = model.UnmarshalUser(user)
 
 	return nil
 }
