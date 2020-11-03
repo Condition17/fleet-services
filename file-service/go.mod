@@ -13,9 +13,9 @@ replace (
 require (
 	cloud.google.com/go v0.71.0 // indirect
 	cloud.google.com/go/pubsub v1.8.2 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20201103194300-6b26d2a9cb32
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201103194300-6b26d2a9cb32 // indirect
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201103194300-6b26d2a9cb32 // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201103210223-0cf24d84e514
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201103210223-0cf24d84e514 // indirect
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201103210223-0cf24d84e514 // indirect
 	github.com/gofrs/uuid v3.3.0+incompatible
 	github.com/golang/protobuf v1.4.3
 	github.com/gomodule/redigo v1.8.2
