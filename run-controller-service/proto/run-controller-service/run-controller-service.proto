@@ -35,7 +35,8 @@ message TestRunCreatedEventData {
 
 message WssEvent {
 	string type = 1;
-	bytes data = 2;
+	bytes target = 2;
+	bytes data = 3;
 }
 
 message WssErrorEventData {
