@@ -12,10 +12,10 @@ replace (
 
 require (
 	cloud.google.com/go v0.71.0 // indirect
-	github.com/Condition17/fleet-services/file-service v0.0.0-20201103081339-2d11f130c838
-	github.com/Condition17/fleet-services/lib v0.0.0-20201103081339-2d11f130c838
-	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201103081339-2d11f130c838
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201103081339-2d11f130c838 // indirect
+	github.com/Condition17/fleet-services/file-service v0.0.0-20201103194300-6b26d2a9cb32
+	github.com/Condition17/fleet-services/lib v0.0.0-20201103194300-6b26d2a9cb32
+	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201103194300-6b26d2a9cb32
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201103194300-6b26d2a9cb32 // indirect
 	github.com/go-git/go-git/v5 v5.2.0 // indirect
 	github.com/golang/protobuf v1.4.3
 	github.com/micro/go-micro/v2 v2.9.1
@@ -25,10 +25,10 @@ require (
 	golang.org/x/net v0.0.0-20201031054903-ff519b6c9102 // indirect
 	golang.org/x/sys v0.0.0-20201101102859-da207088b7d1 // indirect
 	golang.org/x/text v0.3.4 // indirect
-	golang.org/x/tools v0.0.0-20201102212025-f46e4245211d // indirect
+	golang.org/x/tools v0.0.0-20201103190053-ac612affd56b // indirect
 	google.golang.org/api v0.34.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20201102152239-715cce707fb0 // indirect
+	google.golang.org/genproto v0.0.0-20201103154000-415bd0cd5df6 // indirect
 	google.golang.org/grpc v1.33.1 // indirect
 	google.golang.org/protobuf v1.25.0
 )

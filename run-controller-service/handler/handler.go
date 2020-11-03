@@ -44,23 +44,23 @@ func NewHandler(service micro.Service) func(broker.Event) error {
 }
 
 func (h EventHandler) HandleEvent(event *proto.Event) {
+	// TODO: this is odd. Find a better way to do this
+	ctx := metadata.Set(context.Background(), "Authorization", string(event.Meta.Authorization))
+	ctx = context.WithValue(ctx, "User", event.Meta.User)
+
 	switch event.Type {
 	case events.TEST_RUN_CREATED:
-		h.handleTestRunCreated(event)
+		h.handleTestRunCreated(ctx, event)
 	default:
 		log.Printf("The event with type '%s' is not a recognized fleet test run pipeline event", event.Type)
 	}
 }
 
-func (h EventHandler) buildCallContext(event *proto.Event) context.Context {
-	return metadata.Set(context.Background(), "Authorization", string(event.Meta.Authorization))
+func (h EventHandler) sendErrorToWssQueue(ctx context.Context, err error) {
+	h.SendEventToWssQueue(ctx, events.WSS_ERROR, []byte(err.Error()))
 }
 
-func (h EventHandler) sendErrorToWssQueue(err error) {
-	h.SendEventToWssQueue(context.Background(), events.WSS_ERROR, []byte(err.Error()))
-}
-
-func (h EventHandler) handleTestRunCreated(event *proto.Event) {
+func (h EventHandler) handleTestRunCreated(ctx context.Context, event *proto.Event) {
 	// unmarshal event speciffic data
 	var eventData *proto.TestRunCreatedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
@@ -74,9 +74,9 @@ func (h EventHandler) handleTestRunCreated(event *proto.Event) {
 		Size:         eventData.FileSpec.Size,
 		MaxChunkSize: eventData.FileSpec.MaxChunkSize,
 	}
-	createFileResp, err := h.FileService.CreateFile(h.buildCallContext(event), &fileSpec)
+	createFileResp, err := h.FileService.CreateFile(ctx, &fileSpec)
 	if err != nil {
-		h.sendErrorToWssQueue(errors.FileCreationError(eventData.TestRunSpec))
+		h.sendErrorToWssQueue(ctx, errors.FileCreationError(eventData.TestRunSpec))
 		return
 	}
 
@@ -85,8 +85,8 @@ func (h EventHandler) handleTestRunCreated(event *proto.Event) {
 		TestRunId: eventData.TestRunSpec.Id,
 		FileId:    createFileResp.File.Id,
 	}
-	if _, err := h.TestRunService.AssignFile(h.buildCallContext(event), &assignmentDetails); err != nil {
-		h.sendErrorToWssQueue(errors.FileCreationError(eventData.TestRunSpec))
+	if _, err := h.TestRunService.AssignFile(ctx, &assignmentDetails); err != nil {
+		h.sendErrorToWssQueue(ctx, errors.FileCreationError(eventData.TestRunSpec))
 		return
 	}
 
@@ -95,5 +95,5 @@ func (h EventHandler) handleTestRunCreated(event *proto.Event) {
 		TestRunId: assignmentDetails.TestRunId,
 		FileId:    assignmentDetails.FileId,
 	})
-	h.SendEventToWssQueue(context.Background(), events.WSS_FILE_ENTITY_CREATED, wssEventData)
+	h.SendEventToWssQueue(ctx, events.WSS_FILE_ENTITY_CREATED, wssEventData)
 }
