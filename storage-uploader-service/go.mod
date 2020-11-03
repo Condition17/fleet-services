@@ -11,12 +11,16 @@ replace (
 )
 
 require (
-	cloud.google.com/go/storage v1.10.0
-	github.com/Condition17/fleet-services/file-service v0.0.0-20200928220040-6ae6c4f52080
-	github.com/Condition17/fleet-services/lib v0.0.0-20201031183420-a99aa12d16c6
+	cloud.google.com/go v0.71.0 // indirect
+	cloud.google.com/go/storage v1.12.0
+	github.com/Condition17/fleet-services/file-service v0.0.0-20201103081339-2d11f130c838
+	github.com/Condition17/fleet-services/lib v0.0.0-20201103081339-2d11f130c838
 	github.com/golang/protobuf v1.4.3
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
 	github.com/micro/go-plugins/registry/kubernetes/v2 v2.9.1
+	golang.org/x/sys v0.0.0-20201101102859-da207088b7d1 // indirect
+	golang.org/x/tools v0.0.0-20201102212025-f46e4245211d // indirect
+	google.golang.org/genproto v0.0.0-20201102152239-715cce707fb0 // indirect
 	google.golang.org/protobuf v1.25.0
 )

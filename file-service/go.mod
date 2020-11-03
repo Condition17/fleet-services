@@ -11,10 +11,11 @@ replace (
 )
 
 require (
+	cloud.google.com/go v0.71.0 // indirect
 	cloud.google.com/go/pubsub v1.8.2 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20201031183420-a99aa12d16c6
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025130724-a13bbe51623b // indirect
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201025130724-a13bbe51623b // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201103081339-2d11f130c838
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201103081339-2d11f130c838 // indirect
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201103081339-2d11f130c838 // indirect
 	github.com/gofrs/uuid v3.3.0+incompatible
 	github.com/golang/protobuf v1.4.3
 	github.com/gomodule/redigo v1.8.2
@@ -23,6 +24,7 @@ require (
 	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
 	github.com/micro/go-plugins/registry/kubernetes/v2 v2.9.1
 	github.com/tkanos/gonfig v0.0.0-20181112185242-896f3d81fadf
-	golang.org/x/tools v0.0.0-20201023174141-c8cfbd0f21e6 // indirect
+	golang.org/x/tools v0.0.0-20201102212025-f46e4245211d // indirect
+	google.golang.org/genproto v0.0.0-20201102152239-715cce707fb0 // indirect
 	google.golang.org/protobuf v1.25.0
 )
