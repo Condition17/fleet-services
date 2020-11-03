@@ -6,7 +6,7 @@ service RunControllerService {}
 
 message EventMetadata {
 	bytes user = 1;
-	bytes token = 2;
+	bytes authorization = 2;
 }
 
 message Event {

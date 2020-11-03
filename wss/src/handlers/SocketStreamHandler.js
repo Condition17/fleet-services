@@ -22,7 +22,10 @@ class SocketStreamHandler {
   }
 
   sendMessage(message) {
-    this.connected.emit("notification", message);
+    // TODO: remove this
+    if (this.connected) {
+      this.connected.emit("notification", message);
+    }
     // check the message type and behave accordingly
   }
 }

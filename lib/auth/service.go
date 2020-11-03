@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/micro/go-micro/v2/client"
 	microErrors "github.com/micro/go-micro/v2/errors"
@@ -35,10 +36,16 @@ func GetUserBytesFromContext(ctx context.Context) []byte {
 	return usrBytes
 }
 
-func GetTokenBytesFromContext(ctx context.Context) []byte {
+func GetAuthorizationBytesFromContext(ctx context.Context) []byte {
 	meta, _ := metadata.FromContext(ctx)
 
-	return []byte(meta["Token"])
+	return []byte(meta["Authorization"])
+}
+
+func GetTokenBytesFromContext(ctx context.Context) []byte {
+	splitAuthToken := strings.Split(string(GetAuthorizationBytesFromContext(ctx)), "Bearer ")
+
+	return []byte(splitAuthToken[1])
 }
 
 func GetUserFromContext(ctx context.Context) (*proto.User, error) {

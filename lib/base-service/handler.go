@@ -26,8 +26,8 @@ func (h *BaseHandler) SendRunStateEvent(ctx context.Context, eventType string, d
 		&runControllerProto.Event{
 			Type: eventType,
 			Meta: &runControllerProto.EventMetadata{
-				User:  auth.GetUserBytesFromContext(ctx),
-				Token: auth.GetTokenBytesFromContext(ctx),
+				User:          auth.GetUserBytesFromContext(ctx),
+				Authorization: auth.GetAuthorizationBytesFromContext(ctx),
 			},
 			Data: data,
 		})

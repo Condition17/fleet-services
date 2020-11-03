@@ -53,7 +53,7 @@ func (h EventHandler) HandleEvent(event *proto.Event) {
 }
 
 func (h EventHandler) buildCallContext(event *proto.Event) context.Context {
-	return metadata.Set(context.Background(), "Token", string(event.Meta.Token))
+	return metadata.Set(context.Background(), "Authorization", string(event.Meta.Authorization))
 }
 
 func (h EventHandler) sendErrorToWssQueue(err error) {
