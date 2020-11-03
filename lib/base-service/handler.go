@@ -3,6 +3,7 @@ package baseservice
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/Condition17/fleet-services/lib/auth"
@@ -39,6 +40,7 @@ func (h *BaseHandler) SendChunkDataToUploadQueue(ctx context.Context, data []byt
 }
 
 func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string, data []byte) {
+	fmt.Printf("User bytes from context: %v\n", auth.GetUserBytesFromContext(ctx))
 	msgBody, _ := json.Marshal(
 		&runControllerProto.WssEvent{
 			Type:   eventType,
