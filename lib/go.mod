@@ -10,8 +10,8 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201101131607-5400ac9e44b5
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201031183420-a99aa12d16c6
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201103193219-2be2f53eecab
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201103081339-2d11f130c838
 	github.com/ghodss/yaml v1.0.0
 	github.com/micro/go-micro/v2 v2.9.1
 )

@@ -41,8 +41,9 @@ func (h *BaseHandler) SendChunkDataToUploadQueue(ctx context.Context, data []byt
 func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string, data []byte) {
 	msgBody, _ := json.Marshal(
 		&runControllerProto.WssEvent{
-			Type: eventType,
-			Data: data,
+			Type:   eventType,
+			Target: auth.GetUserBytesFromContext(ctx),
+			Data:   data,
 		})
 	h.publishMessage(topics.WssTopic, &broker.Message{Body: msgBody})
 }
