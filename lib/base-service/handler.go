@@ -39,6 +39,10 @@ func (h *BaseHandler) SendChunkDataToUploadQueue(ctx context.Context, data []byt
 	h.publishMessage(topics.ChunksUploadQueueTopic, &broker.Message{Body: data})
 }
 
+func (h *BaseHandler) SendStorageUploadedChunkData(ctx context.Context, data []byte) {
+	h.publishMessage(topics.StorageUploadedChunksTopic, &broker.Message{Body: data})
+}
+
 func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string, data []byte) {
 	fmt.Printf("User bytes from context: %v\n", auth.GetUserBytesFromContext(ctx))
 	msgBody, _ := json.Marshal(
