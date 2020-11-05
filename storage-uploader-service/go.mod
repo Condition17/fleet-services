@@ -13,14 +13,18 @@ replace (
 require (
 	cloud.google.com/go v0.71.0 // indirect
 	cloud.google.com/go/storage v1.12.0
-	github.com/Condition17/fleet-services/file-service v0.0.0-20201103081339-2d11f130c838
-	github.com/Condition17/fleet-services/lib v0.0.0-20201103081339-2d11f130c838
+	github.com/Condition17/fleet-services/file-service v0.0.0-20201105193453-e2fb352f53cd
+	github.com/Condition17/fleet-services/lib v0.0.0-20201105193453-e2fb352f53cd
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201105193453-e2fb352f53cd // indirect
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201105193453-e2fb352f53cd // indirect
+	github.com/Microsoft/go-winio v0.4.15 // indirect
 	github.com/golang/protobuf v1.4.3
+	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
 	github.com/micro/go-plugins/registry/kubernetes/v2 v2.9.1
 	golang.org/x/sys v0.0.0-20201101102859-da207088b7d1 // indirect
-	golang.org/x/tools v0.0.0-20201102212025-f46e4245211d // indirect
-	google.golang.org/genproto v0.0.0-20201102152239-715cce707fb0 // indirect
+	golang.org/x/tools v0.0.0-20201105173854-bc9fc8d8c4bc // indirect
+	google.golang.org/genproto v0.0.0-20201105153401-9d023cd09d72 // indirect
 	google.golang.org/protobuf v1.25.0
 )
