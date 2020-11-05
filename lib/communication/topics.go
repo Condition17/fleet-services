@@ -1,5 +1,8 @@
 package topics
 
-const RunStateTopic = "test-run-state"
-const ChunksUploadQueueTopic = "chunk-gcs-upload"
-const WssTopic = "wss-events"
+const (
+	RunStateTopic              = "test-run-state"
+	ChunksUploadQueueTopic     = "chunk-gcs-upload"
+	WssTopic                   = "wss-events"
+	StorageUploadedChunksTopic = "storage-uploaded-chunks"
+)
