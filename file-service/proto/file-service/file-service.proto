@@ -20,8 +20,9 @@ message Chunk {
 }
 
 message ChunkDataMessage {
-	string sha2 = 1;
-	bytes data = 2;
+	string fileId = 1;
+	string sha2 = 2;
+	bytes data = 3;
 }
 
 message File {
