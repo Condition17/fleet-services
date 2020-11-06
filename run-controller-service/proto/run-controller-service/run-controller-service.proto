@@ -31,6 +31,10 @@ message TestRunCreatedEventData {
 	FileSpec	fileSpec = 2;
 }
 
+message FileUploadedEventData {
+	FileSpec fileSpec = 2;
+}
+
 // Events sent to WSS
 
 message WssEvent {
