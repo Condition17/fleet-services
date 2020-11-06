@@ -18,22 +18,25 @@ import (
 
 func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, resp interface{}) error {
-		var userClaim *userServiceProto.User
+		var userClaims *userServiceProto.User
+		var err error
 
-		if userClaim, err := GetUserFromDecodedToken(ctx); err != nil {
+		userClaims, err = GetUserFromDecodedToken(ctx)
+
+		if err != nil {
 			return microErrors.Unauthorized(lib.GetFullExternalServiceName("user-service"), fmt.Sprintf("%v", err))
 		}
 
 		userServiceClient := userServiceProto.NewUserService(lib.GetFullExternalServiceName("user-service"), client.DefaultClient)
-		_, err := userServiceClient.GetUserByEmail(ctx, userClaim.Email)
+		_, err = userServiceClient.GetProfile(ctx, &userServiceProto.EmptyRequest{})
 		if err != nil {
 			// The user profile was not found in our database
 			return microErrors.Unauthorized(lib.GetFullExternalServiceName("user-service"), fmt.Sprintf("%v", err))
 		}
 
 		// Add user data from token in request context
-		user, _ := json.Marshal(userClaim)
-		return fn(context.WithValue(ctx, "User", userClaim), req, resp)
+		user, _ := json.Marshal(userClaims)
+		return fn(context.WithValue(ctx, "User", user), req, resp)
 	}
 }
 
