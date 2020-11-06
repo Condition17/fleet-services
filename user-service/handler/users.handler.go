@@ -35,7 +35,7 @@ func (h *Handler) Create(ctx context.Context, req *proto.User, res *proto.EmptyR
 }
 
 func (h *Handler) Authenticate(ctx context.Context, req *proto.User, res *proto.AuthResponse) error {
-	user, err := h.GetUserByEmail(req.Email)
+	user, err := h.getUserByEmail(req.Email)
 	if err != nil {
 		return err
 	}
@@ -63,16 +63,13 @@ func (h *Handler) ValidateToken(ctx context.Context, req *proto.Token, res *prot
 }
 
 func (h *Handler) GetProfile(ctx context.Context, req *proto.EmptyRequest, res *proto.AuthResponse) error {
-	// TODO: refactor here. Use logic existent in lib/auth
-	var tokenBytes []byte = auth.GetTokenBytesFromContext(ctx)
-	claims, err := h.TokenService.Decode(string(tokenBytes))
+	userClaims, err := auth.GetUserFromDecodedToken(ctx)
 
 	if err != nil {
-		return microErrors.Unauthorized(h.Service.Name(), "Invalid token")
+		return microErrors.Unauthorized(h.Service.Name(), err.Error())
 	}
-	// -- end refactor
 
-	userEntry, err := h.GetUserByEmail(ctx, claims.User.Email)
+	userEntry, err := h.getUserByEmail(userClaims.Email)
 	if err != nil {
 		return err
 	}
@@ -91,7 +88,7 @@ func (h *Handler) generateToken(payload *proto.User) (*proto.Token, error) {
 	return &proto.Token{Token: token}, nil
 }
 
-func (h *Handler) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
+func (h *Handler) getUserByEmail(email string) (*model.User, error) {
 	user, err := h.UserRepository.GetByEmail(email)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
