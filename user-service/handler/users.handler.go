@@ -35,12 +35,9 @@ func (h *Handler) Create(ctx context.Context, req *proto.User, res *proto.EmptyR
 }
 
 func (h *Handler) Authenticate(ctx context.Context, req *proto.User, res *proto.AuthResponse) error {
-	user, err := h.UserRepository.GetByEmail(req.Email)
+	user, err := h.GetUserByEmail(req.Email)
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return microErrors.Unauthorized(h.Service.Name(), "User with this email not found")
-		}
-		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+		return err
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
@@ -66,20 +63,20 @@ func (h *Handler) ValidateToken(ctx context.Context, req *proto.Token, res *prot
 }
 
 func (h *Handler) GetProfile(ctx context.Context, req *proto.EmptyRequest, res *proto.AuthResponse) error {
+	// TODO: refactor here. Use logic existent in lib/auth
 	var tokenBytes []byte = auth.GetTokenBytesFromContext(ctx)
 	claims, err := h.TokenService.Decode(string(tokenBytes))
 
 	if err != nil {
 		return microErrors.Unauthorized(h.Service.Name(), "Invalid token")
 	}
+	// -- end refactor
 
-	userEntry, err := h.UserRepository.GetByEmail(claims.User.Email)
+	userEntry, err := h.GetUserByEmail(ctx, claims.User.Email)
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return microErrors.Unauthorized(h.Service.Name(), "User with this email not found")
-		}
-		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+		return err
 	}
+
 	res.User = model.UnmarshalUser(userEntry)
 
 	return nil
@@ -92,4 +89,16 @@ func (h *Handler) generateToken(payload *proto.User) (*proto.Token, error) {
 	}
 
 	return &proto.Token{Token: token}, nil
+}
+
+func (h *Handler) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
+	user, err := h.UserRepository.GetByEmail(email)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, microErrors.Unauthorized(h.Service.Name(), "User with this email not found")
+		}
+		return nil, microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+	}
+
+	return user, nil
 }
