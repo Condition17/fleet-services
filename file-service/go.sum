@@ -63,6 +63,7 @@ github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/Condition17/fleet-services v0.0.0-20201031183420-a99aa12d16c6 h1:9K9eq2evdJFeFCuepqu0b/68ihrd0GrcJJcOSWNW8JQ=
+github.com/Condition17/fleet-services v0.0.0-20201105193453-e2fb352f53cd h1:Xsb/B14uVJ8VS0UmoHqRIYCCzsJYyTL1m4NB5n0OALY=
 github.com/Condition17/fleet-services/common v0.0.0-20201006230311-7c30ed4c66b2/go.mod h1:XdWH9f8yXj2pth6P79ssOk51h8Fib20hjEk86HEdJVc=
 github.com/Condition17/fleet-services/common v0.0.0-20201010123938-c45c2dee5d72/go.mod h1:uV+z+bre1Z6NlwKObRL/G/4nkH9dgdbhmV3TUHY3W3o=
 github.com/Condition17/fleet-services/lib v0.0.0-20201023200655-da5a0a50b457 h1:6yyG5Op4IL0L/1s+/abcmycQ6ULRluTxo8NDDGS6tzI=
@@ -85,6 +86,8 @@ github.com/Condition17/fleet-services/lib v0.0.0-20201103194300-6b26d2a9cb32 h1:
 github.com/Condition17/fleet-services/lib v0.0.0-20201103194300-6b26d2a9cb32/go.mod h1:6HxO/YT/e0lWGxzgHnmlpxVit/+k+jKhdaT7LLEvgLQ=
 github.com/Condition17/fleet-services/lib v0.0.0-20201103210223-0cf24d84e514 h1:O4A0xkN6vDJE4IDTQiKU5LJC9ez3uAmKIFmH8XOi4t8=
 github.com/Condition17/fleet-services/lib v0.0.0-20201103210223-0cf24d84e514/go.mod h1:6HxO/YT/e0lWGxzgHnmlpxVit/+k+jKhdaT7LLEvgLQ=
+github.com/Condition17/fleet-services/lib v0.0.0-20201105193453-e2fb352f53cd h1:LVwxoMd39XJ1jz/T7AjndPb3CgV3q3puHuLBkhu33ww=
+github.com/Condition17/fleet-services/lib v0.0.0-20201105193453-e2fb352f53cd/go.mod h1:MkvO6c89/bWTC55fyXNjv2DQGl5K+nVZtlq/hbHxFqM=
 github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201023191611-154681af0b4d h1:eiZMH90MCbOW2jMG5UhH3NMSEdBINHRuBWmi8a7Hhi4=
 github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201023191611-154681af0b4d/go.mod h1:M8uiHM2k7Y4ZK/bkzTkcSVW10UGbq+Zjht7RC1vY67M=
 github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025103716-bc8e68e1010b/go.mod h1:eugZkNSpZDAzMQuZzoiUtJC/9YlOKNPPlTugsWB+4tU=
@@ -106,11 +109,14 @@ github.com/Condition17/fleet-services/run-controller-service v0.0.0-202011031943
 github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201103194300-6b26d2a9cb32/go.mod h1:NvvI44BzQ/5Ekk5fQQPANamdcjCC4OQkEGkCcpXl2PI=
 github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201103210223-0cf24d84e514 h1:/trglbBhCiyP1P4bcehZITPjxwgWmTrQ+53Y6PM3tcQ=
 github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201103210223-0cf24d84e514/go.mod h1:rHbcGp1z2C1uNHXrOwceINLS2Y9jgbUtSMqKeBeNQNc=
+github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201105193453-e2fb352f53cd h1:VbdXnPkuXbYBS/qSfRCCnCVQfAO06muHJdVJM+XqLYg=
+github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201105193453-e2fb352f53cd/go.mod h1:EMNzLbn3TpZWipGwT1RlCzblQc6BvvcAq3tMDTfQgUg=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201025142808-89bce418f084/go.mod h1:ugouWCb31QxoJLYwEsLUttcQtAgUth5bEJlc0h8Bxsw=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201031183420-a99aa12d16c6/go.mod h1:/bOryp2zV5RUr2xm1B68e+g88P5WGmtvPjBIlVgT2Ik=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201101134952-b4d4ae48186b/go.mod h1:DxpynnK2g2VQI9tPVbvGYYyPAkovUA9Ac7xfNyhiIM0=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201103081339-2d11f130c838/go.mod h1:DxpynnK2g2VQI9tPVbvGYYyPAkovUA9Ac7xfNyhiIM0=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201103194300-6b26d2a9cb32/go.mod h1:ZzK8zgWhk8Pv6TKXYYLl4HV4i2ilvaFIMLELorGIHhg=
+github.com/Condition17/fleet-services/test-run-service v0.0.0-20201103210223-0cf24d84e514/go.mod h1:ZzK8zgWhk8Pv6TKXYYLl4HV4i2ilvaFIMLELorGIHhg=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201007203348-e24ac06cccf8 h1:Pdum1Sie1Je6xJVmOsWllgSMF6y9HDVpQiHtmny5OW0=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201007203348-e24ac06cccf8/go.mod h1:hIxGNh1zYEbZa7tzb9OKzu9ycmEAmiZbK/dgZ8JXujg=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201018140155-bea1c2e00e55/go.mod h1:OwoicKhYveKQ1h8SYXQn17myP9PRR4qDVeWaj/nuFsM=
@@ -130,9 +136,13 @@ github.com/Condition17/fleet-services/user-service v0.0.0-20201103194300-6b26d2a
 github.com/Condition17/fleet-services/user-service v0.0.0-20201103194300-6b26d2a9cb32/go.mod h1:qwg+H7FsTPn0o2AvKlfMFzs3mjrer4eIvkyqP+uOw3o=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201103210223-0cf24d84e514 h1:LFjOqkHGXU873KY532U0+O9vNlKMbulRbA1CQngErc0=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201103210223-0cf24d84e514/go.mod h1:ziw4ccjLKXJmodeUyn6M0rqTO4BT1svmWNo9FVkWzBY=
+github.com/Condition17/fleet-services/user-service v0.0.0-20201105193453-e2fb352f53cd h1:UV+UNssF6BPJQiMKka8XqGWflyuMbBftn6ayYtvUAqg=
+github.com/Condition17/fleet-services/user-service v0.0.0-20201105193453-e2fb352f53cd/go.mod h1:UJBEwsT8i19LdzBMyMpEE9N8L0/28wPjUmEpKjlMIMc=
 github.com/Microsoft/go-winio v0.4.14/go.mod h1:qXqCSQ3Xa7+6tgxaGTIe4Kpcdsi+P8jBhyzoq1bpyYA=
 github.com/Microsoft/go-winio v0.4.15-0.20190919025122-fc70bd9a86b5 h1:ygIc8M6trr62pF5DucadTWGdEB4mEyvzi0e2nbcmcyA=
 github.com/Microsoft/go-winio v0.4.15-0.20190919025122-fc70bd9a86b5/go.mod h1:tTuCMEN+UleMWgg9dVx4Hu52b1bJo+59jBh3ajtinzw=
+github.com/Microsoft/go-winio v0.4.15 h1:qkLXKzb1QoVatRyd/YlXZ/Kg0m5K3SPuoD82jjSOaBc=
+github.com/Microsoft/go-winio v0.4.15/go.mod h1:tTuCMEN+UleMWgg9dVx4Hu52b1bJo+59jBh3ajtinzw=
 github.com/Microsoft/hcsshim v0.8.6/go.mod h1:Op3hHsoHPAvb6lceZHDtd9OkTew38wNoXnJs8iY7rUg=
 github.com/Microsoft/hcsshim v0.8.7-0.20191101173118-65519b62243c/go.mod h1:7xhjOwRV2+0HXGmM0jxaEu+ZiXJFoVZOTfL/dmqbrD8=
 github.com/OpenDNS/vegadns2client v0.0.0-20180418235048-a3fa4a771d87/go.mod h1:iGLljf5n9GjT6kc0HBvyI1nOKnGQbNB66VzSNbK5iks=
@@ -545,6 +555,8 @@ github.com/micro/go-plugins/registry/kubernetes/v2 v2.9.1 h1:lHC7DaAOL0OA8nLKmb3
 github.com/micro/go-plugins/registry/kubernetes/v2 v2.9.1/go.mod h1:VmKy2vY/1g2j9G2bLKNv+Y3qFhkd+TEhnWtpTpHlnzU=
 github.com/micro/mdns v0.3.0 h1:bYycYe+98AXR3s8Nq5qvt6C573uFTDPIYzJemWON0QE=
 github.com/micro/mdns v0.3.0/go.mod h1:KJ0dW7KmicXU2BV++qkLlmHYcVv7/hHnbtguSWt9Aoc=
+github.com/micro/micro v1.18.0 h1:v+xiQOXbT9xxotLwu1nJM81t4FbruBxZSSyIdhUfujM=
+github.com/micro/micro/v2 v2.9.3 h1:20tSy6OEFQFcxQpSj+MRWpwtJPzXP1upCX3V9KsG3Wk=
 github.com/micro/protoc-gen-micro v1.0.0/go.mod h1:C8ij4DJhapBmypcT00AXdb0cZ675/3PqUO02buWWqbE=
 github.com/miekg/dns v1.1.3/go.mod h1:W1PPwlIAgtquWBMBEV9nkV9Cazfe8ScdGz/Lj7v3Nrg=
 github.com/miekg/dns v1.1.15/go.mod h1:W1PPwlIAgtquWBMBEV9nkV9Cazfe8ScdGz/Lj7v3Nrg=
@@ -1058,6 +1070,8 @@ golang.org/x/tools v0.0.0-20201102212025-f46e4245211d h1:qbdJV2Z36oENmeAcKxD4qJx
 golang.org/x/tools v0.0.0-20201102212025-f46e4245211d/go.mod h1:emZCQorbCU4vsT4fOWvOPXz4eW1wZW4PmDk9uLelYpA=
 golang.org/x/tools v0.0.0-20201103190053-ac612affd56b h1:E8yjJlQ4Hd1QX1XjnK5qUpjOlnBhU6ryPcQL7Uihxbc=
 golang.org/x/tools v0.0.0-20201103190053-ac612affd56b/go.mod h1:emZCQorbCU4vsT4fOWvOPXz4eW1wZW4PmDk9uLelYpA=
+golang.org/x/tools v0.0.0-20201105173854-bc9fc8d8c4bc h1:PygtgttjPI9ktfNZacJy9qQ0UQ8HZm8MV0Eaw4g6sAU=
+golang.org/x/tools v0.0.0-20201105173854-bc9fc8d8c4bc/go.mod h1:emZCQorbCU4vsT4fOWvOPXz4eW1wZW4PmDk9uLelYpA=
 golang.org/x/xerrors v0.0.0-20190410155217-1f06c39b4373/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 golang.org/x/xerrors v0.0.0-20190513163551-3ee3066db522/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
@@ -1147,6 +1161,8 @@ google.golang.org/genproto v0.0.0-20201102152239-715cce707fb0 h1:d0rYPqjQfVuFe+t
 google.golang.org/genproto v0.0.0-20201102152239-715cce707fb0/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
 google.golang.org/genproto v0.0.0-20201103154000-415bd0cd5df6 h1:rMoZiLTOobSD3eg30lPMcFkBFNSyKUQQIQlw/hsAXME=
 google.golang.org/genproto v0.0.0-20201103154000-415bd0cd5df6/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
+google.golang.org/genproto v0.0.0-20201105153401-9d023cd09d72 h1:y5Oh0goCgfBLNYTXMIwrAWyOECSQLVdZ51A14It40OI=
+google.golang.org/genproto v0.0.0-20201105153401-9d023cd09d72/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
 google.golang.org/grpc v1.27.0 h1:rRYRFMVgRv6E0D70Skyfsr28tDXIuuPZyWGMPdMcnXg=
 google.golang.org/grpc v1.27.0/go.mod h1:qbnxyOmOxrQa7FizSgH+ReBfzJrCY1pSN7KXBS8abTk=
 google.golang.org/protobuf v0.0.0-20200109180630-ec00e32a8dfd/go.mod h1:DFci5gLYBciE7Vtevhsrf46CRTquxDuWsQurQQe4oz8=

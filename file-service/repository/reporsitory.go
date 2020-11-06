@@ -17,6 +17,10 @@ const (
 	storeEntity CacheEntityType = "store"
 )
 
+func composeFileUploadedChunksCountKey(fileId string) string {
+	return fmt.Sprintf("%s:uploadedChunksCount", composeFileKey(fileId))
+}
+
 func composeFileKey(fileId string) string {
 	return fmt.Sprintf("%s:%s", fileEntity, fileId)
 }

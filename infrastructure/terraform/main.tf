@@ -73,6 +73,11 @@ resource "google_pubsub_subscription" "wss-subscription" {
   topic = google_pubsub_topic.wss-events.name
 }
 
+# storage-uploaded-chunks
+resource "google_pubsub_topic" "storage-uploaded-chunks" {
+  name = "storage-uploaded-chunks"
+}
+
 # Setup GKE
 
 resource "google_container_cluster" "primary_cluster" {

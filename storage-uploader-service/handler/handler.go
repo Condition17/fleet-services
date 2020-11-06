@@ -23,6 +23,8 @@ func (h ChunkDataHandler) HandleChunkDataMessage(chunkDataMessage *fileServicePr
 		log.Printf("Error encountered on upload (chunk %v): %v\n", chunkDataMessage.Sha2, err)
 		return
 	}
+
+	log.Printf("-----> Uploaded chunk data: %v\n", chunkDataMessage)
 	// inform other services that the chunk was uploaded
 	uploadedChunkData, _ := json.Marshal(chunkDataMessage)
 	h.SendStorageUploadedChunkData(context.Background(), uploadedChunkData)

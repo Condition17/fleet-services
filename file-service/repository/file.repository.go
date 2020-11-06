@@ -56,9 +56,21 @@ func (r *FileRepository) Create(ctx context.Context, file *model.File) (*model.F
 	// create Redis hash associated to file
 	file.ChunksStoresCount = neededStoresCount
 	file.TotalChunksCount = totalChunksCount
-	if _, err := conn.Do("HSET", redis.Args{}.Add(key).AddFlat(file)...); err != nil {
+
+	conn.Send("MULTI")
+	conn.Send("HSET", redis.Args{}.Add(key).AddFlat(file)...)
+	conn.Send("SET", composeFileUploadedChunksCountKey(file.ID), 0)
+
+	if _, err := conn.Do("EXEC"); err != nil {
 		return nil, err
 	}
 
 	return file, nil
+}
+
+func (r *FileRepository) IncrementUploadedChunksCount(ctx context.Context, fileId string) (int, error) {
+	conn := r.DB.Get()
+	defer conn.Close()
+
+	return redis.Int(conn.Do("INCR", composeFileUploadedChunksCountKey(fileId)))
 }

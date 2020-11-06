@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"encoding/json"
 
 	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
 
@@ -31,6 +32,24 @@ func (h *Handler) ReadFile(ctx context.Context, req *pb.File, res *pb.Response) 
 	}
 
 	res.File = model.UnmarshalFile(file)
+
+	return nil
+}
+
+func (h Handler) HandleChunkStorageUpladSuccess(ctx context.Context, file *pb.File) error {
+	uploadedChunksCount, err := h.FileRepository.IncrementUploadedChunksCount(ctx, file.Id)
+
+	if err != nil {
+		return err
+	}
+
+	eventData, _ := json.Marshal(
+		&pb.FileChunkUploadedEventData{
+			FileId:              file.Id,
+			TotalChunksCount:    file.TotalChunksCount,
+			UploadedChunksCount: uint64(uploadedChunksCount),
+		})
+	h.SendEventToWssQueue(ctx, "fileChunkUploaded", eventData)
 
 	return nil
 }

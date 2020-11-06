@@ -8,8 +8,9 @@ import (
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
 
-	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
+	proto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/Condition17/fleet-services/lib/auth"
+	topics "github.com/Condition17/fleet-services/lib/communication"
 	"github.com/micro/go-plugins/broker/googlepubsub/v2"
 )
 
@@ -44,7 +45,18 @@ func main() {
 
 	// Register Handler
 	serviceHandler := handler.NewHandler(service, repository.FileRepository{DB: redisPool}, repository.ChunkRepository{DB: redisPool})
-	if err := pb.RegisterFileServiceHandler(service.Server(), &serviceHandler); err != nil {
+	if err := proto.RegisterFileServiceHandler(service.Server(), &serviceHandler); err != nil {
+		log.Fatal(err)
+	}
+
+	// Get the message broker instance
+	msgBroker := service.Server().Options().Broker
+	if err := msgBroker.Connect(); err != nil {
+		log.Fatal(err)
+	}
+
+	// Subscribe to storage uploaded chunks topic
+	if _, err := msgBroker.Subscribe(topics.StorageUploadedChunksTopic, serviceHandler.GetEventsHandler()); err != nil {
 		log.Fatal(err)
 	}
 

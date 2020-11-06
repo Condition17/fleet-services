@@ -3,9 +3,11 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"log"
 
+	"github.com/Condition17/fleet-services/file-service/model"
 	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
-
+	"github.com/Condition17/fleet-services/lib/auth"
 	"github.com/micro/go-micro/errors"
 )
 
@@ -32,17 +34,25 @@ func (h *Handler) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.Em
 		return errors.BadRequest(h.Service.Name(), "Invalid chunk index for file.")
 	}
 
-	chunkSHA2, err := h.ChunkRepository.Create(ctx, req)
+	chunkSHA2, uploadedToStorage, err := h.ChunkRepository.Create(ctx, req)
 	if err != nil {
 		return err
 	}
 
-	if chunkSHA2 == "" {
-		// This chunk has been already updated
+	if uploadedToStorage == true {
+		if err := h.HandleChunkStorageUpladSuccess(ctx, model.UnmarshalFile(file)); err != nil {
+			log.Printf("Error encountered while handling chunk storage upload success: %v", err)
+		}
+
 		return nil
 	}
 
-	uploadData, _ := json.Marshal(&pb.ChunkDataMessage{Sha2: chunkSHA2, Data: req.Data})
+	uploadData, _ := json.Marshal(&pb.ChunkDataMessage{
+		Sha2:       chunkSHA2,
+		Data:       req.Data,
+		FileId:     req.FileId,
+		TargetUser: auth.GetUserBytesFromContext(ctx),
+	})
 	h.SendChunkDataToUploadQueue(ctx, uploadData)
 
 	return nil
