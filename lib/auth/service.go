@@ -12,20 +12,28 @@ import (
 	"github.com/micro/go-micro/v2/server"
 
 	"github.com/Condition17/fleet-services/lib"
-	proto "github.com/Condition17/fleet-services/user-service/proto/user-service"
+	userServiceAuth "github.com/Condition17/fleet-services/user-service/auth"
+	userServiceProto "github.com/Condition17/fleet-services/user-service/proto/user-service"
 )
 
 func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, resp interface{}) error {
-		// Auth here
-		userServiceClient := proto.NewUserService(lib.GetFullExternalServiceName("user-service"), client.DefaultClient)
-		res, err := userServiceClient.GetProfile(ctx, &proto.EmptyRequest{})
-		if err != nil {
+		var userClaim *userServiceProto.User
+
+		if userClaim, err := GetUserFromDecodedToken(ctx); err != nil {
 			return microErrors.Unauthorized(lib.GetFullExternalServiceName("user-service"), fmt.Sprintf("%v", err))
 		}
 
-		user, _ := json.Marshal(res.User)
-		return fn(context.WithValue(ctx, "User", user), req, resp)
+		userServiceClient := userServiceProto.NewUserService(lib.GetFullExternalServiceName("user-service"), client.DefaultClient)
+		_, err := userServiceClient.GetUserByEmail(ctx, userClaim.Email)
+		if err != nil {
+			// The user profile was not found in our database
+			return microErrors.Unauthorized(lib.GetFullExternalServiceName("user-service"), fmt.Sprintf("%v", err))
+		}
+
+		// Add user data from token in request context
+		user, _ := json.Marshal(userClaim)
+		return fn(context.WithValue(ctx, "User", userClaim), req, resp)
 	}
 }
 
@@ -48,11 +56,14 @@ func GetTokenBytesFromContext(ctx context.Context) []byte {
 	return []byte(splitAuthToken[1])
 }
 
-func GetUserFromContext(ctx context.Context) (*proto.User, error) {
-	var user *proto.User
-	if err := json.Unmarshal(GetUserBytesFromContext(ctx), &user); err != nil {
+func GetUserFromDecodedToken(ctx context.Context) (*userServiceProto.User, error) {
+	var tokenService *userServiceAuth.TokenService = &userServiceAuth.TokenService{}
+	var tokenBytes []byte = GetTokenBytesFromContext(ctx)
+	claims, err := tokenService.Decode(string(tokenBytes))
+
+	if err != nil {
 		return nil, err
 	}
 
-	return user, nil
+	return claims.User, nil
 }
