@@ -23,6 +23,7 @@ message ChunkDataMessage {
 	string fileId = 1;
 	string sha2 = 2;
 	bytes data = 3;
+	bytes targetUser = 4;
 }
 
 message File {
@@ -38,4 +39,10 @@ message EmptyResponse {}
 
 message Response {
 	File file = 2;
+}
+
+message FileChunkUploadedEventData {
+	string fileId = 1;
+	uint64 totalChunksCount = 2;
+	uint64 uploadedChunksCount =3;
 }
