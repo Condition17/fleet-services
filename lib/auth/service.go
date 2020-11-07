@@ -56,6 +56,10 @@ func GetAuthorizationBytesFromContext(ctx context.Context) []byte {
 func GetTokenBytesFromContext(ctx context.Context) []byte {
 	splitAuthToken := strings.Split(string(GetAuthorizationBytesFromContext(ctx)), "Bearer ")
 
+	if len(splitAuthToken) < 2 {
+		return nil
+	}
+
 	return []byte(splitAuthToken[1])
 }
 
