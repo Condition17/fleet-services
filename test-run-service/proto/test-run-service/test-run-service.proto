@@ -5,6 +5,7 @@ package go.micro.service.testrunservice;
 service TestRunService {
 	rpc Create(CreateTestRunRequest) returns (TestRunDetails) {}
 	rpc Get(TestRun) returns (TestRunDetails) {}
+	rpc GetByFileId(FileSpec) returns (TestRunDetails) {}
 	rpc List(EmptyRequest) returns (ListResponse) {}
 	rpc Delete(TestRun) returns (EmptyResponse) {}
 	rpc AssignFile(AssignRequest) returns (EmptyResponse) {}
@@ -16,6 +17,7 @@ message CreateTestRunRequest {
 }
 
 message FileSpec {
+	string id = 1;
 	string name = 2;
 	int64 size = 3;
 	uint32 maxChunkSize = 4;

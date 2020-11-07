@@ -44,6 +44,7 @@ func NewTestRunServiceEndpoints() []*api.Endpoint {
 type TestRunService interface {
 	Create(ctx context.Context, in *CreateTestRunRequest, opts ...client.CallOption) (*TestRunDetails, error)
 	Get(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRunDetails, error)
+	GetByFileId(ctx context.Context, in *FileSpec, opts ...client.CallOption) (*TestRunDetails, error)
 	List(ctx context.Context, in *EmptyRequest, opts ...client.CallOption) (*ListResponse, error)
 	Delete(ctx context.Context, in *TestRun, opts ...client.CallOption) (*EmptyResponse, error)
 	AssignFile(ctx context.Context, in *AssignRequest, opts ...client.CallOption) (*EmptyResponse, error)
@@ -73,6 +74,16 @@ func (c *testRunService) Create(ctx context.Context, in *CreateTestRunRequest, o
 
 func (c *testRunService) Get(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRunDetails, error) {
 	req := c.c.NewRequest(c.name, "TestRunService.Get", in)
+	out := new(TestRunDetails)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testRunService) GetByFileId(ctx context.Context, in *FileSpec, opts ...client.CallOption) (*TestRunDetails, error) {
+	req := c.c.NewRequest(c.name, "TestRunService.GetByFileId", in)
 	out := new(TestRunDetails)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -116,6 +127,7 @@ func (c *testRunService) AssignFile(ctx context.Context, in *AssignRequest, opts
 type TestRunServiceHandler interface {
 	Create(context.Context, *CreateTestRunRequest, *TestRunDetails) error
 	Get(context.Context, *TestRun, *TestRunDetails) error
+	GetByFileId(context.Context, *FileSpec, *TestRunDetails) error
 	List(context.Context, *EmptyRequest, *ListResponse) error
 	Delete(context.Context, *TestRun, *EmptyResponse) error
 	AssignFile(context.Context, *AssignRequest, *EmptyResponse) error
@@ -125,6 +137,7 @@ func RegisterTestRunServiceHandler(s server.Server, hdlr TestRunServiceHandler, 
 	type testRunService interface {
 		Create(ctx context.Context, in *CreateTestRunRequest, out *TestRunDetails) error
 		Get(ctx context.Context, in *TestRun, out *TestRunDetails) error
+		GetByFileId(ctx context.Context, in *FileSpec, out *TestRunDetails) error
 		List(ctx context.Context, in *EmptyRequest, out *ListResponse) error
 		Delete(ctx context.Context, in *TestRun, out *EmptyResponse) error
 		AssignFile(ctx context.Context, in *AssignRequest, out *EmptyResponse) error
@@ -146,6 +159,10 @@ func (h *testRunServiceHandler) Create(ctx context.Context, in *CreateTestRunReq
 
 func (h *testRunServiceHandler) Get(ctx context.Context, in *TestRun, out *TestRunDetails) error {
 	return h.TestRunServiceHandler.Get(ctx, in, out)
+}
+
+func (h *testRunServiceHandler) GetByFileId(ctx context.Context, in *FileSpec, out *TestRunDetails) error {
+	return h.TestRunServiceHandler.GetByFileId(ctx, in, out)
 }
 
 func (h *testRunServiceHandler) List(ctx context.Context, in *EmptyRequest, out *ListResponse) error {

@@ -41,6 +41,14 @@ func (r *TestRunRepository) GetTestRun(userId uint32, testRunId uint32) (*model.
 	return &testRun, nil
 }
 
+func (r *TestRunRepository) GetTestRunByFileId(userId uint32, fileId string) (*model.TestRun, error) {
+	var testRun model.TestRun
+	if err := r.DB.First(&testRun, "user_id = ? AND file_id = ?", userId, fileId).Error; err != nil {
+		return nil, err
+	}
+	return &testRun, nil
+}
+
 func (r *TestRunRepository) Delete(userId uint32, testRunId uint32) error {
 	if err := r.DB.Where("user_id = ? AND id = ?", userId, testRunId).Delete(&model.TestRun{}).Error; err != nil {
 		return err

@@ -57,6 +57,20 @@ func (h *Handler) Get(ctx context.Context, req *proto.TestRun, res *proto.TestRu
 	return nil
 }
 
+func (h *Handler) GetByFileId(ctx context.Context, req *proto.FileSpec, res *proto.TestRunDetails) error {
+	user, _ := auth.GetUserFromDecodedToken(ctx)
+	result, err := h.TestRunRepository.GetTestRunByFileId(user.Id, req.Id)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return microErrors.NotFound(h.Service.Name(), "No test run associated with the speciffied file was found")
+		}
+		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+	}
+	res.TestRun = model.UnmarshalTestRun(result)
+
+	return nil
+}
+
 func (h *Handler) List(ctx context.Context, req *proto.EmptyRequest, res *proto.ListResponse) error {
 	user, _ := auth.GetUserFromDecodedToken(ctx)
 	results, err := h.TestRunRepository.GetAll(user.Id)
