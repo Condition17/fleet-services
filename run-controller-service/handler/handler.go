@@ -50,6 +50,8 @@ func (h EventHandler) HandleEvent(event *proto.Event) {
 	switch event.Type {
 	case events.TEST_RUN_CREATED:
 		h.handleTestRunCreated(ctx, event)
+	case events.FILE_UPLOADED:
+		h.handleFileUploaded(ctx, event)
 	default:
 		log.Printf("The event with type '%s' is not a recognized fleet test run pipeline event", event.Type)
 	}
@@ -75,7 +77,6 @@ func (h EventHandler) handleTestRunCreated(ctx context.Context, event *proto.Eve
 	}
 	createFileResp, err := h.FileService.CreateFile(ctx, &fileSpec)
 	if err != nil {
-		log.Printf("Error encountered on createFile: %v\n", err)
 		h.sendErrorToWssQueue(ctx, errors.FileCreationError(eventData.TestRunSpec, err.Error()))
 		return
 	}
@@ -86,7 +87,6 @@ func (h EventHandler) handleTestRunCreated(ctx context.Context, event *proto.Eve
 		FileId:    createFileResp.File.Id,
 	}
 	if _, err := h.TestRunService.AssignFile(ctx, &assignmentDetails); err != nil {
-		log.Printf("Error encountered on AssignFile: %v\n", err)
 		h.sendErrorToWssQueue(ctx, errors.FileAssignError(eventData.TestRunSpec, err.Error()))
 		return
 	}
@@ -97,4 +97,30 @@ func (h EventHandler) handleTestRunCreated(ctx context.Context, event *proto.Eve
 		FileId:    assignmentDetails.FileId,
 	})
 	h.SendEventToWssQueue(ctx, events.WSS_FILE_ENTITY_CREATED, wssEventData)
+}
+
+func (h EventHandler) handleFileUploaded(ctx context.Context, event *proto.Event) {
+	// unmarshal event speciffic data
+	var eventData *proto.FileUploadedEventData
+	if err := json.Unmarshal(event.Data, &eventData); err != nil {
+		log.Println(errors.EventUnmarshalError(event.Data, event))
+		return
+	}
+
+	var fileId string = eventData.FileSpec.Id
+	// get test run associated to the uploaded file
+	var testRunDetailsResp *testRunServiceProto.TestRunDetails
+	testRunDetailsResp, err := h.TestRunService.GetByFileId(ctx, &testRunServiceProto.FileSpec{Id: fileId})
+
+	if err != nil {
+		h.sendErrorToWssQueue(ctx, errors.TestRunRetrievalError(eventData, err.Error()))
+		return
+	}
+
+	// send data to the client using WSS
+	wssEventData, _ := json.Marshal(&proto.FileUploadCompletedEventData{
+		TestRunId: testRunDetailsResp.TestRun.Id,
+		FileId:    fileId,
+	})
+	h.SendEventToWssQueue(ctx, events.WSS_FILE_UPLOAD_COMPLETED, wssEventData)
 }

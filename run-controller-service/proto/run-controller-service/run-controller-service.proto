@@ -54,3 +54,8 @@ message FileEntityCreatedEventData {
 	uint32 testRunId = 1;
 	string fileId = 2;
 }
+
+message FileUploadCompletedEventData {
+	uint32 testRunId = 1;
+	string fileId = 2;
+}

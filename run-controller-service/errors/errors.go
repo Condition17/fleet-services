@@ -48,3 +48,14 @@ func FileAssignError(target interface{}, errorDetails interface{}) error {
 		},
 	}
 }
+
+func TestRunRetrievalError(target interface{}, errorDetails interface{}) error {
+	return &Error{
+		Code:           1002,
+		DisplayMessage: "Error encountered while retrieving test run.",
+		Details: map[string]string{
+			"target": fmt.Sprintf("%v", target),
+			"error":  fmt.Sprintf("%v", errorDetails),
+		},
+	}
+}
