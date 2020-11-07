@@ -21,9 +21,10 @@ message TestRunSpec {
 }
 
 message FileSpec {
-	string name = 1;
-	int64 size = 2;
-	uint32 maxChunkSize = 3;
+	string id = 1;
+	string name = 2;
+	int64 size = 3;
+	uint32 maxChunkSize = 4;
 }
 
 message TestRunCreatedEventData {
