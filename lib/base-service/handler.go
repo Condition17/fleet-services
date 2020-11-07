@@ -26,7 +26,6 @@ func (h *BaseHandler) SendRunStateEvent(ctx context.Context, eventType string, d
 		&runControllerProto.Event{
 			Type: eventType,
 			Meta: &runControllerProto.EventMetadata{
-				User:          auth.GetUserBytesFromContext(ctx),
 				Authorization: auth.GetAuthorizationBytesFromContext(ctx),
 			},
 			Data: data,
@@ -46,7 +45,7 @@ func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string,
 	msgBody, _ := json.Marshal(
 		&runControllerProto.WssEvent{
 			Type:   eventType,
-			Target: auth.GetUserBytesFromContext(ctx),
+			Target: auth.GetUserBytesFromDecodedToken(ctx),
 			Data:   data,
 		})
 	h.publishMessage(topics.WssTopic, &broker.Message{Body: msgBody, Header: map[string]string{"orderingKey": "wssEventKey"}})

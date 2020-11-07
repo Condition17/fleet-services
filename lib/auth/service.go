@@ -18,33 +18,15 @@ import (
 
 func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, resp interface{}) error {
-		var userClaims *userServiceProto.User
-		var err error
-
-		userClaims, err = GetUserFromDecodedToken(ctx)
-
-		if err != nil {
-			return microErrors.Unauthorized(lib.GetFullExternalServiceName("user-service"), fmt.Sprintf("%v", err))
-		}
-
 		userServiceClient := userServiceProto.NewUserService(lib.GetFullExternalServiceName("user-service"), client.DefaultClient)
-		_, err = userServiceClient.GetProfile(ctx, &userServiceProto.EmptyRequest{})
-		if err != nil {
+
+		if _, err := userServiceClient.GetProfile(ctx, &userServiceProto.EmptyRequest{}); err != nil {
 			// The user profile was not found in our database
 			return microErrors.Unauthorized(lib.GetFullExternalServiceName("user-service"), fmt.Sprintf("%v", err))
 		}
 
-		// Add user data from token in request context
-		user, _ := json.Marshal(userClaims)
-		return fn(context.WithValue(ctx, "User", user), req, resp)
+		return fn(ctx, req, resp)
 	}
-}
-
-func GetUserBytesFromContext(ctx context.Context) []byte {
-	var usrBytes []byte
-	usrBytes, _ = ctx.Value("User").([]byte)
-
-	return usrBytes
 }
 
 func GetAuthorizationBytesFromContext(ctx context.Context) []byte {
@@ -61,6 +43,19 @@ func GetTokenBytesFromContext(ctx context.Context) []byte {
 	}
 
 	return []byte(splitAuthToken[1])
+}
+
+func GetUserBytesFromDecodedToken(ctx context.Context) []byte {
+	var userClaims *userServiceProto.User
+	userClaims, err := GetUserFromDecodedToken(ctx)
+
+	if err != nil {
+		fmt.Printf("Error encountered while extracting user from decoded token: %v", err)
+		return nil
+	}
+
+	usrBytes, _ := json.Marshal(userClaims)
+	return usrBytes
 }
 
 func GetUserFromDecodedToken(ctx context.Context) (*userServiceProto.User, error) {
