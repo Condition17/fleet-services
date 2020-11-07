@@ -40,7 +40,7 @@ func (h *Handler) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.Em
 	}
 
 	if uploadedToStorage == true {
-		if err := h.HandleChunkStorageUpladSuccess(ctx, model.UnmarshalFile(file)); err != nil {
+		if err := h.HandleChunkStorageUploadSuccess(ctx, model.UnmarshalFile(file)); err != nil {
 			log.Printf("Error encountered while handling chunk storage upload success: %v", err)
 		}
 
@@ -48,10 +48,10 @@ func (h *Handler) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.Em
 	}
 
 	uploadData, _ := json.Marshal(&pb.ChunkDataMessage{
-		Sha2:       chunkSHA2,
-		Data:       req.Data,
-		FileId:     req.FileId,
-		TargetUser: auth.GetUserBytesFromContext(ctx),
+		Sha2:          chunkSHA2,
+		Data:          req.Data,
+		FileId:        req.FileId,
+		Authorization: auth.GetAuthorizationBytesFromContext(ctx),
 	})
 	h.SendChunkDataToUploadQueue(ctx, uploadData)
 

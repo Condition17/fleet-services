@@ -29,7 +29,7 @@ func (h Handler) HandleEvent(e broker.Event) {
 		return
 	}
 
-	if err := h.HandleChunkStorageUpladSuccess(context.WithValue(context.Background(), "User", message.TargetUser), model.UnmarshalFile(file)); err != nil {
+	if err := h.HandleChunkStorageUploadSuccess(context.WithValue(context.Background(), "Authorization", message.Authorization), model.UnmarshalFile(file)); err != nil {
 		log.Printf("Error encountered: %v\n", err)
 		return
 	}

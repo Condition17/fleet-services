@@ -23,7 +23,7 @@ message ChunkDataMessage {
 	string fileId = 1;
 	string sha2 = 2;
 	bytes data = 3;
-	bytes targetUser = 4;
+	bytes authorization = 4;
 }
 
 message File {

@@ -36,7 +36,7 @@ func (h *Handler) ReadFile(ctx context.Context, req *pb.File, res *pb.Response) 
 	return nil
 }
 
-func (h Handler) HandleChunkStorageUpladSuccess(ctx context.Context, file *pb.File) error {
+func (h Handler) HandleChunkStorageUploadSuccess(ctx context.Context, file *pb.File) error {
 	uploadedChunksCount, err := h.FileRepository.IncrementUploadedChunksCount(ctx, file.Id)
 
 	if err != nil {
@@ -51,5 +51,6 @@ func (h Handler) HandleChunkStorageUpladSuccess(ctx context.Context, file *pb.Fi
 		})
 	h.SendEventToWssQueue(ctx, "fileChunkUploaded", eventData)
 
+	// Notify run controller that the file was uploaded
 	return nil
 }
