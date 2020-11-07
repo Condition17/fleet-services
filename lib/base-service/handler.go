@@ -49,7 +49,7 @@ func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string,
 			Target: auth.GetUserBytesFromContext(ctx),
 			Data:   data,
 		})
-	h.publishMessage(topics.WssTopic, &broker.Message{Body: msgBody})
+	h.publishMessage(topics.WssTopic, &broker.Message{Body: msgBody, Header: map[string]string{"orderingKey": "wssEventKey"}})
 }
 
 func (h *BaseHandler) publishMessage(topic string, message *broker.Message) {
