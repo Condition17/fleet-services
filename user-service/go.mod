@@ -10,8 +10,8 @@ replace (
 
 require (
 	cloud.google.com/go v0.71.0 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20201106195458-a04f32ea3129
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201106195458-a04f32ea3129 // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201107200319-06e7c1fec256
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201107200319-06e7c1fec256 // indirect
 	github.com/Microsoft/go-winio v0.4.15 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang/protobuf v1.4.3
@@ -24,7 +24,7 @@ require (
 	github.com/tkanos/gonfig v0.0.0-20181112185242-896f3d81fadf
 	github.com/xanzy/ssh-agent v0.3.0 // indirect
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897
-	golang.org/x/sys v0.0.0-20201106081118-db71ae66460a // indirect
+	golang.org/x/sys v0.0.0-20201107080550-4d91cf3a1aaf // indirect
 	golang.org/x/tools v0.0.0-20201105220310-78b158585360 // indirect
 	google.golang.org/api v0.35.0 // indirect
 	google.golang.org/genproto v0.0.0-20201106154455-f9bfe239b0ba // indirect

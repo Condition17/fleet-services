@@ -46,7 +46,6 @@ func NewHandler(service micro.Service) func(broker.Event) error {
 func (h EventHandler) HandleEvent(event *proto.Event) {
 	// TODO: this is odd. Find a better way to do this
 	ctx := metadata.Set(context.Background(), "Authorization", string(event.Meta.Authorization))
-	ctx = context.WithValue(ctx, "User", event.Meta.User)
 
 	switch event.Type {
 	case events.TEST_RUN_CREATED:
@@ -64,7 +63,7 @@ func (h EventHandler) handleTestRunCreated(ctx context.Context, event *proto.Eve
 	// unmarshal event speciffic data
 	var eventData *proto.TestRunCreatedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
-		log.Println(errors.EventUnmarshalError(event))
+		log.Println(errors.EventUnmarshalError(event.Data, event))
 		return
 	}
 
@@ -76,7 +75,8 @@ func (h EventHandler) handleTestRunCreated(ctx context.Context, event *proto.Eve
 	}
 	createFileResp, err := h.FileService.CreateFile(ctx, &fileSpec)
 	if err != nil {
-		h.sendErrorToWssQueue(ctx, errors.FileCreationError(eventData.TestRunSpec))
+		log.Printf("Error encountered on createFile: %v\n", err)
+		h.sendErrorToWssQueue(ctx, errors.FileCreationError(eventData.TestRunSpec, err.Error()))
 		return
 	}
 
@@ -86,7 +86,8 @@ func (h EventHandler) handleTestRunCreated(ctx context.Context, event *proto.Eve
 		FileId:    createFileResp.File.Id,
 	}
 	if _, err := h.TestRunService.AssignFile(ctx, &assignmentDetails); err != nil {
-		h.sendErrorToWssQueue(ctx, errors.FileCreationError(eventData.TestRunSpec))
+		log.Printf("Error encountered on AssignFile: %v\n", err)
+		h.sendErrorToWssQueue(ctx, errors.FileAssignError(eventData.TestRunSpec, err.Error()))
 		return
 	}
 

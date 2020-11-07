@@ -15,7 +15,7 @@ import (
 )
 
 func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, res *proto.TestRunDetails) error {
-	user, _ := auth.GetUserFromContext(ctx)
+	user, _ := auth.GetUserFromDecodedToken(ctx)
 	newTestRun := model.MarshalTestRun(req.TestRun)
 	newTestRun.UserID = user.Id
 	createdTestRun, err := h.TestRunRepository.Create(newTestRun)
@@ -44,7 +44,7 @@ func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, r
 }
 
 func (h *Handler) Get(ctx context.Context, req *proto.TestRun, res *proto.TestRunDetails) error {
-	user, _ := auth.GetUserFromContext(ctx)
+	user, _ := auth.GetUserFromDecodedToken(ctx)
 	result, err := h.TestRunRepository.GetTestRun(user.Id, req.Id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -58,7 +58,7 @@ func (h *Handler) Get(ctx context.Context, req *proto.TestRun, res *proto.TestRu
 }
 
 func (h *Handler) List(ctx context.Context, req *proto.EmptyRequest, res *proto.ListResponse) error {
-	user, _ := auth.GetUserFromContext(ctx)
+	user, _ := auth.GetUserFromDecodedToken(ctx)
 	results, err := h.TestRunRepository.GetAll(user.Id)
 	if err != nil {
 		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
@@ -69,7 +69,7 @@ func (h *Handler) List(ctx context.Context, req *proto.EmptyRequest, res *proto.
 }
 
 func (h *Handler) Delete(ctx context.Context, req *proto.TestRun, res *proto.EmptyResponse) error {
-	user, _ := auth.GetUserFromContext(ctx)
+	user, _ := auth.GetUserFromDecodedToken(ctx)
 	if err := h.TestRunRepository.Delete(user.Id, req.Id); err != nil {
 		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
 	}
@@ -78,7 +78,7 @@ func (h *Handler) Delete(ctx context.Context, req *proto.TestRun, res *proto.Emp
 }
 
 func (h *Handler) AssignFile(ctx context.Context, req *proto.AssignRequest, res *proto.EmptyResponse) error {
-	user, _ := auth.GetUserFromContext(ctx)
+	user, _ := auth.GetUserFromDecodedToken(ctx)
 	testRun, err := h.TestRunRepository.GetTestRun(user.Id, req.TestRunId)
 
 	if err != nil {

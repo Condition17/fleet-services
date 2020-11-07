@@ -71,6 +71,7 @@ resource "google_pubsub_topic" "wss-events" {
 resource "google_pubsub_subscription" "wss-subscription" {
   name = "wss-subscription"
   topic = google_pubsub_topic.wss-events.name
+  enable_message_ordering = true
 }
 
 # storage-uploaded-chunks

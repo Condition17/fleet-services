@@ -8,6 +8,7 @@ import (
 	"github.com/Condition17/fleet-services/file-service/model"
 	proto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/micro/go-micro/v2/broker"
+	"github.com/micro/go-micro/v2/metadata"
 )
 
 func (h Handler) HandleEvent(e broker.Event) {
@@ -29,7 +30,9 @@ func (h Handler) HandleEvent(e broker.Event) {
 		return
 	}
 
-	if err := h.HandleChunkStorageUploadSuccess(context.WithValue(context.Background(), "Authorization", message.Authorization), model.UnmarshalFile(file)); err != nil {
+	// fmt.Printf("Received event - chunk uploaded - authorization: %s", string(message.Authorization))
+	ctx := metadata.Set(context.Background(), "Authorization", string(message.Authorization))
+	if err := h.HandleChunkStorageUploadSuccess(ctx, model.UnmarshalFile(file)); err != nil {
 		log.Printf("Error encountered: %v\n", err)
 		return
 	}

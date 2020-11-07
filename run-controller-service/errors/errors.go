@@ -1,6 +1,9 @@
 package errors
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type Error struct {
 	Code           int         `json:"code"`
@@ -13,26 +16,35 @@ func (e *Error) Error() string {
 	return string(b)
 }
 
-func EventUnmarshalError(details interface{}) error {
+func EventUnmarshalError(target interface{}, errorDetails interface{}) error {
 	return &Error{
 		Code:           999,
 		DisplayMessage: "Could not unmarshal given event object.",
-		Details:        details,
+		Details: map[string]string{
+			"target": fmt.Sprintf("%v", target),
+			"error":  fmt.Sprintf("%v", errorDetails),
+		},
 	}
 }
 
-func FileCreationError(details interface{}) error {
+func FileCreationError(target interface{}, errorDetails interface{}) error {
 	return &Error{
 		Code:           1000,
 		DisplayMessage: "Error while creating a file for test run.",
-		Details:        details,
+		Details: map[string]string{
+			"target": fmt.Sprintf("%v", target),
+			"error":  fmt.Sprintf("%v", errorDetails),
+		},
 	}
 }
 
-func FileAssignError(details interface{}) error {
+func FileAssignError(target interface{}, errorDetails interface{}) error {
 	return &Error{
 		Code:           1001,
 		DisplayMessage: "Error encountered while assigning the file to the created test run.",
-		Details:        details,
+		Details: map[string]string{
+			"target": fmt.Sprintf("%v", target),
+			"error":  fmt.Sprintf("%v", errorDetails),
+		},
 	}
 }

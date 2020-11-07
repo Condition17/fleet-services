@@ -24,7 +24,6 @@ func (h ChunkDataHandler) HandleChunkDataMessage(chunkDataMessage *fileServicePr
 		return
 	}
 
-	log.Printf("-----> Uploaded chunk data: %v\n", chunkDataMessage)
 	// inform other services that the chunk was uploaded
 	uploadedChunkData, _ := json.Marshal(chunkDataMessage)
 	h.SendStorageUploadedChunkData(context.Background(), uploadedChunkData)

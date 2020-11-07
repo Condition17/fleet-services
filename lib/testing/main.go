@@ -24,11 +24,11 @@ func main() {
 	// baseHandler = baseservice.NewBaseHandler(service)
 
 	// Test getTokenBytesFromContext
-	var ctx context.Context = metadata.Set(context.Background(), "Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7ImlkIjo3LCJuYW1lIjoiR2lnaWVsIFRlc3QiLCJjb21wYW55IjoiQWxwaGFiZXQgSW5jLiIsImVtYWlsIjoiZ2lnZWwuZW1haWxAZ21haWwuY29tIn0sImV4cCI6MTYzNDE1NDE5MiwiaXNzIjoiZ28ubWljcm8uYXBpLnVzZXItc2VydmljZSJ9.93BX3wcbjeTYszsR8UvpFLG1v1XS8GzQ7n7RzQcF3rU")
+	var ctx context.Context = metadata.Set(context.Background(), "Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7ImlkIjoxMiwibmFtZSI6InRzdDEiLCJjb21wYW55IjoidHN0MS5zcmwiLCJlbWFpbCI6InRzdDFAZGV2LmZsZWV0In0sImV4cCI6MTYzNTc5NzA4OCwiaXNzIjoiZ28ubWljcm8uYXBpLnVzZXItc2VydmljZSJ9.L9QKsNQzIeN3v-ov3jzYQjj3F5nmXIDrFKSYNArlKZw")
 	// var vals []byte
 	// vals = ctx.Value("Token").([]byte)
 	// fmt.Print(vals)
-	fmt.Print(auth.GetUserBytesFromDecodedToken(ctx))
+	fmt.Print(string(auth.GetUserBytesFromDecodedToken(ctx)))
 	// baseHandler.SendDataToWssQueue(context.Background(), []byte("this is from lib"))
 	// fmt.Println("Message sent, theoretically")
 }
