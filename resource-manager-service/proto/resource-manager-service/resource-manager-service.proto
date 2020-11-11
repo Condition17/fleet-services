@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package go.micro.service.resourcemanagerservice;
+
+service ResourceManagerService {
+	rpc ProvisionFileSystem(FileSystemSpec) returns (EmptyResponse) {} 
+}
+
+message FileSystemSpec {
+	uint32 testRunId = 1;
+	int64 contentSize = 2;
+}
+
+message EmptyResponse {}
