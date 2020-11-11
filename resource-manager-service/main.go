@@ -1,16 +1,16 @@
 package main
 
 import (
-	"github.com/Condition17/resource-manager-service/config"
-	"github.com/Condition17/resource-manager-service/database"
-	"github.com/Condition17/resource-manager-service/handler"
-	"github.com/Condition17/resource-manager-service/model"
+	"github.com/Condition17/fleet-services/resource-manager-service/config"
+	"github.com/Condition17/fleet-services/resource-manager-service/handler"
+	"github.com/Condition17/fleet-services/resource-manager-service/model"
+	"github.com/Condition17/fleet-services/resource-manager-service/repository"
+	"github.com/Condition17/fleet-services/resource-manager-service/storage/database"
 
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
 
 	proto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service"
-	"github.com/Condition17/fleet-services/test-run-service/repository"
 	"github.com/micro/go-plugins/broker/googlepubsub/v2"
 )
 
@@ -39,8 +39,8 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	serviceHandler := handler.NewHandler(service, repository.TestRunRepository{DB: db})
-	proto.RegisterTestRunServiceHandler(service.Server(), &serviceHandler)
+	serviceHandler := handler.NewHandler(service, repository.FileSystemRepository{DB: db})
+	proto.RegisterResourceManagerServiceHandler(service.Server(), &serviceHandler)
 
 	// Run service
 	if err := service.Run(); err != nil {
