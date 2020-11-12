@@ -13,9 +13,10 @@ import (
 type Handler struct {
 	baseservice.BaseHandler
 	CloudFileStoreService *file.Service
+	FileSystemRepository  repository.FileSystemRepository
 }
 
-func NewHandler(service micro.Service, repo repository.FileSystemRepository) Handler {
+func NewHandler(service micro.Service, fileSystemRepo repository.FileSystemRepository) Handler {
 	fileStoreService, err := file.NewService(context.Background())
 
 	if err != nil {
@@ -25,5 +26,6 @@ func NewHandler(service micro.Service, repo repository.FileSystemRepository) Han
 	return Handler{
 		BaseHandler:           baseservice.NewBaseHandler(service),
 		CloudFileStoreService: fileStoreService,
+		FileSystemRepository:  fileSystemRepo,
 	}
 }
