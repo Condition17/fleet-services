@@ -10,7 +10,7 @@ type FileSystem struct {
 
 	IP        string `gorm:"not null;type:varchar(100);default:null"`
 	Name      string `gorm:"not null;type:varchar(100);default:null"`
-	Capacity  uint64 `gorm:"not null;default: null"`
+	Capacity  uint64 `gorm:"not nulll"`
 	TestRunID uint32
 	TestRun   testRunModels.TestRun
 }

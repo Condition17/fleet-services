@@ -1,0 +1,53 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "make build",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "local:run",
+      "type": "shell",
+      "command": "./file-service",
+      "options": {
+        "env": {
+          "MICRO_BROKER": "googlepubsub",
+          "GOOGLEPUBSUB_PROJECT_ID": "fleet-271114"
+        }
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "micro:run",
+      "type": "shell",
+      "command": "micro update . & micro run .",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "micro:kill",
+      "type": "shell",
+      "command": "micro kill file-service",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    }
+  ]
+}
