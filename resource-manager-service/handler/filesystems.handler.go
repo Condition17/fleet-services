@@ -2,42 +2,67 @@ package handler
 
 import (
 	"context"
+	"crypto/md5"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"time"
 
+	"github.com/Condition17/fleet-services/resource-manager-service/config"
 	"github.com/Condition17/fleet-services/resource-manager-service/model"
 	proto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service"
 	"google.golang.org/api/file/v1"
 )
 
+const MIN_FILESTORE_CAPACITY_GB int64 = 1024
+const MAX_FILESTORE_CAPACITY_GB int64 = 63900
+
 func (h *Handler) ProvisionFileSystem(ctx context.Context, req *proto.FileSystemSpec, res *proto.EmptyResponse) error {
-	// TODO ===== REFACTOR THIS
-	fileShareConfig := &file.FileShareConfig{CapacityGb: 1024, Name: "target"}
-	networkConfig := &file.NetworkConfig{
-		Modes:           []string{"MODE_IPV4"},
-		Network:         "default",
-		ReservedIpRange: "",
+	var requestedSizeGb int64 = int64(math.Round(float64(req.SizeInBytes)/float64(math.Pow10(9)) + 0.5))
+	var neededFsCapacityGb = int64(math.Max(float64(MIN_FILESTORE_CAPACITY_GB), float64(requestedSizeGb)))
+
+	if neededFsCapacityGb > MAX_FILESTORE_CAPACITY_GB {
+		return errors.New(fmt.Sprintf(
+			"Requested capacity in Gb: %v for testrun (id: %v). Could not create file system bigger than %vGb\n",
+			neededFsCapacityGb,
+			req.TestRunId,
+			MAX_FILESTORE_CAPACITY_GB,
+		))
 	}
-	instance := &file.Instance{
+
+	var fsInstanceConfig *file.Instance = &file.Instance{
 		Description: "",
-		FileShares:  []*file.FileShareConfig{fileShareConfig},
-		Networks:    []*file.NetworkConfig{networkConfig},
-		Tier:        "BASIC_HDD",
+		FileShares: []*file.FileShareConfig{
+			&file.FileShareConfig{
+				CapacityGb: neededFsCapacityGb,
+				Name:       "target",
+			},
+		},
+		Tier: "BASIC_HDD",
+		Networks: []*file.NetworkConfig{
+			&file.NetworkConfig{
+				Modes:           []string{"MODE_IPV4"},
+				Network:         "default",
+				ReservedIpRange: "",
+			},
+		},
 	}
-	createCall := h.CloudFileStoreService.Projects.Locations.Instances.Create(
-		fmt.Sprintf("projects/%s/locations/%s", "fleet-271114", "us-central1-a"), instance)
 
-	createCall.InstanceId("tst123")
-	// ------------------
+	createFsInstanceCall := h.CloudFileStoreService.Projects.Locations.Instances.Create(
+		fmt.Sprintf("projects/%s/locations/%s", config.GetConfig().GoogleProjectID, config.GetConfig().FsDeployLocations),
+		fsInstanceConfig,
+	)
 
-	operation, err := createCall.Do()
+	var instanceIdMd5 [16]byte = md5.Sum([]byte(fmt.Sprintf("%v-%v-%v", time.Now().Unix(), neededFsCapacityGb, req.TestRunId)))
+	createFsInstanceCall.InstanceId(fmt.Sprintf("instance-%x", instanceIdMd5))
+
+	createOperation, err := createFsInstanceCall.Do()
 	if err != nil {
 		return err
 	}
 
-	go h.executePostFSCreateOperationSteps(req.TestRunId, operation)
+	go h.executePostFSCreateOperationSteps(req.TestRunId, createOperation)
 
 	return nil
 }
@@ -68,8 +93,7 @@ func (h *Handler) executePostFSCreateOperationSteps(testRunId uint32, op *file.O
 		return
 	}
 
-	fmt.Println("FS db entity created (for the record). Now we have to communicate it to the run-controller service")
-	// send data to run controller service
+	// TODO: send data to run controller service
 }
 
 func (h *Handler) waitForOperationToFinish(op *file.Operation) (*file.Operation, error) {

@@ -4,3 +4,4 @@
 "DB_NAME": "fleet"
 "DB_PASSWORD": "root"
 "GOOGLE_PROJECT_ID": "fleet-271114"
+"FS_DEPLOY_LOCATIONS": "us-central1-a"
