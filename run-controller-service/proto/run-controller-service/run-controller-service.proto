@@ -52,7 +52,7 @@ message WssErrorEventData {
 
 message FileEntityCreatedEventData {
 	uint32 testRunId = 1;
-	string fileId = 2;
+	FileSpec fileSpec = 2;
 }
 
 message FileUploadCompletedEventData {

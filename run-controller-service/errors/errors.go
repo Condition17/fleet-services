@@ -59,3 +59,14 @@ func TestRunRetrievalError(target interface{}, errorDetails interface{}) error {
 		},
 	}
 }
+
+func FileSystemCreationError(target interface{}, errorDetails interface{}) error {
+	return &Error{
+		Code:           1003,
+		DisplayMessage: "Error encountered while creating file system.",
+		Details: map[string]string{
+			"target": fmt.Sprintf("%v", target),
+			"error":  fmt.Sprintf("%v", errorDetails),
+		},
+	}
+}

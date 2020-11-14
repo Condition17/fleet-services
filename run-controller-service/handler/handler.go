@@ -8,6 +8,7 @@ import (
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/Condition17/fleet-services/lib"
 	baseservice "github.com/Condition17/fleet-services/lib/base-service"
+	resourceManagerProto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service"
 	"github.com/Condition17/fleet-services/run-controller-service/errors"
 	"github.com/Condition17/fleet-services/run-controller-service/events"
 	proto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
@@ -20,15 +21,17 @@ import (
 
 type EventHandler struct {
 	baseservice.BaseHandler
-	FileService    fileServiceProto.FileService
-	TestRunService testRunServiceProto.TestRunService
+	FileService            fileServiceProto.FileService
+	TestRunService         testRunServiceProto.TestRunService
+	ResourceManagerService resourceManagerProto.ResourceManagerService
 }
 
 func NewHandler(service micro.Service) func(broker.Event) error {
 	var handler EventHandler = EventHandler{
-		BaseHandler:    baseservice.NewBaseHandler(service),
-		FileService:    fileServiceProto.NewFileService(lib.GetFullExternalServiceName("file-service"), client.DefaultClient),
-		TestRunService: testRunServiceProto.NewTestRunService(lib.GetFullExternalServiceName("test-run-service"), client.DefaultClient),
+		BaseHandler:            baseservice.NewBaseHandler(service),
+		FileService:            fileServiceProto.NewFileService(lib.GetFullExternalServiceName("file-service"), client.DefaultClient),
+		TestRunService:         testRunServiceProto.NewTestRunService(lib.GetFullExternalServiceName("test-run-service"), client.DefaultClient),
+		ResourceManagerService: resourceManagerProto.NewResourceManagerService(lib.GetFullExternalServiceName("resource-manager-service"), client.DefaultClient),
 	}
 
 	return func(e broker.Event) error {
@@ -94,7 +97,12 @@ func (h EventHandler) handleTestRunCreated(ctx context.Context, event *proto.Eve
 	// send informations to the client through WS service
 	wssEventData, _ := json.Marshal(&proto.FileEntityCreatedEventData{
 		TestRunId: assignmentDetails.TestRunId,
-		FileId:    assignmentDetails.FileId,
+		FileSpec: &proto.FileSpec{
+			Id:           assignmentDetails.FileId,
+			Name:         fileSpec.Name,
+			Size:         fileSpec.Size,
+			MaxChunkSize: fileSpec.MaxChunkSize,
+		},
 	})
 	h.SendEventToWssQueue(ctx, events.WSS_FILE_ENTITY_CREATED, wssEventData)
 }
@@ -107,10 +115,11 @@ func (h EventHandler) handleFileUploaded(ctx context.Context, event *proto.Event
 		return
 	}
 
-	var fileId string = eventData.FileSpec.Id
+	var fileSpec *proto.FileSpec = eventData.FileSpec
+
 	// get test run associated to the uploaded file
 	var testRunDetailsResp *testRunServiceProto.TestRunDetails
-	testRunDetailsResp, err := h.TestRunService.GetByFileId(ctx, &testRunServiceProto.FileSpec{Id: fileId})
+	testRunDetailsResp, err := h.TestRunService.GetByFileId(ctx, &testRunServiceProto.FileSpec{Id: fileSpec.Id})
 
 	if err != nil {
 		h.sendErrorToWssQueue(ctx, errors.TestRunRetrievalError(eventData, err.Error()))
@@ -120,7 +129,18 @@ func (h EventHandler) handleFileUploaded(ctx context.Context, event *proto.Event
 	// send data to the client using WSS
 	wssEventData, _ := json.Marshal(&proto.FileUploadCompletedEventData{
 		TestRunId: testRunDetailsResp.TestRun.Id,
-		FileId:    fileId,
+		FileId:    fileSpec.Id,
 	})
 	h.SendEventToWssQueue(ctx, events.WSS_FILE_UPLOAD_COMPLETED, wssEventData)
+
+	// request file system provisioning to resource manager service
+	var fileSystemSpec *resourceManagerProto.FileSystemSpec = &resourceManagerProto.FileSystemSpec{
+		TestRunId:   testRunDetailsResp.TestRun.Id,
+		SizeInBytes: fileSpec.Size,
+	}
+
+	if _, err := h.ResourceManagerService.ProvisionFileSystem(ctx, fileSystemSpec); err != nil {
+		h.sendErrorToWssQueue(ctx, errors.FileSystemCreationError(fileSystemSpec, events.WSS_ERROR))
+		return
+	}
 }

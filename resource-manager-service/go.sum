@@ -72,6 +72,7 @@ github.com/Condition17/fleet-services/file-service v0.0.0-20201103081339-2d11f13
 github.com/Condition17/fleet-services/file-service v0.0.0-20201103194300-6b26d2a9cb32/go.mod h1:rjDmxMsBuV3XYpG7adhG73VukHY9jgMRBGiQ9fPHOAE=
 github.com/Condition17/fleet-services/file-service v0.0.0-20201103210223-0cf24d84e514/go.mod h1:AjiZZZjpZaP0sOhFo0t8iGElgQJzzO32pDc1IiqUqrw=
 github.com/Condition17/fleet-services/file-service v0.0.0-20201107200319-06e7c1fec256/go.mod h1:tdZA/LKpjKhvsxJtcmBKbZHuiKkeq3x2X6FJT7wywCQ=
+github.com/Condition17/fleet-services/file-service v0.0.0-20201107223016-b8381b8f372a/go.mod h1:xq5SRR2ixLoyJMLP5HWQzDDnYGxIuJT/pSxxvwUTcPk=
 github.com/Condition17/fleet-services/lib v0.0.0-20201023200655-da5a0a50b457/go.mod h1:PmNtvyWCgbAYmINexByoQDAOauYNPcQbMALDEqImtOI=
 github.com/Condition17/fleet-services/lib v0.0.0-20201023205230-f4d9ac7f3894/go.mod h1:PmNtvyWCgbAYmINexByoQDAOauYNPcQbMALDEqImtOI=
 github.com/Condition17/fleet-services/lib v0.0.0-20201025124251-378b9f3827a1/go.mod h1:E+OCYeIFjXOrqlZ/M+YGZh9fO6OxNFqDwiBVdwY2DJM=
@@ -89,6 +90,9 @@ github.com/Condition17/fleet-services/lib v0.0.0-20201107184340-0568efb3eeb4/go.
 github.com/Condition17/fleet-services/lib v0.0.0-20201107200319-06e7c1fec256/go.mod h1:MkvO6c89/bWTC55fyXNjv2DQGl5K+nVZtlq/hbHxFqM=
 github.com/Condition17/fleet-services/lib v0.0.0-20201107220710-33139c8c7d11 h1:/vxYoARsOq/hwBAFtgoBh+7FWHeCFRnDN3B3CGw5stw=
 github.com/Condition17/fleet-services/lib v0.0.0-20201107220710-33139c8c7d11/go.mod h1:MkvO6c89/bWTC55fyXNjv2DQGl5K+nVZtlq/hbHxFqM=
+github.com/Condition17/fleet-services/lib v0.0.0-20201107223016-b8381b8f372a/go.mod h1:MkvO6c89/bWTC55fyXNjv2DQGl5K+nVZtlq/hbHxFqM=
+github.com/Condition17/fleet-services/lib v0.0.0-20201114120241-c6821d09ccf0 h1:ST4mLLvKx/wHzpR4piqRABDfZsSaHYvhwCTv/X3o5TI=
+github.com/Condition17/fleet-services/lib v0.0.0-20201114120241-c6821d09ccf0/go.mod h1:MkvO6c89/bWTC55fyXNjv2DQGl5K+nVZtlq/hbHxFqM=
 github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201023191611-154681af0b4d/go.mod h1:M8uiHM2k7Y4ZK/bkzTkcSVW10UGbq+Zjht7RC1vY67M=
 github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201023205230-f4d9ac7f3894/go.mod h1:M8uiHM2k7Y4ZK/bkzTkcSVW10UGbq+Zjht7RC1vY67M=
 github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201025103716-bc8e68e1010b/go.mod h1:eugZkNSpZDAzMQuZzoiUtJC/9YlOKNPPlTugsWB+4tU=
@@ -108,6 +112,8 @@ github.com/Condition17/fleet-services/run-controller-service v0.0.0-202011071843
 github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201107200319-06e7c1fec256/go.mod h1:EMNzLbn3TpZWipGwT1RlCzblQc6BvvcAq3tMDTfQgUg=
 github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201107220710-33139c8c7d11 h1:L4VvPsIlAKRpqUoaRxNSAZnYjko/rEj/ftbL2fIQfHo=
 github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201107220710-33139c8c7d11/go.mod h1:GkFMyzX1OsyJuEFz7El9lV0j/e+6RombWfi3CQc6/kA=
+github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201114120241-c6821d09ccf0 h1:/cDa3kuSIyvW8KpdWA4kRDQoZFYmHDN3RdU1gjYRgcQ=
+github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201114120241-c6821d09ccf0/go.mod h1:yc0RveLHaDiDctnwtkT0FZa9TStAwJawK8RU3iAIi8s=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201025142808-89bce418f084/go.mod h1:ugouWCb31QxoJLYwEsLUttcQtAgUth5bEJlc0h8Bxsw=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201031183420-a99aa12d16c6/go.mod h1:/bOryp2zV5RUr2xm1B68e+g88P5WGmtvPjBIlVgT2Ik=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201101134952-b4d4ae48186b/go.mod h1:DxpynnK2g2VQI9tPVbvGYYyPAkovUA9Ac7xfNyhiIM0=
@@ -115,10 +121,13 @@ github.com/Condition17/fleet-services/test-run-service v0.0.0-20201103081339-2d1
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201103194300-6b26d2a9cb32/go.mod h1:ZzK8zgWhk8Pv6TKXYYLl4HV4i2ilvaFIMLELorGIHhg=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201103210223-0cf24d84e514/go.mod h1:ZzK8zgWhk8Pv6TKXYYLl4HV4i2ilvaFIMLELorGIHhg=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201107200319-06e7c1fec256/go.mod h1:21Ggpk1BUm247Lc8O2vYB6j3aeITbB05fZzq/G7qWHw=
+github.com/Condition17/fleet-services/test-run-service v0.0.0-20201107223016-b8381b8f372a/go.mod h1:X+7JcwrdFlbNwgERNnOaF2QIRIpIXhUJqnXhQcZs1sg=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201107225756-c400b48b3d63 h1:kkZbRJ6LKQs7lmE4XrFGGOCxFo8/FDUEzKVwCXGrdco=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201107225756-c400b48b3d63/go.mod h1:X+7JcwrdFlbNwgERNnOaF2QIRIpIXhUJqnXhQcZs1sg=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201111212302-bc6c8bb28f29 h1:En1ooezbxxGt0OaBatG8KncB0um7PwIKyCBVFgwj/ng=
 github.com/Condition17/fleet-services/test-run-service v0.0.0-20201111212302-bc6c8bb28f29/go.mod h1:X+7JcwrdFlbNwgERNnOaF2QIRIpIXhUJqnXhQcZs1sg=
+github.com/Condition17/fleet-services/test-run-service v0.0.0-20201114120241-c6821d09ccf0 h1:gh3xZ6RNdmyhGH0j1Pva1Nk8AtrDZkDCbqY/clSvLpU=
+github.com/Condition17/fleet-services/test-run-service v0.0.0-20201114120241-c6821d09ccf0/go.mod h1:X+7JcwrdFlbNwgERNnOaF2QIRIpIXhUJqnXhQcZs1sg=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201007203348-e24ac06cccf8/go.mod h1:hIxGNh1zYEbZa7tzb9OKzu9ycmEAmiZbK/dgZ8JXujg=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201018140155-bea1c2e00e55/go.mod h1:OwoicKhYveKQ1h8SYXQn17myP9PRR4qDVeWaj/nuFsM=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201023205230-f4d9ac7f3894/go.mod h1:PCJ58ETlWm18QiHTXOkM9iA+Td8y9JUVUdJn5PS3miI=
@@ -136,8 +145,11 @@ github.com/Condition17/fleet-services/user-service v0.0.0-20201107184340-0568efb
 github.com/Condition17/fleet-services/user-service v0.0.0-20201107200319-06e7c1fec256/go.mod h1:v24ZrfPhtl7YcZCPXiq0BTlPfJ8mgvVaVQwt9NSKYzI=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201107220710-33139c8c7d11 h1:OaWIFqdv4rbmkZLLIM4/gLqystP5QMjA0AQ/xnc+Q54=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201107220710-33139c8c7d11/go.mod h1:uF0yu388uEDxt1F9Q7EKxzdrv/a1d+gAVyntVYGHvnc=
+github.com/Condition17/fleet-services/user-service v0.0.0-20201107223016-b8381b8f372a/go.mod h1:uF0yu388uEDxt1F9Q7EKxzdrv/a1d+gAVyntVYGHvnc=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201111212302-bc6c8bb28f29 h1:qGWRKSsQVmavUirzAlrQCug2rEqTNGXR7NHql1+RW88=
 github.com/Condition17/fleet-services/user-service v0.0.0-20201111212302-bc6c8bb28f29/go.mod h1:uF0yu388uEDxt1F9Q7EKxzdrv/a1d+gAVyntVYGHvnc=
+github.com/Condition17/fleet-services/user-service v0.0.0-20201114120241-c6821d09ccf0 h1:CpRAEUiT560bdWasmqqL9rhpjzprLpucSnxraPbCxyw=
+github.com/Condition17/fleet-services/user-service v0.0.0-20201114120241-c6821d09ccf0/go.mod h1:uF0yu388uEDxt1F9Q7EKxzdrv/a1d+gAVyntVYGHvnc=
 github.com/Microsoft/go-winio v0.4.14/go.mod h1:qXqCSQ3Xa7+6tgxaGTIe4Kpcdsi+P8jBhyzoq1bpyYA=
 github.com/Microsoft/go-winio v0.4.15-0.20190919025122-fc70bd9a86b5/go.mod h1:tTuCMEN+UleMWgg9dVx4Hu52b1bJo+59jBh3ajtinzw=
 github.com/Microsoft/go-winio v0.4.15 h1:qkLXKzb1QoVatRyd/YlXZ/Kg0m5K3SPuoD82jjSOaBc=
@@ -328,6 +340,8 @@ github.com/google/go-cmp v0.5.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/
 github.com/google/go-cmp v0.5.1/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-cmp v0.5.2 h1:X2ev0eStA3AbceY54o37/0PQ/UWqKEiiO2dKL5OPaFM=
 github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
+github.com/google/go-cmp v0.5.3 h1:x95R7cp+rSeeqAMI2knLtQ0DKlaBhv2NrtrOvafPHRo=
+github.com/google/go-cmp v0.5.3/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-dap v0.2.0/go.mod h1:5q8aYQFnHOAZEMP+6vmq25HKYAEwE+LF5yh7JKrrhSQ=
 github.com/google/go-querystring v1.0.0/go.mod h1:odCYkC5MyYFN7vkCjXpyrEuKhc/BUO6wN/zVPAxq5ck=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
@@ -747,6 +761,8 @@ golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPh
 golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 h1:pLI5jrR7OSLijeIDcmRxNmw2api+jEfxLoykJVice/E=
 golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
+golang.org/x/crypto v0.0.0-20201112155050-0c6587e931a9 h1:umElSU9WZirRdgu2yFHY0ayQkEnKiOC1TtM3fWXFnoU=
+golang.org/x/crypto v0.0.0-20201112155050-0c6587e931a9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/exp v0.0.0-20190121172915-509febef88a4/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
 golang.org/x/exp v0.0.0-20190306152737-a1d7652674e8/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
 golang.org/x/exp v0.0.0-20190510132918-efd6b22b2522/go.mod h1:ZjyILWgesfNpC6sMxTJOJm9Kp84zZh5NQWvqDGG3Qr8=
@@ -914,6 +930,8 @@ golang.org/x/sys v0.0.0-20201107080550-4d91cf3a1aaf h1:kt3wY1Lu5MJAnKTfoMR52Cu4g
 golang.org/x/sys v0.0.0-20201107080550-4d91cf3a1aaf/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20201110211018-35f3e6cf4a65 h1:Qo9oJ566/Sq7N4hrGftVXs8GI2CXBCuOd4S2wHE/e0M=
 golang.org/x/sys v0.0.0-20201110211018-35f3e6cf4a65/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20201113233024-12cec1faf1ba h1:xmhUJGQGbxlod18iJGqVEp9cHIPLl7QiX2aA3to708s=
+golang.org/x/sys v0.0.0-20201113233024-12cec1faf1ba/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.1-0.20180807135948-17ff2d5776d2/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
@@ -995,6 +1013,8 @@ golang.org/x/tools v0.0.0-20201105220310-78b158585360/go.mod h1:emZCQorbCU4vsT4f
 golang.org/x/tools v0.0.0-20201110124207-079ba7bd75cd/go.mod h1:emZCQorbCU4vsT4fOWvOPXz4eW1wZW4PmDk9uLelYpA=
 golang.org/x/tools v0.0.0-20201111133315-69daaf961d65 h1:cuDLV0fZoIC/Oj72hGUKPhXR2AvbvJoQKPmSeE5nH4Q=
 golang.org/x/tools v0.0.0-20201111133315-69daaf961d65/go.mod h1:emZCQorbCU4vsT4fOWvOPXz4eW1wZW4PmDk9uLelYpA=
+golang.org/x/tools v0.0.0-20201113202037-1643af1435f3 h1:7R7+wzd5VuLvCNyHZ/MG511kkoP/DBEzkbh8qUsFbY8=
+golang.org/x/tools v0.0.0-20201113202037-1643af1435f3/go.mod h1:emZCQorbCU4vsT4fOWvOPXz4eW1wZW4PmDk9uLelYpA=
 golang.org/x/xerrors v0.0.0-20190410155217-1f06c39b4373/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 golang.org/x/xerrors v0.0.0-20190513163551-3ee3066db522/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
@@ -1079,6 +1099,8 @@ google.golang.org/genproto v0.0.0-20201106154455-f9bfe239b0ba/go.mod h1:FWY/as6D
 google.golang.org/genproto v0.0.0-20201109203340-2640f1f9cdfb/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
 google.golang.org/genproto v0.0.0-20201111145450-ac7456db90a6 h1:iRN4+t0lvZX/l9gH14ARF9i58tsVa5a97k6aH95rC3Y=
 google.golang.org/genproto v0.0.0-20201111145450-ac7456db90a6/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
+google.golang.org/genproto v0.0.0-20201113130914-ce600e9a6f9e h1:jRAe+6EDD0LNrVzmjx7FxBivivOZTKnXMbH5lvmxLP8=
+google.golang.org/genproto v0.0.0-20201113130914-ce600e9a6f9e/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
 google.golang.org/grpc v1.26.0 h1:2dTRdpdFEEhJYQD8EMLB61nnrzSCTbG38PhqdhvOltg=
 google.golang.org/grpc v1.26.0/go.mod h1:qbnxyOmOxrQa7FizSgH+ReBfzJrCY1pSN7KXBS8abTk=
 google.golang.org/grpc v1.27.0 h1:rRYRFMVgRv6E0D70Skyfsr28tDXIuuPZyWGMPdMcnXg=
