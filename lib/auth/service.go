@@ -18,6 +18,14 @@ import (
 
 func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, resp interface{}) error {
+		meta, _ := metadata.FromContext(ctx)
+		var isServiceCaller bool = meta["Host"] == "" || meta["Method"] == ""
+		var reqCtx = context.WithValue(ctx, "callerType", isServiceCaller)
+
+		if isServiceCaller {
+			return fn(reqCtx, req, resp)
+		}
+
 		userServiceClient := userServiceProto.NewUserService(lib.GetFullExternalServiceName("user-service"), client.DefaultClient)
 
 		if _, err := userServiceClient.GetProfile(ctx, &userServiceProto.EmptyRequest{}); err != nil {
@@ -25,7 +33,7 @@ func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 			return microErrors.Unauthorized(lib.GetFullExternalServiceName("user-service"), fmt.Sprintf("%v", err))
 		}
 
-		return fn(ctx, req, resp)
+		return fn(reqCtx, req, resp)
 	}
 }
 
