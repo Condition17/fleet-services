@@ -5,6 +5,7 @@ const (
 	FILE_CREATED                   = "file.created"
 	FILE_UPLOADED                  = "file.uploaded"
 	FILE_SYSTEM_CREATED            = "filesystem.created"
+	EXECUTOR_INSTANCE_CREATED      = "executorinstance.created"
 	WSS_FILE_ENTITY_CREATED        = "fileEntityCreated"
 	WSS_FILE_UPLOAD_COMPLETED      = "fileUploadCompleted"
 	WSS_FILE_SYSTEM_CREATION_START = "fileSystemCreationStart"

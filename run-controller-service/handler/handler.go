@@ -58,6 +58,8 @@ func (h EventHandler) HandleEvent(event *proto.Event) {
 		h.handleFileUploaded(ctx, event)
 	case events.FILE_SYSTEM_CREATED:
 		h.handleFileSystemCreated(ctx, event)
+	case events.EXECUTOR_INSTANCE_CREATED:
+		h.handleExecutorInstanceCreated(ctx, event)
 	default:
 		log.Printf("The event with type '%s' is not a recognized fleet test run pipeline event", event.Type)
 	}
@@ -157,4 +159,15 @@ func (h EventHandler) handleFileSystemCreated(ctx context.Context, event *proto.
 	}
 
 	fmt.Printf("Received file system created event: %v\n", eventData)
+}
+
+func (h EventHandler) handleExecutorInstanceCreated(ctx context.Context, event *proto.Event) {
+	// unmarshal event speciffic data
+	var eventData *proto.ExecutorInstanceCreatedEventData
+	if err := json.Unmarshal(event.Data, &eventData); err != nil {
+		log.Println(errors.EventUnmarshalError(event.Data, event))
+		return
+	}
+
+	fmt.Printf("Received executor instance created event: %v\n", eventData)
 }

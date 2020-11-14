@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"crypto/md5"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
@@ -12,6 +13,7 @@ import (
 	"github.com/Condition17/fleet-services/resource-manager-service/config"
 	"github.com/Condition17/fleet-services/resource-manager-service/model"
 	proto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service"
+	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 )
 
 var (
@@ -59,7 +61,9 @@ func (h *Handler) executePostInstanceInsertOperationSteps(testRunId uint32, op *
 		return
 	}
 
-	// TODO: send data to run controller service
+	// send data to run controller service
+	execInstanceCreatedEventData, _ := json.Marshal(&runControllerProto.ExecutorInstanceCreatedEventData{TestRunId: testRunId})
+	h.SendRunStateEvent(context.Background(), "executorinstance.created", execInstanceCreatedEventData)
 }
 
 func (h *Handler) waitForComputeOperationToFinish(op *compute.Operation) (*compute.Operation, error) {
