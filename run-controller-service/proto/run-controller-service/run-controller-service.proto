@@ -63,3 +63,7 @@ message FileUploadCompletedEventData {
 message FileSystemCreatedEventData {
 	uint32 testRunId = 1;
 }
+
+message ExecutorInstanceCreatedEventData {
+	uint32 testRunId = 1;
+}

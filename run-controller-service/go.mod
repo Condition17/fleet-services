@@ -11,11 +11,11 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/file-service v0.0.0-20201114120241-c6821d09ccf0
-	github.com/Condition17/fleet-services/lib v0.0.0-20201114120241-c6821d09ccf0
-	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20201114120241-c6821d09ccf0
-	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201114120241-c6821d09ccf0
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201114120241-c6821d09ccf0 // indirect
+	github.com/Condition17/fleet-services/file-service v0.0.0-20201114190137-513f114ad49d
+	github.com/Condition17/fleet-services/lib v0.0.0-20201114190137-513f114ad49d
+	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20201114190137-513f114ad49d
+	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201114190137-513f114ad49d
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201114190137-513f114ad49d // indirect
 	github.com/go-git/go-git/v5 v5.2.0 // indirect
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.3 // indirect
