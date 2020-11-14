@@ -31,26 +31,9 @@ func (h *Handler) ProvisionFileSystem(ctx context.Context, req *proto.FileSystem
 		))
 	}
 
-	var fsInstanceConfig *file.Instance = &file.Instance{
-		Description: "",
-		FileShares: []*file.FileShareConfig{
-			&file.FileShareConfig{
-				CapacityGb: neededFsCapacityGb,
-				Name:       "target",
-			},
-		},
-		Tier: "BASIC_HDD",
-		Networks: []*file.NetworkConfig{
-			&file.NetworkConfig{
-				Modes:           []string{"MODE_IPV4"},
-				Network:         "default",
-				ReservedIpRange: "",
-			},
-		},
-	}
-
+	var fsInstanceConfig *file.Instance = h.buildFSInstanceConfig(neededFsCapacityGb)
 	createFsInstanceCall := h.CloudFileStoreService.Projects.Locations.Instances.Create(
-		fmt.Sprintf("projects/%s/locations/%s", config.GetConfig().GoogleProjectID, config.GetConfig().FsDeployLocations),
+		fmt.Sprintf("projects/%s/locations/%s", config.GetConfig().GoogleProjectID, config.GetConfig().ResourcesDeployLocations),
 		fsInstanceConfig,
 	)
 
@@ -68,7 +51,7 @@ func (h *Handler) ProvisionFileSystem(ctx context.Context, req *proto.FileSystem
 }
 
 func (h *Handler) executePostFSCreateOperationSteps(testRunId uint32, op *file.Operation) {
-	finishedOperation, err := h.waitForOperationToFinish(op)
+	finishedOperation, err := h.waitForFSOperationToFinish(op)
 	if err != nil {
 		fmt.Printf("Error encountered while waiting filestore create operation finish %v", err)
 		return
@@ -96,7 +79,7 @@ func (h *Handler) executePostFSCreateOperationSteps(testRunId uint32, op *file.O
 	// TODO: send data to run controller service
 }
 
-func (h *Handler) waitForOperationToFinish(op *file.Operation) (*file.Operation, error) {
+func (h *Handler) waitForFSOperationToFinish(op *file.Operation) (*file.Operation, error) {
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
 
@@ -115,9 +98,29 @@ func (h *Handler) waitForOperationToFinish(op *file.Operation) (*file.Operation,
 		// the operation has finished
 		ticker.Stop()
 		if operation.Error != nil {
-			return nil, errors.New(fmt.Sprintf("Operation %s failed with error: %v", op.Name, operation.Error))
+			return nil, errors.New(fmt.Sprintf("FS operation %s failed with error: %v", op.Name, operation.Error))
 		}
 
 		return operation, nil
+	}
+}
+
+func (h *Handler) buildFSInstanceConfig(capacityGb int64) *file.Instance {
+	return &file.Instance{
+		Description: "",
+		FileShares: []*file.FileShareConfig{
+			&file.FileShareConfig{
+				CapacityGb: capacityGb,
+				Name:       "target",
+			},
+		},
+		Tier: "BASIC_HDD",
+		Networks: []*file.NetworkConfig{
+			&file.NetworkConfig{
+				Modes:           []string{"MODE_IPV4"},
+				Network:         "default",
+				ReservedIpRange: "",
+			},
+		},
 	}
 }

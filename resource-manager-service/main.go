@@ -25,7 +25,7 @@ func main() {
 
 	// Automatically migrates the user struct
 	// into database columns/types etc.
-	db.AutoMigrate(&model.FileSystem{})
+	db.AutoMigrate(&model.FileSystem{}, &model.ExecutorInstance{})
 
 	pubsub := googlepubsub.NewBroker(googlepubsub.ProjectID(configs.GoogleProjectID))
 	// New Service
@@ -39,7 +39,7 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	serviceHandler := handler.NewHandler(service, repository.FileSystemRepository{DB: db})
+	serviceHandler := handler.NewHandler(service, repository.FileSystemRepository{DB: db}, repository.ExecutorInstanceRepository{DB: db})
 	proto.RegisterResourceManagerServiceHandler(service.Server(), &serviceHandler)
 
 	// Run service

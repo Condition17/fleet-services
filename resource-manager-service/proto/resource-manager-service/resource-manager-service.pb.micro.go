@@ -5,16 +5,14 @@ package go_micro_service_resourcemanagerservice
 
 import (
 	fmt "fmt"
-	math "math"
-
 	proto "github.com/golang/protobuf/proto"
+	math "math"
+)
 
+import (
 	context "context"
-
 	api "github.com/micro/go-micro/v2/api"
-
 	client "github.com/micro/go-micro/v2/client"
-
 	server "github.com/micro/go-micro/v2/server"
 )
 
@@ -45,6 +43,7 @@ func NewResourceManagerServiceEndpoints() []*api.Endpoint {
 
 type ResourceManagerService interface {
 	ProvisionFileSystem(ctx context.Context, in *FileSystemSpec, opts ...client.CallOption) (*EmptyResponse, error)
+	ProvisionExecutorInstance(ctx context.Context, in *ExecutorInstanceSpec, opts ...client.CallOption) (*EmptyResponse, error)
 }
 
 type resourceManagerService struct {
@@ -69,15 +68,27 @@ func (c *resourceManagerService) ProvisionFileSystem(ctx context.Context, in *Fi
 	return out, nil
 }
 
+func (c *resourceManagerService) ProvisionExecutorInstance(ctx context.Context, in *ExecutorInstanceSpec, opts ...client.CallOption) (*EmptyResponse, error) {
+	req := c.c.NewRequest(c.name, "ResourceManagerService.ProvisionExecutorInstance", in)
+	out := new(EmptyResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for ResourceManagerService service
 
 type ResourceManagerServiceHandler interface {
 	ProvisionFileSystem(context.Context, *FileSystemSpec, *EmptyResponse) error
+	ProvisionExecutorInstance(context.Context, *ExecutorInstanceSpec, *EmptyResponse) error
 }
 
 func RegisterResourceManagerServiceHandler(s server.Server, hdlr ResourceManagerServiceHandler, opts ...server.HandlerOption) error {
 	type resourceManagerService interface {
 		ProvisionFileSystem(ctx context.Context, in *FileSystemSpec, out *EmptyResponse) error
+		ProvisionExecutorInstance(ctx context.Context, in *ExecutorInstanceSpec, out *EmptyResponse) error
 	}
 	type ResourceManagerService struct {
 		resourceManagerService
@@ -92,4 +103,8 @@ type resourceManagerServiceHandler struct {
 
 func (h *resourceManagerServiceHandler) ProvisionFileSystem(ctx context.Context, in *FileSystemSpec, out *EmptyResponse) error {
 	return h.ResourceManagerServiceHandler.ProvisionFileSystem(ctx, in, out)
+}
+
+func (h *resourceManagerServiceHandler) ProvisionExecutorInstance(ctx context.Context, in *ExecutorInstanceSpec, out *EmptyResponse) error {
+	return h.ResourceManagerServiceHandler.ProvisionExecutorInstance(ctx, in, out)
 }

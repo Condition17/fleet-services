@@ -4,11 +4,16 @@ package go.micro.service.resourcemanagerservice;
 
 service ResourceManagerService {
 	rpc ProvisionFileSystem(FileSystemSpec) returns (EmptyResponse) {} 
+	rpc ProvisionExecutorInstance(ExecutorInstanceSpec) returns (EmptyResponse) {}
 }
 
 message FileSystemSpec {
 	uint32 testRunId = 1;
 	int64 sizeInBytes = 2;
+}
+
+message ExecutorInstanceSpec {
+	uint32 testRunId = 1;
 }
 
 message EmptyResponse {}

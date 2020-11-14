@@ -12,6 +12,6 @@ type FileSystem struct {
 	Name                string `gorm:"not null;type:varchar(100);default:null"`
 	FileShareCapacityGb int64  `gorm:"not nulll"`
 	FileShareName       string `gorm:"not null;type:varchar(100);default:null"`
-	TestRunID           uint32
+	TestRunID           uint32 `gorm:"unique;constaint:OnDelete:CASCADE;"`
 	TestRun             testRunModels.TestRun
 }
