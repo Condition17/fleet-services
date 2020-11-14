@@ -59,3 +59,7 @@ message FileUploadCompletedEventData {
 	uint32 testRunId = 1;
 	string fileId = 2;
 }
+
+message FileSystemCreatedEventData {
+	uint32 testRunId = 1;
+}

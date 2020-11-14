@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
@@ -55,6 +56,8 @@ func (h EventHandler) HandleEvent(event *proto.Event) {
 		h.handleTestRunCreated(ctx, event)
 	case events.FILE_UPLOADED:
 		h.handleFileUploaded(ctx, event)
+	case events.FILE_SYSTEM_CREATED:
+		h.handleFileSystemCreated(ctx, event)
 	default:
 		log.Printf("The event with type '%s' is not a recognized fleet test run pipeline event", event.Type)
 	}
@@ -143,4 +146,15 @@ func (h EventHandler) handleFileUploaded(ctx context.Context, event *proto.Event
 		h.sendErrorToWssQueue(ctx, errors.FileSystemCreationError(fileSystemSpec, events.WSS_ERROR))
 		return
 	}
+}
+
+func (h EventHandler) handleFileSystemCreated(ctx context.Context, event *proto.Event) {
+	// unmarshal event speciffic data
+	var eventData *proto.FileSystemCreatedEventData
+	if err := json.Unmarshal(event.Data, &eventData); err != nil {
+		log.Println(errors.EventUnmarshalError(event.Data, event))
+		return
+	}
+
+	fmt.Printf("Received file system created event: %v\n", eventData)
 }
