@@ -20,7 +20,6 @@ func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, resp interface{}) error {
 		meta, _ := metadata.FromContext(ctx)
 		var isServiceCaller bool = meta["Host"] == "" || meta["Method"] == ""
-		fmt.Printf("Meta: %v - %v\n", meta, isServiceCaller)
 		var reqCtx = context.WithValue(ctx, "serviceCaller", isServiceCaller)
 
 		if isServiceCaller {
