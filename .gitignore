@@ -8,3 +8,4 @@
 /infrastructure/terraform/*.tfvars
 /wss/node_modules
 /*/service
+/*/__*
