@@ -3,7 +3,6 @@ package handler
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
@@ -132,11 +131,11 @@ func (h EventHandler) handleFileUploaded(ctx context.Context, event *proto.Event
 	}
 
 	// send data to the client using WSS
-	wssEventData, _ := json.Marshal(&proto.FileUploadCompletedEventData{
+	wssUploadCompletedEventData, _ := json.Marshal(&proto.FileUploadCompletedEventData{
 		TestRunId: testRunDetailsResp.TestRun.Id,
 		FileId:    fileSpec.Id,
 	})
-	h.SendEventToWssQueue(ctx, events.WSS_FILE_UPLOAD_COMPLETED, wssEventData)
+	h.SendEventToWssQueue(ctx, events.WSS_FILE_UPLOAD_COMPLETED, wssUploadCompletedEventData)
 
 	// request file system provisioning to resource manager service
 	var fileSystemSpec *resourceManagerProto.FileSystemSpec = &resourceManagerProto.FileSystemSpec{
@@ -148,26 +147,52 @@ func (h EventHandler) handleFileUploaded(ctx context.Context, event *proto.Event
 		h.sendErrorToWssQueue(ctx, errors.FileSystemCreationError(fileSystemSpec, events.WSS_ERROR))
 		return
 	}
+
+	// send file system creation start event to WSS
+	wssEventData, _ := json.Marshal(&proto.FileSystemCreateEventData{TestRunId: testRunDetailsResp.TestRun.Id})
+	h.SendEventToWssQueue(ctx, events.WSS_FILE_SYSTEM_CREATION_START, wssEventData)
 }
 
 func (h EventHandler) handleFileSystemCreated(ctx context.Context, event *proto.Event) {
 	// unmarshal event speciffic data
-	var eventData *proto.FileSystemCreatedEventData
+	var eventData *proto.FileSystemCreateEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
 		log.Println(errors.EventUnmarshalError(event.Data, event))
 		return
 	}
 
-	fmt.Printf("Received file system created event: %v\n", eventData)
+	// append wss event target bytes to context
+	testRunDetails, err := h.TestRunService.GetById(ctx, &testRunServiceProto.TestRun{Id: eventData.TestRunId})
+	if err != nil {
+		log.Println(errors.TestRunRetrievalError(eventData, err.Error()))
+		return
+	}
+
+	userDataBytes, err := json.Marshal(&testRunDetails.TestRun.User)
+	ctx = context.WithValue(ctx, "User", userDataBytes)
+	// send wss event
+	wssEventData, _ := json.Marshal(&proto.FileSystemCreateEventData{TestRunId: testRunDetails.TestRun.Id})
+	h.SendEventToWssQueue(ctx, events.WSS_FILE_SYSTEM_CREATION_COMPLETED, wssEventData)
 }
 
 func (h EventHandler) handleExecutorInstanceCreated(ctx context.Context, event *proto.Event) {
 	// unmarshal event speciffic data
-	var eventData *proto.ExecutorInstanceCreatedEventData
+	var eventData *proto.ExecutorInstanceCreateEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
 		log.Println(errors.EventUnmarshalError(event.Data, event))
 		return
 	}
 
-	fmt.Printf("Received executor instance created event: %v\n", eventData)
+	// append wss event target bytes to context
+	testRunDetails, err := h.TestRunService.GetById(ctx, &testRunServiceProto.TestRun{Id: eventData.TestRunId})
+	if err != nil {
+		log.Println(errors.TestRunRetrievalError(eventData, err.Error()))
+		return
+	}
+
+	userDataBytes, err := json.Marshal(&testRunDetails.TestRun.User)
+	ctx = context.WithValue(ctx, "User", userDataBytes)
+	// send wss event
+	wssEventData, _ := json.Marshal(&proto.FileSystemCreateEventData{TestRunId: testRunDetails.TestRun.Id})
+	h.SendEventToWssQueue(ctx, events.WSS_EXECUTOR_INSTANCE_CREATION_COMPLETED, wssEventData)
 }

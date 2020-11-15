@@ -60,10 +60,10 @@ message FileUploadCompletedEventData {
 	string fileId = 2;
 }
 
-message FileSystemCreatedEventData {
+message FileSystemCreateEventData {
 	uint32 testRunId = 1;
 }
 
-message ExecutorInstanceCreatedEventData {
+message ExecutorInstanceCreateEventData {
 	uint32 testRunId = 1;
 }
