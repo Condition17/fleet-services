@@ -11,8 +11,8 @@ replace (
 require (
 	cloud.google.com/go v0.72.0 // indirect
 	cloud.google.com/go/pubsub v1.8.3 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20201114221338-2184166fd70b
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201114221338-2184166fd70b // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201115015951-4b854f3e1865
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201115015951-4b854f3e1865 // indirect
 	github.com/Microsoft/go-winio v0.4.15 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang/protobuf v1.4.3
@@ -29,7 +29,6 @@ require (
 	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b // indirect
 	golang.org/x/oauth2 v0.0.0-20201109201403-9fd604954f58 // indirect
 	golang.org/x/sys v0.0.0-20201113233024-12cec1faf1ba // indirect
-	golang.org/x/tools v0.0.0-20201113202037-1643af1435f3 // indirect
 	google.golang.org/api v0.35.0 // indirect
 	google.golang.org/genproto v0.0.0-20201113130914-ce600e9a6f9e // indirect
 	google.golang.org/grpc v1.33.2 // indirect

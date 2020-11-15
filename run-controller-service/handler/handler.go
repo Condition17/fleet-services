@@ -162,16 +162,12 @@ func (h EventHandler) handleFileSystemCreated(ctx context.Context, event *proto.
 	}
 
 	// append wss event target bytes to context
-	testRunDetails, err := h.TestRunService.GetById(ctx, &testRunServiceProto.TestRun{Id: eventData.TestRunId})
-	if err != nil {
-		log.Println(errors.TestRunRetrievalError(eventData, err.Error()))
+	if err := h.appendTestRunUserBytesToContext(&ctx, eventData.TestRunId); err != nil {
+		log.Println(err)
 		return
 	}
-
-	userDataBytes, err := json.Marshal(&testRunDetails.TestRun.User)
-	ctx = context.WithValue(ctx, "User", userDataBytes)
 	// send wss event
-	wssEventData, _ := json.Marshal(&proto.FileSystemCreateEventData{TestRunId: testRunDetails.TestRun.Id})
+	wssEventData, _ := json.Marshal(&proto.FileSystemCreateEventData{TestRunId: eventData.TestRunId})
 	h.SendEventToWssQueue(ctx, events.WSS_FILE_SYSTEM_CREATION_COMPLETED, wssEventData)
 }
 
@@ -184,15 +180,25 @@ func (h EventHandler) handleExecutorInstanceCreated(ctx context.Context, event *
 	}
 
 	// append wss event target bytes to context
-	testRunDetails, err := h.TestRunService.GetById(ctx, &testRunServiceProto.TestRun{Id: eventData.TestRunId})
-	if err != nil {
-		log.Println(errors.TestRunRetrievalError(eventData, err.Error()))
+	if err := h.appendTestRunUserBytesToContext(&ctx, eventData.TestRunId); err != nil {
+		log.Println(err)
 		return
 	}
 
-	userDataBytes, err := json.Marshal(&testRunDetails.TestRun.User)
-	ctx = context.WithValue(ctx, "User", userDataBytes)
-	// send wss event
-	wssEventData, _ := json.Marshal(&proto.FileSystemCreateEventData{TestRunId: testRunDetails.TestRun.Id})
+	// send executor instance created event
+	wssEventData, _ := json.Marshal(&proto.FileSystemCreateEventData{TestRunId: eventData.TestRunId})
 	h.SendEventToWssQueue(ctx, events.WSS_EXECUTOR_INSTANCE_CREATION_COMPLETED, wssEventData)
+}
+
+func (h EventHandler) appendTestRunUserBytesToContext(ctx *context.Context, testRunId uint32) error {
+	testRunSpec := &testRunServiceProto.TestRun{Id: testRunId}
+	testRunDetails, err := h.TestRunService.GetById(*ctx, testRunSpec)
+	if err != nil {
+		return errors.TestRunRetrievalError(testRunSpec, err.Error())
+	}
+
+	userDataBytes, err := json.Marshal(&testRunDetails.TestRun.User)
+	*ctx = context.WithValue(*ctx, "User", userDataBytes)
+
+	return nil
 }

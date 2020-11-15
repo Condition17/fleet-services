@@ -78,7 +78,7 @@ func (h *Handler) executePostFSCreateOperationSteps(testRunId uint32, op *file.O
 	}
 
 	// send data to run controller service
-	fsCreatedEventData, _ := json.Marshal(&runControllerProto.FileSystemCreatedEventData{TestRunId: testRunId})
+	fsCreatedEventData, _ := json.Marshal(&runControllerProto.FileSystemCreateEventData{TestRunId: testRunId})
 	h.SendRunStateEvent(context.Background(), "filesystem.created", fsCreatedEventData)
 }
 

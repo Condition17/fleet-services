@@ -13,9 +13,9 @@ replace (
 require (
 	cloud.google.com/go v0.72.0 // indirect
 	cloud.google.com/go/pubsub v1.8.3 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20201115001501-a0af38fc89d5
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201115001501-a0af38fc89d5
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201115001501-a0af38fc89d5
+	github.com/Condition17/fleet-services/lib v0.0.0-20201115015951-4b854f3e1865
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201115015951-4b854f3e1865
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201115015951-4b854f3e1865
 	github.com/ghodss/yaml v1.0.0
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.3 // indirect

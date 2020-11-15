@@ -62,7 +62,7 @@ func (h *Handler) executePostInstanceInsertOperationSteps(testRunId uint32, op *
 	}
 
 	// send data to run controller service
-	execInstanceCreatedEventData, _ := json.Marshal(&runControllerProto.ExecutorInstanceCreatedEventData{TestRunId: testRunId})
+	execInstanceCreatedEventData, _ := json.Marshal(&runControllerProto.ExecutorInstanceCreateEventData{TestRunId: testRunId})
 	h.SendRunStateEvent(context.Background(), "executorinstance.created", execInstanceCreatedEventData)
 }
 
