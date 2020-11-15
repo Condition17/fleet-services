@@ -53,6 +53,12 @@ func GetTokenBytesFromContext(ctx context.Context) []byte {
 	return []byte(splitAuthToken[1])
 }
 
+func GetUserBytesFromContext(ctx context.Context) []byte {
+	userBytes, _ := ctx.Value("User").([]byte)
+
+	return userBytes
+}
+
 func GetUserBytesFromDecodedToken(ctx context.Context) []byte {
 	var userClaims *userServiceProto.User
 	userClaims, err := GetUserFromDecodedToken(ctx)

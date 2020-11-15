@@ -42,10 +42,17 @@ func (h *BaseHandler) SendStorageUploadedChunkData(ctx context.Context, data []b
 }
 
 func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string, data []byte) {
+	var userBytes []byte
+
+	userBytes = auth.GetUserBytesFromContext(ctx)
+	if len(userBytes) == 0 {
+		userBytes = auth.GetUserBytesFromDecodedToken(ctx)
+	}
+
 	msgBody, _ := json.Marshal(
 		&runControllerProto.WssEvent{
 			Type:   eventType,
-			Target: auth.GetUserBytesFromDecodedToken(ctx),
+			Target: userBytes,
 			Data:   data,
 		})
 	h.publishMessage(topics.WssTopic, &broker.Message{Body: msgBody, Header: map[string]string{"orderingKey": "wssEventKey"}})
