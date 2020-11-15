@@ -6,6 +6,7 @@ service TestRunService {
 	rpc Create(CreateTestRunRequest) returns (TestRunDetails) {}
 	rpc Get(TestRun) returns (TestRunDetails) {}
 	rpc GetByFileId(FileSpec) returns (TestRunDetails) {}
+	rpc GetById (TestRun) returns (TestRunDetails);
 	rpc List(EmptyRequest) returns (ListResponse) {}
 	rpc Delete(TestRun) returns (EmptyResponse) {}
 	rpc AssignFile(AssignRequest) returns (EmptyResponse) {}
@@ -23,10 +24,19 @@ message FileSpec {
 	uint32 maxChunkSize = 4;
 }
 
+message User {
+	uint32 id = 1;
+  string name = 2;
+  string company = 3;
+  string email = 4;
+}
+
 message TestRun {
 	uint32 id = 1;
 	string name = 2;
 	string fileId = 3;
+	uint32 userId = 4;
+	User user = 5;
 }
 
 message TestRunDetails {

@@ -23,10 +23,18 @@ func MarshalTestRun(testRun *proto.TestRun) *TestRun {
 }
 
 func UnmarshalTestRun(testRun *TestRun) *proto.TestRun {
+	userData := userModels.UnmarshalUser(&testRun.User)
 	return &proto.TestRun{
 		Id:     uint32(testRun.ID),
 		Name:   testRun.Name,
 		FileId: string(testRun.FileID),
+		UserId: testRun.UserID,
+		User: &proto.User{
+			Id:      userData.Id,
+			Name:    userData.Name,
+			Company: userData.Company,
+			Email:   userData.Email,
+		},
 	}
 }
 

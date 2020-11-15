@@ -45,7 +45,7 @@ func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, r
 
 func (h *Handler) Get(ctx context.Context, req *proto.TestRun, res *proto.TestRunDetails) error {
 	user, _ := auth.GetUserFromDecodedToken(ctx)
-	result, err := h.TestRunRepository.GetTestRun(user.Id, req.Id)
+	result, err := h.TestRunRepository.GetUserTestRun(user.Id, req.Id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return microErrors.NotFound(h.Service.Name(), "Test run with this id not found")
@@ -63,6 +63,25 @@ func (h *Handler) GetByFileId(ctx context.Context, req *proto.FileSpec, res *pro
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return microErrors.NotFound(h.Service.Name(), "No test run associated with the speciffied file was found")
+		}
+		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+	}
+	res.TestRun = model.UnmarshalTestRun(result)
+
+	return nil
+}
+
+func (h *Handler) GetById(ctx context.Context, req *proto.TestRun, res *proto.TestRunDetails) error {
+	var isServiceCaller bool = ctx.Value("serviceCaller").(bool)
+
+	if !isServiceCaller {
+		return microErrors.Unauthorized(h.Service.Name(), "Caller not authorized for this operation")
+	}
+
+	result, err := h.TestRunRepository.GetTestRunById(req.Id)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return microErrors.NotFound(h.Service.Name(), "No test run associated with the speciffied id was found")
 		}
 		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
 	}
@@ -93,7 +112,7 @@ func (h *Handler) Delete(ctx context.Context, req *proto.TestRun, res *proto.Emp
 
 func (h *Handler) AssignFile(ctx context.Context, req *proto.AssignRequest, res *proto.EmptyResponse) error {
 	user, _ := auth.GetUserFromDecodedToken(ctx)
-	testRun, err := h.TestRunRepository.GetTestRun(user.Id, req.TestRunId)
+	testRun, err := h.TestRunRepository.GetUserTestRun(user.Id, req.TestRunId)
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

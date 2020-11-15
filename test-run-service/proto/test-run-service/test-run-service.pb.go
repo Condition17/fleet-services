@@ -151,6 +151,77 @@ func (x *FileSpec) GetMaxChunkSize() uint32 {
 	return 0
 }
 
+type User struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id      uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name    string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Company string `protobuf:"bytes,3,opt,name=company,proto3" json:"company,omitempty"`
+	Email   string `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
+}
+
+func (x *User) Reset() {
+	*x = User{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *User) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*User) ProtoMessage() {}
+
+func (x *User) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use User.ProtoReflect.Descriptor instead.
+func (*User) Descriptor() ([]byte, []int) {
+	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *User) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *User) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *User) GetCompany() string {
+	if x != nil {
+		return x.Company
+	}
+	return ""
+}
+
+func (x *User) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
 type TestRun struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -159,12 +230,14 @@ type TestRun struct {
 	Id     uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name   string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	FileId string `protobuf:"bytes,3,opt,name=fileId,proto3" json:"fileId,omitempty"`
+	UserId uint32 `protobuf:"varint,4,opt,name=userId,proto3" json:"userId,omitempty"`
+	User   *User  `protobuf:"bytes,5,opt,name=user,proto3" json:"user,omitempty"`
 }
 
 func (x *TestRun) Reset() {
 	*x = TestRun{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[2]
+		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -177,7 +250,7 @@ func (x *TestRun) String() string {
 func (*TestRun) ProtoMessage() {}
 
 func (x *TestRun) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[2]
+	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -190,7 +263,7 @@ func (x *TestRun) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestRun.ProtoReflect.Descriptor instead.
 func (*TestRun) Descriptor() ([]byte, []int) {
-	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{2}
+	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *TestRun) GetId() uint32 {
@@ -214,6 +287,20 @@ func (x *TestRun) GetFileId() string {
 	return ""
 }
 
+func (x *TestRun) GetUserId() uint32 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *TestRun) GetUser() *User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
 type TestRunDetails struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -225,7 +312,7 @@ type TestRunDetails struct {
 func (x *TestRunDetails) Reset() {
 	*x = TestRunDetails{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[3]
+		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -238,7 +325,7 @@ func (x *TestRunDetails) String() string {
 func (*TestRunDetails) ProtoMessage() {}
 
 func (x *TestRunDetails) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[3]
+	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -251,7 +338,7 @@ func (x *TestRunDetails) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestRunDetails.ProtoReflect.Descriptor instead.
 func (*TestRunDetails) Descriptor() ([]byte, []int) {
-	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{3}
+	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *TestRunDetails) GetTestRun() *TestRun {
@@ -272,7 +359,7 @@ type ListResponse struct {
 func (x *ListResponse) Reset() {
 	*x = ListResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[4]
+		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -285,7 +372,7 @@ func (x *ListResponse) String() string {
 func (*ListResponse) ProtoMessage() {}
 
 func (x *ListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[4]
+	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -298,7 +385,7 @@ func (x *ListResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListResponse.ProtoReflect.Descriptor instead.
 func (*ListResponse) Descriptor() ([]byte, []int) {
-	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{4}
+	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListResponse) GetTestRuns() []*TestRun {
@@ -320,7 +407,7 @@ type AssignRequest struct {
 func (x *AssignRequest) Reset() {
 	*x = AssignRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[5]
+		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -333,7 +420,7 @@ func (x *AssignRequest) String() string {
 func (*AssignRequest) ProtoMessage() {}
 
 func (x *AssignRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[5]
+	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -346,7 +433,7 @@ func (x *AssignRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AssignRequest.ProtoReflect.Descriptor instead.
 func (*AssignRequest) Descriptor() ([]byte, []int) {
-	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{5}
+	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *AssignRequest) GetTestRunId() uint32 {
@@ -372,7 +459,7 @@ type EmptyRequest struct {
 func (x *EmptyRequest) Reset() {
 	*x = EmptyRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[6]
+		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -385,7 +472,7 @@ func (x *EmptyRequest) String() string {
 func (*EmptyRequest) ProtoMessage() {}
 
 func (x *EmptyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[6]
+	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -398,7 +485,7 @@ func (x *EmptyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EmptyRequest.ProtoReflect.Descriptor instead.
 func (*EmptyRequest) Descriptor() ([]byte, []int) {
-	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{6}
+	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{7}
 }
 
 type EmptyResponse struct {
@@ -410,7 +497,7 @@ type EmptyResponse struct {
 func (x *EmptyResponse) Reset() {
 	*x = EmptyResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[7]
+		mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -423,7 +510,7 @@ func (x *EmptyResponse) String() string {
 func (*EmptyResponse) ProtoMessage() {}
 
 func (x *EmptyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[7]
+	mi := &file_proto_test_run_service_test_run_service_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -436,7 +523,7 @@ func (x *EmptyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EmptyResponse.ProtoReflect.Descriptor instead.
 func (*EmptyResponse) Descriptor() ([]byte, []int) {
-	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{7}
+	return file_proto_test_run_service_test_run_service_proto_rawDescGZIP(), []int{8}
 }
 
 var File_proto_test_run_service_test_run_service_proto protoreflect.FileDescriptor
@@ -463,12 +550,23 @@ var file_proto_test_run_service_test_run_service_proto_rawDesc = []byte{
 	0x6e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x03, 0x20, 0x01,
 	0x28, 0x03, 0x52, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x12, 0x22, 0x0a, 0x0c, 0x6d, 0x61, 0x78, 0x43,
 	0x68, 0x75, 0x6e, 0x6b, 0x53, 0x69, 0x7a, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x0c,
-	0x6d, 0x61, 0x78, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x53, 0x69, 0x7a, 0x65, 0x22, 0x45, 0x0a, 0x07,
-	0x54, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x0d, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18,
-	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x66,
-	0x69, 0x6c, 0x65, 0x49, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x66, 0x69, 0x6c,
-	0x65, 0x49, 0x64, 0x22, 0x54, 0x0a, 0x0e, 0x54, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x44, 0x65,
+	0x6d, 0x61, 0x78, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x53, 0x69, 0x7a, 0x65, 0x22, 0x5a, 0x0a, 0x04,
+	0x55, 0x73, 0x65, 0x72, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d,
+	0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x6f, 0x6d, 0x70,
+	0x61, 0x6e, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6f, 0x6d, 0x70, 0x61,
+	0x6e, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x04, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x22, 0x98, 0x01, 0x0a, 0x07, 0x54, 0x65, 0x73,
+	0x74, 0x52, 0x75, 0x6e, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d,
+	0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x66, 0x69, 0x6c, 0x65,
+	0x49, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x66, 0x69, 0x6c, 0x65, 0x49, 0x64,
+	0x12, 0x16, 0x0a, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0d,
+	0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x39, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72,
+	0x18, 0x05, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x25, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72,
+	0x6f, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x72, 0x75,
+	0x6e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x04, 0x75,
+	0x73, 0x65, 0x72, 0x22, 0x54, 0x0a, 0x0e, 0x54, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x44, 0x65,
 	0x74, 0x61, 0x69, 0x6c, 0x73, 0x12, 0x42, 0x0a, 0x07, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x28, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72,
 	0x6f, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x72, 0x75,
@@ -485,7 +583,7 @@ var file_proto_test_run_service_test_run_service_proto_rawDesc = []byte{
 	0x0a, 0x06, 0x66, 0x69, 0x6c, 0x65, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06,
 	0x66, 0x69, 0x6c, 0x65, 0x49, 0x64, 0x22, 0x0e, 0x0a, 0x0c, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x52,
 	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x0f, 0x0a, 0x0d, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0x93, 0x05, 0x0a, 0x0e, 0x54, 0x65, 0x73, 0x74,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xf9, 0x05, 0x0a, 0x0e, 0x54, 0x65, 0x73, 0x74,
 	0x52, 0x75, 0x6e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x72, 0x0a, 0x06, 0x43, 0x72,
 	0x65, 0x61, 0x74, 0x65, 0x12, 0x35, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e,
 	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x72, 0x75, 0x6e, 0x73,
@@ -507,27 +605,33 @@ var file_proto_test_run_service_test_run_service_proto_rawDesc = []byte{
 	0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e,
 	0x74, 0x65, 0x73, 0x74, 0x72, 0x75, 0x6e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x54,
 	0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x22, 0x00, 0x12,
-	0x66, 0x0a, 0x04, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x2d, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63,
+	0x64, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x12, 0x28, 0x2e, 0x67, 0x6f, 0x2e,
+	0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x74, 0x65,
+	0x73, 0x74, 0x72, 0x75, 0x6e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x54, 0x65, 0x73,
+	0x74, 0x52, 0x75, 0x6e, 0x1a, 0x2f, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e,
+	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x72, 0x75, 0x6e, 0x73,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x44, 0x65,
+	0x74, 0x61, 0x69, 0x6c, 0x73, 0x12, 0x66, 0x0a, 0x04, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x2d, 0x2e,
+	0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x2e, 0x74, 0x65, 0x73, 0x74, 0x72, 0x75, 0x6e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e,
+	0x45, 0x6d, 0x70, 0x74, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2d, 0x2e, 0x67,
+	0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e,
+	0x74, 0x65, 0x73, 0x74, 0x72, 0x75, 0x6e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x4c,
+	0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x64, 0x0a,
+	0x06, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x12, 0x28, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63,
 	0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x72,
-	0x75, 0x6e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2d, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72,
-	0x6f, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x72, 0x75,
-	0x6e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x64, 0x0a, 0x06, 0x44, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x12, 0x28, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72,
+	0x75, 0x6e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x52, 0x75,
+	0x6e, 0x1a, 0x2e, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72,
 	0x76, 0x69, 0x63, 0x65, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x72, 0x75, 0x6e, 0x73, 0x65, 0x72, 0x76,
-	0x69, 0x63, 0x65, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x1a, 0x2e, 0x2e, 0x67, 0x6f,
-	0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x74,
-	0x65, 0x73, 0x74, 0x72, 0x75, 0x6e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x45, 0x6d,
-	0x70, 0x74, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x6e, 0x0a,
-	0x0a, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x2e, 0x2e, 0x67, 0x6f,
-	0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x74,
-	0x65, 0x73, 0x74, 0x72, 0x75, 0x6e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x41, 0x73,
-	0x73, 0x69, 0x67, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2e, 0x2e, 0x67, 0x6f,
-	0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x74,
-	0x65, 0x73, 0x74, 0x72, 0x75, 0x6e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x45, 0x6d,
-	0x70, 0x74, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x69, 0x63, 0x65, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x22, 0x00, 0x12, 0x6e, 0x0a, 0x0a, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x46, 0x69, 0x6c,
+	0x65, 0x12, 0x2e, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72,
+	0x76, 0x69, 0x63, 0x65, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x72, 0x75, 0x6e, 0x73, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x2e, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x2e, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x73, 0x65, 0x72,
+	0x76, 0x69, 0x63, 0x65, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x72, 0x75, 0x6e, 0x73, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x22, 0x00, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -542,39 +646,43 @@ func file_proto_test_run_service_test_run_service_proto_rawDescGZIP() []byte {
 	return file_proto_test_run_service_test_run_service_proto_rawDescData
 }
 
-var file_proto_test_run_service_test_run_service_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_proto_test_run_service_test_run_service_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_proto_test_run_service_test_run_service_proto_goTypes = []interface{}{
 	(*CreateTestRunRequest)(nil), // 0: go.micro.service.testrunservice.CreateTestRunRequest
 	(*FileSpec)(nil),             // 1: go.micro.service.testrunservice.FileSpec
-	(*TestRun)(nil),              // 2: go.micro.service.testrunservice.TestRun
-	(*TestRunDetails)(nil),       // 3: go.micro.service.testrunservice.TestRunDetails
-	(*ListResponse)(nil),         // 4: go.micro.service.testrunservice.ListResponse
-	(*AssignRequest)(nil),        // 5: go.micro.service.testrunservice.AssignRequest
-	(*EmptyRequest)(nil),         // 6: go.micro.service.testrunservice.EmptyRequest
-	(*EmptyResponse)(nil),        // 7: go.micro.service.testrunservice.EmptyResponse
+	(*User)(nil),                 // 2: go.micro.service.testrunservice.User
+	(*TestRun)(nil),              // 3: go.micro.service.testrunservice.TestRun
+	(*TestRunDetails)(nil),       // 4: go.micro.service.testrunservice.TestRunDetails
+	(*ListResponse)(nil),         // 5: go.micro.service.testrunservice.ListResponse
+	(*AssignRequest)(nil),        // 6: go.micro.service.testrunservice.AssignRequest
+	(*EmptyRequest)(nil),         // 7: go.micro.service.testrunservice.EmptyRequest
+	(*EmptyResponse)(nil),        // 8: go.micro.service.testrunservice.EmptyResponse
 }
 var file_proto_test_run_service_test_run_service_proto_depIdxs = []int32{
-	2,  // 0: go.micro.service.testrunservice.CreateTestRunRequest.testRun:type_name -> go.micro.service.testrunservice.TestRun
+	3,  // 0: go.micro.service.testrunservice.CreateTestRunRequest.testRun:type_name -> go.micro.service.testrunservice.TestRun
 	1,  // 1: go.micro.service.testrunservice.CreateTestRunRequest.fileSpec:type_name -> go.micro.service.testrunservice.FileSpec
-	2,  // 2: go.micro.service.testrunservice.TestRunDetails.testRun:type_name -> go.micro.service.testrunservice.TestRun
-	2,  // 3: go.micro.service.testrunservice.ListResponse.testRuns:type_name -> go.micro.service.testrunservice.TestRun
-	0,  // 4: go.micro.service.testrunservice.TestRunService.Create:input_type -> go.micro.service.testrunservice.CreateTestRunRequest
-	2,  // 5: go.micro.service.testrunservice.TestRunService.Get:input_type -> go.micro.service.testrunservice.TestRun
-	1,  // 6: go.micro.service.testrunservice.TestRunService.GetByFileId:input_type -> go.micro.service.testrunservice.FileSpec
-	6,  // 7: go.micro.service.testrunservice.TestRunService.List:input_type -> go.micro.service.testrunservice.EmptyRequest
-	2,  // 8: go.micro.service.testrunservice.TestRunService.Delete:input_type -> go.micro.service.testrunservice.TestRun
-	5,  // 9: go.micro.service.testrunservice.TestRunService.AssignFile:input_type -> go.micro.service.testrunservice.AssignRequest
-	3,  // 10: go.micro.service.testrunservice.TestRunService.Create:output_type -> go.micro.service.testrunservice.TestRunDetails
-	3,  // 11: go.micro.service.testrunservice.TestRunService.Get:output_type -> go.micro.service.testrunservice.TestRunDetails
-	3,  // 12: go.micro.service.testrunservice.TestRunService.GetByFileId:output_type -> go.micro.service.testrunservice.TestRunDetails
-	4,  // 13: go.micro.service.testrunservice.TestRunService.List:output_type -> go.micro.service.testrunservice.ListResponse
-	7,  // 14: go.micro.service.testrunservice.TestRunService.Delete:output_type -> go.micro.service.testrunservice.EmptyResponse
-	7,  // 15: go.micro.service.testrunservice.TestRunService.AssignFile:output_type -> go.micro.service.testrunservice.EmptyResponse
-	10, // [10:16] is the sub-list for method output_type
-	4,  // [4:10] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	2,  // 2: go.micro.service.testrunservice.TestRun.user:type_name -> go.micro.service.testrunservice.User
+	3,  // 3: go.micro.service.testrunservice.TestRunDetails.testRun:type_name -> go.micro.service.testrunservice.TestRun
+	3,  // 4: go.micro.service.testrunservice.ListResponse.testRuns:type_name -> go.micro.service.testrunservice.TestRun
+	0,  // 5: go.micro.service.testrunservice.TestRunService.Create:input_type -> go.micro.service.testrunservice.CreateTestRunRequest
+	3,  // 6: go.micro.service.testrunservice.TestRunService.Get:input_type -> go.micro.service.testrunservice.TestRun
+	1,  // 7: go.micro.service.testrunservice.TestRunService.GetByFileId:input_type -> go.micro.service.testrunservice.FileSpec
+	3,  // 8: go.micro.service.testrunservice.TestRunService.GetById:input_type -> go.micro.service.testrunservice.TestRun
+	7,  // 9: go.micro.service.testrunservice.TestRunService.List:input_type -> go.micro.service.testrunservice.EmptyRequest
+	3,  // 10: go.micro.service.testrunservice.TestRunService.Delete:input_type -> go.micro.service.testrunservice.TestRun
+	6,  // 11: go.micro.service.testrunservice.TestRunService.AssignFile:input_type -> go.micro.service.testrunservice.AssignRequest
+	4,  // 12: go.micro.service.testrunservice.TestRunService.Create:output_type -> go.micro.service.testrunservice.TestRunDetails
+	4,  // 13: go.micro.service.testrunservice.TestRunService.Get:output_type -> go.micro.service.testrunservice.TestRunDetails
+	4,  // 14: go.micro.service.testrunservice.TestRunService.GetByFileId:output_type -> go.micro.service.testrunservice.TestRunDetails
+	4,  // 15: go.micro.service.testrunservice.TestRunService.GetById:output_type -> go.micro.service.testrunservice.TestRunDetails
+	5,  // 16: go.micro.service.testrunservice.TestRunService.List:output_type -> go.micro.service.testrunservice.ListResponse
+	8,  // 17: go.micro.service.testrunservice.TestRunService.Delete:output_type -> go.micro.service.testrunservice.EmptyResponse
+	8,  // 18: go.micro.service.testrunservice.TestRunService.AssignFile:output_type -> go.micro.service.testrunservice.EmptyResponse
+	12, // [12:19] is the sub-list for method output_type
+	5,  // [5:12] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_proto_test_run_service_test_run_service_proto_init() }
@@ -608,7 +716,7 @@ func file_proto_test_run_service_test_run_service_proto_init() {
 			}
 		}
 		file_proto_test_run_service_test_run_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TestRun); i {
+			switch v := v.(*User); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -620,7 +728,7 @@ func file_proto_test_run_service_test_run_service_proto_init() {
 			}
 		}
 		file_proto_test_run_service_test_run_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TestRunDetails); i {
+			switch v := v.(*TestRun); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -632,7 +740,7 @@ func file_proto_test_run_service_test_run_service_proto_init() {
 			}
 		}
 		file_proto_test_run_service_test_run_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListResponse); i {
+			switch v := v.(*TestRunDetails); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -644,7 +752,7 @@ func file_proto_test_run_service_test_run_service_proto_init() {
 			}
 		}
 		file_proto_test_run_service_test_run_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AssignRequest); i {
+			switch v := v.(*ListResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -656,7 +764,7 @@ func file_proto_test_run_service_test_run_service_proto_init() {
 			}
 		}
 		file_proto_test_run_service_test_run_service_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EmptyRequest); i {
+			switch v := v.(*AssignRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -668,6 +776,18 @@ func file_proto_test_run_service_test_run_service_proto_init() {
 			}
 		}
 		file_proto_test_run_service_test_run_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EmptyRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_test_run_service_test_run_service_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*EmptyResponse); i {
 			case 0:
 				return &v.state
@@ -686,7 +806,7 @@ func file_proto_test_run_service_test_run_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_proto_test_run_service_test_run_service_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

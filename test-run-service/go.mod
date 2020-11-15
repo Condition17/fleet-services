@@ -13,12 +13,13 @@ replace (
 require (
 	cloud.google.com/go v0.72.0 // indirect
 	cloud.google.com/go/pubsub v1.8.3 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20201114120241-c6821d09ccf0
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201114120241-c6821d09ccf0
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201114120241-c6821d09ccf0
+	github.com/Condition17/fleet-services/lib v0.0.0-20201114223651-56351161cd6e
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201114223651-56351161cd6e
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201114223651-56351161cd6e
 	github.com/ghodss/yaml v1.0.0
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.3 // indirect
+	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
 	github.com/nats-io/jwt v1.2.0 // indirect
