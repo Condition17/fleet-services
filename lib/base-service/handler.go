@@ -3,7 +3,6 @@ package baseservice
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 
 	"github.com/Condition17/fleet-services/lib/auth"
@@ -47,7 +46,6 @@ func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string,
 
 	userBytes = auth.GetUserBytesFromContext(ctx)
 	if len(userBytes) == 0 {
-		fmt.Println("No user bytes")
 		userBytes = auth.GetUserBytesFromDecodedToken(ctx)
 	}
 
