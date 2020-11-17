@@ -20,7 +20,7 @@
       "options": {
         "env": {
           "MICRO_BROKER": "googlepubsub",
-          "GOOGLEPUBSUB_PROJECT_ID": "fleet-271114"
+          "GOOGLEPUBSUB_PROJECT_ID": "fleet-295921"
         }
       },
       "group": "build",

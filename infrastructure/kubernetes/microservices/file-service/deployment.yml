@@ -14,7 +14,7 @@ spec:
       serviceAccountName: micro-services
       containers:
         - name: file-service
-          image: gcr.io/fleet-271114/fleet-file-service
+          image: gcr.io/fleet-295921/fleet-file-service
           imagePullPolicy: Always
           command:
             [

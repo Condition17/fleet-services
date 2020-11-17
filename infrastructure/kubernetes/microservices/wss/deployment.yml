@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: wss
-          image: gcr.io/fleet-271114/fleet-wss
+          image: gcr.io/fleet-295921/fleet-wss
           imagePullPolicy: Always
           envFrom:
             - secretRef:

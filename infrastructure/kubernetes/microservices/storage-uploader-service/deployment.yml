@@ -14,7 +14,7 @@ spec:
       serviceAccountName: micro-services
       containers:
       - name: storage-uploader-service
-        image: gcr.io/fleet-271114/fleet-storage-uploader-service
+        image: gcr.io/fleet-295921/fleet-storage-uploader-service
         imagePullPolicy: Always
         command: [
           "./service",

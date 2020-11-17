@@ -1,3 +1,3 @@
 SERVICE_NAME: "go.micro.api.file-service"
-GOOGLE_PROJECT_ID: "fleet-271114"
+GOOGLE_PROJECT_ID: "fleet-295921"
 REDIS_URL: "localhost:6379"

@@ -14,7 +14,7 @@ spec:
       serviceAccountName: micro-services
       containers:
       - name: run-controller-service
-        image: gcr.io/fleet-271114/fleet-run-controller-service
+        image: gcr.io/fleet-295921/fleet-run-controller-service
         imagePullPolicy: Always
         command: [
           "./service",

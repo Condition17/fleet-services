@@ -14,7 +14,7 @@ spec:
       serviceAccountName: micro-services
       containers:
       - name: resource-manager-service
-        image: gcr.io/fleet-271114/fleet-resource-manager-service
+        image: gcr.io/fleet-295921/fleet-resource-manager-service
         imagePullPolicy: Always
         command: [
           "./service",

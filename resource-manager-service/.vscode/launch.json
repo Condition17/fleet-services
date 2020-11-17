@@ -12,7 +12,7 @@
             "program": "${workspaceFolder}",
             "env": {
                 "MICRO_BROKER": "googlepubsub",
-                "GOOGLEPUBSUB_PROJECT_ID": "fleet-271114"
+                "GOOGLEPUBSUB_PROJECT_ID": "fleet-295921"
             },
             "args": ["--broker=googlepubsub"]
         }
