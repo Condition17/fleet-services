@@ -25,7 +25,5 @@ spec:
         envFrom:
           - configMapRef:
               name: pod-base-env
-          - secretRef:
-              name: user-service-secrets
         ports:
         - containerPort: 8080

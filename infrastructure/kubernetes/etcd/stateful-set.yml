@@ -1,10 +1,13 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: etcd
   labels:
     app: etcd
 spec:
+  selector:
+    matchLabels:
+      app: etcd
   serviceName: etcd
   replicas: 3
   template:
