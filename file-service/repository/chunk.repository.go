@@ -51,7 +51,7 @@ func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) (strin
 	}
 
 	// create file-chunk binding
-	conn.Send("SET", composeFileChunkBindingKey(spec.FileId, sha2), "")
+	conn.Send("SET", composeFileChunkBindingKey(spec.FileId, sha2), spec.Index)
 
 	// add chunk as a part of the file
 	var storeIndex uint64 = spec.Index / maxChunkStoreSize

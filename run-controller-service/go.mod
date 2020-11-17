@@ -11,11 +11,11 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/file-service v0.0.0-20201115015951-4b854f3e1865
-	github.com/Condition17/fleet-services/lib v0.0.0-20201115015951-4b854f3e1865
-	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20201115015951-4b854f3e1865
-	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201115015951-4b854f3e1865
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201115015951-4b854f3e1865 // indirect
+	github.com/Condition17/fleet-services/file-service v0.0.0-20201115141257-e152a37ff788
+	github.com/Condition17/fleet-services/lib v0.0.0-20201115141257-e152a37ff788
+	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20201115141257-e152a37ff788
+	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201115141257-e152a37ff788
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201115141257-e152a37ff788 // indirect
 	github.com/go-git/go-git/v5 v5.2.0 // indirect
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.3 // indirect
@@ -24,11 +24,11 @@ require (
 	github.com/micro/go-plugins/registry/kubernetes/v2 v2.9.1
 	github.com/nats-io/jwt v1.2.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	golang.org/x/crypto v0.0.0-20201112155050-0c6587e931a9 // indirect
-	golang.org/x/sys v0.0.0-20201113233024-12cec1faf1ba // indirect
+	golang.org/x/crypto v0.0.0-20201117144127-c1f2f97bffc9 // indirect
+	golang.org/x/sys v0.0.0-20201117170446-d9b008d0a637 // indirect
 	golang.org/x/text v0.3.4 // indirect
-	golang.org/x/tools v0.0.0-20201114224030-61ea331ec02b // indirect
+	golang.org/x/tools v0.0.0-20201117152513-9036a0f9af11 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20201113130914-ce600e9a6f9e // indirect
+	google.golang.org/genproto v0.0.0-20201117123952-62d171c70ae1 // indirect
 	google.golang.org/protobuf v1.25.0
 )
