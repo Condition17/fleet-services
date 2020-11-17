@@ -18,10 +18,7 @@ spec:
           imagePullPolicy: Always
           envFrom:
             - secretRef:
-                name: user-service-secrets
-          env:
-            - name: NODE_ENV
-              value: "prod"
+                name: wss-secrets
           ports:
             - containerPort: 3001
               name: wss-port
