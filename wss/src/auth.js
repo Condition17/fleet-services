@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const jwt = require("jsonwebtoken")
-const secret = fs.readFileSync(path.join(__dirname, "..", "secret"))
+const {TOKEN_SECRET} = require("../environment");
 
 function getDecodedTokenValue(token) {
   return jwt.verify(token, secret);

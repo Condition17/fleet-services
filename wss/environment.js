@@ -1,9 +1,8 @@
 
-function isProdEnvironment() {
-  return process.env.NODE_ENV === "prod"
-}
+require("dotenv").config
 
 module.exports = {
-  REDIS_HOST: isProdEnvironment() ? "redis" : "localhost",
-  REDIS_PORT: 6379
+  REDIS_HOST: process.env.REDIS_HOST || "localhost",
+  REDIS_PORT: process.env.REDIS_PORT || 6379,
+  TOKEN_SECRET: process.env.TOKEN_SECRET || "mySuperSecretKey",
 }
