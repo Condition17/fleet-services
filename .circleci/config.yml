@@ -86,6 +86,20 @@ jobs:
           image: $IMAGE_NAME
       - gcr/push-image:
           image: $IMAGE_NAME
+  build-push-resource-manager-service:
+    description: Build and push Resource Manager service image to GCR
+    machine: true
+    environment:
+      IMAGE_NAME: fleet-resource-manager-service
+    steps:
+      - checkout
+      - gcr/gcr-auth
+      - gcr/build-image:
+          path: ~/project/resource-manager-service
+          docker-context: ~/project/resource-manager-service
+          image: $IMAGE_NAME
+      - gcr/push-image:
+          image: $IMAGE_NAME
 workflows:
   build_and_upload_service_images:
     jobs:
@@ -110,6 +124,10 @@ workflows:
             branches:
               only: master
       - build-push-wss-image:
+          filters:
+            branches:
+              only: master
+      - build-push-resource-manager-service:
           filters:
             branches:
               only: master

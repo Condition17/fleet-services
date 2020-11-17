@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-manager-service
+spec:
+  selector:
+    matchLabels:
+      app: resource-manager-service
+  template:
+    metadata:
+      labels:
+        app: resource-manager-service
+    spec:
+      serviceAccountName: micro-services
+      containers:
+      - name: resource-manager-service
+        image: gcr.io/fleet-271114/fleet-resource-manager-service
+        imagePullPolicy: Always
+        command: [
+          "./service",
+          "--selector=static",
+          "--server_address=:8080",
+          "--broker=googlepubsub"
+        ]
+        envFrom:
+          - configMapRef:
+              name: pod-base-env
+        ports:
+        - containerPort: 8080
