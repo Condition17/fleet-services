@@ -3,9 +3,9 @@ kind: Service
 metadata:
   name: redis
 spec:
+  type: LoadBalancer
   selector:
     app: redis
-  clusterIP: None
   ports:
     - port: 6379
       targetPort: redis
