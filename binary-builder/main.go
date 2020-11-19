@@ -1,41 +1,99 @@
 package main
 
 import (
-	"github.com/Condition17/fleet-services/binary-builder/config"
-	"context"
-	"log"
-	"io/ioutil"
 	"fmt"
+	"log"
+	"os"
+	"runtime"
 
-	"cloud.google.com/go/storage"
+	"path/filepath"
+	"syscall"
 )
 
+func getMountCmd(os string) string {
+	switch os {
+	case "linux":
+		return "mount"
+	case "darwin":
+		// mac os
+		return "mount_nfs"
+	default:
+		return ""
+	}
+}
+
+func getMountCmdArgs(os string) []string {
+	switch os {
+	case "darwin":
+		return []string{"-o", "resvport"}
+	default:
+		return []string{}
+	}
+}
+
 func main() {
-	config := config.GetConfig()
+	// config := config.GetConfig()
 
-	// Create google storage client
-	client, err := storage.NewClient(context.Background())
+	// // Create google storage client
+	// client, err := storage.NewClient(context.Background())
+	// if err != nil {
+	// 	log.Fatalf("Failed to create Google Storage Client: %v", err)
+	// }
+	// defer client.Close()
+
+	// bucketName := "fleet-files-chunks"
+
+	// // Create bucket instance
+	// bucket := client.Bucket(bucketName).UserProject(config.GoogleProjectID)
+	// attrs, errs := bucket.Attrs(context.Background())
+	// fmt.Printf("bucket attrs: %v - error: %v", attrs, errs)
+	// objectName := "1a510b80dacb2e5251df15becafd41619ebeb7e9eb1c97ce0de9cfa1832cf5d4"
+	// reader, err := bucket.Object(objectName).NewReader(context.Background())
+	// if err != nil {
+	// 	log.Fatalf("Object(%q).NewReader: %v", objectName, err)
+	// }
+	// defer reader.Close()
+
+	// data, err := ioutil.ReadAll(reader)
+	// if err != nil {
+	// 	fmt.Errorf("ioutil.ReadAll: %v", err)
+	// }
+	// fmt.Printf("Blob %v downloaded: %v\n", objectName, data)
+
+	// syscall.Mount("10.252.184.154:/target", "./mnt", "nfs")
+
+	wdPath, err := os.Getwd()
 	if err != nil {
-		log.Fatalf("Failed to create Google Storage Client: %v", err)
+		log.Fatal(err)
 	}
-	defer client.Close()
+	fmt.Println(runtime.GOOS)
+	addr := "10.252.184.154"
+	source := ":/target"
+	targetPath := fmt.Sprintf("%s%s", wdPath, "/mnt")
 
-	bucketName := "fleet-files-chunks"
+	// fmt.Printf("Executing command: %s %s %s %s\n", getMountCmd(runtime.GOOS), strings.Join(getMountCmdArgs(runtime.GOOS), " "), source, target)
+	// out, err := exec.Command(getMountCmd(runtime.GOOS), strings.Join(getMountCmdArgs(runtime.GOOS), " "), source, target).Output()
+	// if err != nil {
+	// 	log.Fatalf("Error: %s | Out: %s", err, out)
+	// }
+	// fmt.Println("Command successfully executed")
+	// fmt.Println(string(out[:]))
 
-	// Create bucket instance
-	bucket := client.Bucket(bucketName).UserProject(config.GoogleProjectID)
-	attrs, errs := bucket.Attrs(context.Background())
-	fmt.Printf("bucket attrs: %v - error: %v", attrs, errs)
-	objectName := "1a510b80dacb2e5251df15becafd41619ebeb7e9eb1c97ce0de9cfa1832cf5d4"
-	reader, err := bucket.Object(objectName).NewReader(context.Background())
+	if err := syscall.Mount(source, targetPath, "nfs", 0, fmt.Sprintf("nolock,addr=%s", addr)); err != nil {
+		log.Fatalf("Syscall mount error: %v", err)
+	}
+	fmt.Println("NFS successfully mounted.")
+
+	// try file creation in NFS
+	f, err := os.OpenFile(filepath.Join(targetPath, "program_file"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Fatalf("Object(%q).NewReader: %v", objectName, err)
+		log.Fatal(err)
 	}
-	defer reader.Close()
+	f.Close()
 
-	data, err := ioutil.ReadAll(reader)
-	if err != nil {
-		fmt.Errorf("ioutil.ReadAll: %v", err)
+	fmt.Println("Trying to unmount")
+	if err := syscall.Unmount(targetPath, 0); err != nil {
+		fmt.Println("Error encountered while unmounting")
 	}
-	fmt.Printf("Blob %v downloaded: %v\n", objectName, data)
+	fmt.Println("Successfully unmounted")
 }
