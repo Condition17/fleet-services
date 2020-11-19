@@ -8,6 +8,7 @@ import (
 
 	"path/filepath"
 	"syscall"
+	"os/exec"
 )
 
 func getMountCmd(os string) string {
@@ -71,14 +72,6 @@ func main() {
 	source := ":/target"
 	targetPath := fmt.Sprintf("%s%s", wdPath, "/mnt")
 
-	// fmt.Printf("Executing command: %s %s %s %s\n", getMountCmd(runtime.GOOS), strings.Join(getMountCmdArgs(runtime.GOOS), " "), source, target)
-	// out, err := exec.Command(getMountCmd(runtime.GOOS), strings.Join(getMountCmdArgs(runtime.GOOS), " "), source, target).Output()
-	// if err != nil {
-	// 	log.Fatalf("Error: %s | Out: %s", err, out)
-	// }
-	// fmt.Println("Command successfully executed")
-	// fmt.Println(string(out[:]))
-
 	if err := syscall.Mount(source, targetPath, "nfs", 0, fmt.Sprintf("nolock,addr=%s", addr)); err != nil {
 		log.Fatalf("Syscall mount error: %v", err)
 	}
@@ -92,8 +85,10 @@ func main() {
 	f.Close()
 
 	fmt.Println("Trying to unmount")
-	if err := syscall.Unmount(targetPath, 0); err != nil {
-		fmt.Println("Error encountered while unmounting")
+	out, err := exec.Command("umount","-l", targetPath).Output()
+	if err != nil {
+		log.Fatalf("Error unmounting fs: %s | Out: %s", err, out)
 	}
 	fmt.Println("Successfully unmounted")
+	fmt.Println(string(out[:]))
 }
