@@ -67,7 +67,7 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println(runtime.GOOS)
-	addr := "10.252.184.154"
+	addr := "10.24.195.50"
 	source := ":/target"
 	targetPath := fmt.Sprintf("%s%s", wdPath, "/mnt")
 
