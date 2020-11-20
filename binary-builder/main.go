@@ -3,37 +3,13 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
-	"runtime"
 
-	"path/filepath"
-	"syscall"
-	"os/exec"
+	"github.com/Condition17/fleet-services/binary-builder/config"
+	db "github.com/Condition17/fleet-services/binary-builder/database"
 )
 
-func getMountCmd(os string) string {
-	switch os {
-	case "linux":
-		return "mount"
-	case "darwin":
-		// mac os
-		return "mount_nfs"
-	default:
-		return ""
-	}
-}
-
-func getMountCmdArgs(os string) []string {
-	switch os {
-	case "darwin":
-		return []string{"-o", "resvport"}
-	default:
-		return []string{}
-	}
-}
-
 func main() {
-	// config := config.GetConfig()
+	config := config.GetConfig()
 
 	// // Create google storage client
 	// client, err := storage.NewClient(context.Background())
@@ -63,32 +39,45 @@ func main() {
 
 	// syscall.Mount("10.252.184.154:/target", "./mnt", "nfs")
 
-	wdPath, err := os.Getwd()
-	if err != nil {
+	// Setup Redis client
+	redisPool := db.CreateRedisPool(config.RedisUrl)
+	// ensure that connection to Redis is always properly closed
+
+	// test redis connectivity via PING
+	conn := redisPool.Get()
+	if err := db.PingRedis(conn); err != nil {
 		log.Fatal(err)
+	} else {
+		fmt.Println("Successfully connected to Redis")
 	}
-	fmt.Println(runtime.GOOS)
-	addr := "10.24.195.50"
-	source := ":/target"
-	targetPath := fmt.Sprintf("%s%s", wdPath, "/mnt")
+	conn.Close()
 
-	if err := syscall.Mount(source, targetPath, "nfs", 0, fmt.Sprintf("nolock,addr=%s", addr)); err != nil {
-		log.Fatalf("Syscall mount error: %v", err)
-	}
-	fmt.Println("NFS successfully mounted.")
+	// wdPath, err := os.Getwd()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println(runtime.GOOS)
+	// addr := "10.24.195.50"
+	// source := ":/target"
+	// targetPath := fmt.Sprintf("%s%s", wdPath, "/mnt")
 
-	// try file creation in NFS
-	f, err := os.OpenFile(filepath.Join(targetPath, "program_file"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-	f.Close()
+	// if err := syscall.Mount(source, targetPath, "nfs", 0, fmt.Sprintf("nolock,addr=%s", addr)); err != nil {
+	// 	log.Fatalf("Syscall mount error: %v", err)
+	// }
+	// fmt.Println("NFS successfully mounted.")
 
-	fmt.Println("Trying to unmount")
-	out, err := exec.Command("umount","-l", targetPath).Output()
-	if err != nil {
-		log.Fatalf("Error unmounting fs: %s | Out: %s", err, out)
-	}
-	fmt.Println("Successfully unmounted")
-	fmt.Println(string(out[:]))
+	// // try file creation in NFS
+	// f, err := os.OpenFile(filepath.Join(targetPath, "program_file"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// f.Close()
+
+	// fmt.Println("Trying to unmount")
+	// out, err := exec.Command("umount", "-l", targetPath).Output()
+	// if err != nil {
+	// 	log.Fatalf("Error unmounting fs: %s | Out: %s", err, out)
+	// }
+	// fmt.Println("Successfully unmounted")
+	// fmt.Println(string(out[:]))
 }

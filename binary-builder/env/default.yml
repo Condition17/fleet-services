@@ -1,1 +1,2 @@
 GOOGLE_PROJECT_ID: "fleet-295921"
+REDIS_URL: "localhost:6379"
