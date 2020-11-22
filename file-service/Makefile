@@ -7,6 +7,10 @@ proto:
     
 	protoc --plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-go --plugin=protoc-gen-micro=${GOPATH}/bin/protoc-gen-micro --proto_path=. --micro_out=${MODIFY}:. --go_out=${MODIFY}:. proto/file-service/file-service.proto
     
+protoTest:
+
+	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=./grpc --go-grpc_opt=paths=source_relative proto/file-service/file-service.proto
+
 
 .PHONY: build
 build: proto

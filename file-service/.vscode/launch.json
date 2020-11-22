@@ -14,7 +14,7 @@
                 "MICRO_BROKER": "googlepubsub",
                 "GOOGLEPUBSUB_PROJECT_ID": "fleet-295921"
             },
-            "args": []
+            "args": ["--broker=googlepubsub"]
         }
     ]
 }
