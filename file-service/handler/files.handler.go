@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
 
@@ -13,6 +14,7 @@ import (
 )
 
 func (h *Handler) CreateFile(ctx context.Context, req *pb.File, res *pb.Response) error {
+	fmt.Println("Here")
 	file, err := h.FileRepository.Create(context.Background(), model.MarshalFile(req))
 	if err != nil {
 		return err
