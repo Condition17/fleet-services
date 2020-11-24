@@ -6,8 +6,7 @@ go 1.13
 // see https://github.com/etcd-io/etcd/issues/11154 and https://github.com/etcd-io/etcd/issues/11931.
 replace (
 	github.com/Condition17/fleet-services/test-run-service => ./.
-	github.com/coreos/etcd => github.com/ozonru/etcd v3.3.20-grpc1.27-origmodule+incompatible
-	google.golang.org/grpc => google.golang.org/grpc v1.27.0
+	github.com/coreos/etcd => github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0
 )
 
 require (
@@ -23,6 +22,7 @@ require (
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
 	github.com/nats-io/jwt v1.2.0 // indirect
+	github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0 // indirect
 	github.com/tkanos/gonfig v0.0.0-20181112185242-896f3d81fadf
 	golang.org/x/crypto v0.0.0-20201117144127-c1f2f97bffc9 // indirect
 	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b // indirect

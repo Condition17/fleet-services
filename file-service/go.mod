@@ -6,8 +6,7 @@ go 1.13
 // see https://github.com/etcd-io/etcd/issues/11154 and https://github.com/etcd-io/etcd/issues/11931.
 replace (
 	github.com/Condition17/fleet-services/file-service => ./.
-	github.com/coreos/etcd => github.com/ozonru/etcd v3.3.20-grpc1.27-origmodule+incompatible
-	google.golang.org/grpc => google.golang.org/grpc v1.27.0
+	github.com/coreos/etcd => github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0
 )
 
 require (
@@ -41,6 +40,7 @@ require (
 	github.com/mitchellh/hashstructure v1.1.0 // indirect
 	github.com/nats-io/jwt v1.2.0 // indirect
 	github.com/nats-io/nats.go v1.10.0 // indirect
+	github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/tkanos/gonfig v0.0.0-20181112185242-896f3d81fadf // indirect
 	github.com/xanzy/ssh-agent v0.3.0 // indirect

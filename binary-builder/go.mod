@@ -2,7 +2,9 @@ module github.com/Condition17/fleet-services/binary-builder
 
 go 1.14
 
-replace github.com/Condition17/fleet-services/binary-builder => ./.
+replace (
+	github.com/Condition17/fleet-services/binary-builder => ./.
+)
 
 require (
 	cloud.google.com/go v0.72.0 // indirect
