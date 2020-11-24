@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-package go.micro.api.fileservice;
-
 service FileService {
 	rpc CreateChunk(ChunkSpec) returns (EmptyResponse) {}
 	rpc CreateFile(File) returns (Response) {}
