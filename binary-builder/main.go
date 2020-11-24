@@ -4,32 +4,54 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net"
 
-	pb "github.com/Condition17/fleet-services/file-service/proto/file-service/grpc"
+	proto "github.com/Condition17/fleet-services/binary-builder/proto/binary-builder"
 	"google.golang.org/grpc"
 )
 
+type binaryBuilderServer struct {
+	proto.UnimplementedBinaryBuilderServer
+}
+
+func (s *binaryBuilderServer) Hello(ctx context.Context, req *proto.EmptyMessage) (*proto.EmptyMessage, error) {
+	fmt.Println("Executed hello! <3")
+	return &proto.EmptyMessage{}, nil
+}
+
 func main() {
 	// -- server startup
-
+	lis, err := net.Listen("tcp", "localhost:8090")
+	if err != nil {
+		log.Fatalf("Server failed to listen: %v", err)
+	}
+	grpcServer := grpc.NewServer()
+	defer grpcServer.Stop()
+	s := &binaryBuilderServer{}
+	proto.RegisterBinaryBuilderServer(grpcServer, s)
+	fmt.Println("Starting server on localhost:8090")
+	fmt.Println(grpcServer.GetServiceInfo())
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("Failed to server: %v", err)
+	}
 	// -- handling request
 	// get file details
 	// Set up a connection to the server.
-	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
-	}
-	fmt.Println("Connection:", conn)
-	defer conn.Close()
+	// conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
+	// if err != nil {
+	// 	log.Fatalf("Did not connect: %v", err)
+	// }
+	// fmt.Println("Connection:", conn)
+	// defer conn.Close()
 
-	client := pb.NewFileServiceClient(conn)
-	if fileDetails, err := client.ReadFile(context.Background(), &pb.File{Id: "ea223793-5b74-49df-8806-b1e5c3d4e064"}); err != nil {
-		fmt.Println("Error:", err)
-		return
-	} else {
-		fmt.Println("File details:", fileDetails)
-		return
-	}
+	// client := fileServicePb.NewFileServiceClient(conn)
+	// if fileDetails, err := client.ReadFile(context.Background(), &fileServicePb.File{Id: "ea223793-5b74-49df-8806-b1e5c3d4e064"}); err != nil {
+	// 	fmt.Println("Error:", err)
+	// 	return
+	// } else {
+	// 	fmt.Println("File details:", fileDetails)
+	// 	return
+	// }
 
 	// if fileDetails, err := client.ReadFile(context.Background(), &fileServiceProto.File{Id: "file:ea223793-5b74-49df-8806-b1e5c3d4e064:uploadedChunksCount"}); err != nil {
 	// 	fmt.Println("Error:", err)

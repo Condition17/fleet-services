@@ -10,6 +10,7 @@ require (
 	github.com/Condition17/fleet-services/file-service v0.0.0-20201124082821-bbccf128fb9b
 	github.com/Condition17/fleet-services/lib v0.0.0-20201120170506-cd29a9cac69c
 	github.com/gofrs/uuid v3.3.0+incompatible
+	github.com/golang/protobuf v1.4.3
 	github.com/gomodule/redigo v1.8.2
 	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.9.1
@@ -18,4 +19,5 @@ require (
 	golang.org/x/sys v0.0.0-20201119102817-f84b799fce68 // indirect
 	google.golang.org/genproto v0.0.0-20201119123407-9b1e624d6bc4 // indirect
 	google.golang.org/grpc v1.33.2
+	google.golang.org/protobuf v1.25.0
 )
