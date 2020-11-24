@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-proxy
+  template:
+    metadata:
+      labels:
+        app: micro-proxy
+    spec:
+      containers:
+        - name: micro-proxy
+          image: micro/micro:v2.9.3
+          imagePullPolicy: Always
+          args:
+            - proxy
+          env:
+            - name: MICRO_REGISTRY
+              value: "etcd"
+            - name: MICRO_REGISTRY_ADDRESS
+              value: "etcd"
+            - name: MICRO_PROXY_ADDRESS
+              value: ":8081"
+          ports:
+            - containerPort: 8081
+              name: proxy-port

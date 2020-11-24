@@ -1,17 +1,62 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
-	"github.com/Condition17/fleet-services/binary-builder/config"
-	db "github.com/Condition17/fleet-services/binary-builder/database"
+	pb "github.com/Condition17/fleet-services/file-service/proto/file-service/grpc"
+	"google.golang.org/grpc"
 )
 
 func main() {
-	config := config.GetConfig()
+	// -- server startup
 
-	// // Create google storage client
+	// -- handling request
+	// get file details
+	// Set up a connection to the server.
+	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("Did not connect: %v", err)
+	}
+	fmt.Println("Connection:", conn)
+	defer conn.Close()
+
+	client := pb.NewFileServiceClient(conn)
+	if fileDetails, err := client.ReadFile(context.Background(), &pb.File{Id: "ea223793-5b74-49df-8806-b1e5c3d4e064"}); err != nil {
+		fmt.Println("Error:", err)
+		return
+	} else {
+		fmt.Println("File details:", fileDetails)
+		return
+	}
+
+	// if fileDetails, err := client.ReadFile(context.Background(), &fileServiceProto.File{Id: "file:ea223793-5b74-49df-8806-b1e5c3d4e064:uploadedChunksCount"}); err != nil {
+	// 	fmt.Println("Error:", err)
+	// 	return
+	// } else {
+	// 	fmt.Println("File details:", fileDetails)
+	// 	return
+	// }
+	// var fileID string = "ea223793-5b74-49df-8806-b1e5c3d4e064"
+	// if fileDetails == nil {
+	// 	fmt.Println("File not found")
+	// 	return
+	// }
+
+	// if err != nil {
+	// 	fmt.Printf("Error encountered while retrieving file details: %v", fileID)
+	// 	return
+	// }
+
+	// -- spawn goroutine
+	// -- request handling end
+	return
+
+	// --------------------------------------
+	// -- EXPERIMENTS --
+
+	// Create google storage client
 	// client, err := storage.NewClient(context.Background())
 	// if err != nil {
 	// 	log.Fatalf("Failed to create Google Storage Client: %v", err)
@@ -38,19 +83,6 @@ func main() {
 	// fmt.Printf("Blob %v downloaded: %v\n", objectName, data)
 
 	// syscall.Mount("10.252.184.154:/target", "./mnt", "nfs")
-
-	// Setup Redis client
-	redisPool := db.CreateRedisPool(config.RedisUrl)
-	// ensure that connection to Redis is always properly closed
-
-	// test redis connectivity via PING
-	conn := redisPool.Get()
-	if err := db.PingRedis(conn); err != nil {
-		log.Fatal(err)
-	} else {
-		fmt.Println("Successfully connected to Redis")
-	}
-	conn.Close()
 
 	// wdPath, err := os.Getwd()
 	// if err != nil {
@@ -80,4 +112,24 @@ func main() {
 	// }
 	// fmt.Println("Successfully unmounted")
 	// fmt.Println(string(out[:]))
+
+	// file, _ := os.OpenFile("test.zip", os.O_CREATE|os.O_RDWR, 0666)
+	// _, err := file.Seek(100, 0)
+	// if err != nil {
+	// 	fmt.Println("Error while seeking:", err)
+	// 	return
+	// }
+
+	// if _, err := file.Write([]byte("this is a test")); err != nil {
+	// 	fmt.Println("Error writing file:", err)
+	// }
+
+	// if bytes, err := ioutil.ReadFile("test.zip"); err != nil {
+	// 	fmt.Println("Error reading file:", err)
+	// 	return
+	// } else {
+	// 	fmt.Println(bytes)
+	// 	fmt.Printf("File content: '%s'\n", bytes)
+	// }
+	// defer file.Close()
 }

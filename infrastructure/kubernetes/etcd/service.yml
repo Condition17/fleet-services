@@ -17,7 +17,6 @@ kind: Service
 metadata:
   name: etcd-client
 spec:
-  type: LoadBalancer
   ports:
   - name: etcd-client
     port: 2379

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-proxy
+spec:
+  type: LoadBalancer
+  selector:
+    app: micro-proxy
+  ports:
+  - port: 81
+    targetPort: "proxy-port"
+    protocol: TCP
