@@ -1,16 +1,12 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"log"
 
-	binaryBuilderProto "github.com/Condition17/fleet-services/binary-builder/proto/binary-builder"
 	"github.com/Condition17/fleet-services/run-controller-service/config"
 	handler "github.com/Condition17/fleet-services/run-controller-service/handler"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-plugins/broker/googlepubsub/v2"
-	"google.golang.org/grpc"
 )
 
 const topic string = "test-run-state"
@@ -41,21 +37,21 @@ func main() {
 	}
 
 	// -- remove this block
-	conn, err := grpc.Dial("localhost:8090", grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
-	}
-	fmt.Println("Connection:", conn)
-	defer conn.Close()
+	// conn, err := grpc.Dial("localhost:8090", grpc.WithInsecure())
+	// if err != nil {
+	// 	log.Fatalf("Did not connect: %v", err)
+	// }
+	// fmt.Println("Connection:", conn)
+	// defer conn.Close()
 
-	client := binaryBuilderProto.NewBinaryBuilderClient(conn)
-	if resp, err := client.Hello(context.Background(), &binaryBuilderProto.EmptyMessage{}); err != nil {
-		fmt.Println("Error:", err)
-		return
-	} else {
-		fmt.Println("Call response:", resp)
-		return
-	}
+	// client := binaryBuilderProto.NewBinaryBuilderClient(conn)
+	// if resp, err := client.Hello(context.Background(), &binaryBuilderProto.EmptyMessage{}); err != nil {
+	// 	fmt.Println("Error:", err)
+	// 	return
+	// } else {
+	// 	fmt.Println("Call response:", resp)
+	// 	return
+	// }
 	// ---
 
 	// Run service
