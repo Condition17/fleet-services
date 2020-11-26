@@ -8,7 +8,7 @@ import (
 	"github.com/Condition17/fleet-services/file-service/model"
 	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/Condition17/fleet-services/lib/auth"
-	"github.com/micro/go-micro/errors"
+	"github.com/micro/go-micro/v2/errors"
 )
 
 type ChunkDataMessage struct {
@@ -54,6 +54,24 @@ func (h *Handler) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.Em
 		Authorization: auth.GetAuthorizationBytesFromContext(ctx),
 	})
 	h.SendChunkDataToUploadQueue(ctx, uploadData)
+
+	return nil
+}
+
+func (h *Handler) GetChunkDetailsByIndexInFile(ctx context.Context, req *pb.ChunkSpec, res *pb.ChunkDetails) error {
+	if req.FileId == "" {
+		return errors.BadRequest(h.Service.Name(), "Invalid request")
+	}
+
+	chunk, err := h.ChunkRepository.GetByIndexInFile(ctx, req.FileId, req.Index)
+	if err != nil {
+		return err
+	}
+
+	if chunk == nil {
+		return errors.NotFound(h.Service.Name(), "Chunk not found.")
+	}
+	res.Chunk = model.UnmarshalChunk(chunk)
 
 	return nil
 }

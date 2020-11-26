@@ -45,6 +45,7 @@ type FileService interface {
 	CreateChunk(ctx context.Context, in *ChunkSpec, opts ...client.CallOption) (*EmptyResponse, error)
 	CreateFile(ctx context.Context, in *File, opts ...client.CallOption) (*Response, error)
 	ReadFile(ctx context.Context, in *File, opts ...client.CallOption) (*Response, error)
+	GetChunkDetailsByIndexInFile(ctx context.Context, in *ChunkSpec, opts ...client.CallOption) (*ChunkDetails, error)
 }
 
 type fileService struct {
@@ -89,12 +90,23 @@ func (c *fileService) ReadFile(ctx context.Context, in *File, opts ...client.Cal
 	return out, nil
 }
 
+func (c *fileService) GetChunkDetailsByIndexInFile(ctx context.Context, in *ChunkSpec, opts ...client.CallOption) (*ChunkDetails, error) {
+	req := c.c.NewRequest(c.name, "FileService.GetChunkDetailsByIndexInFile", in)
+	out := new(ChunkDetails)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for FileService service
 
 type FileServiceHandler interface {
 	CreateChunk(context.Context, *ChunkSpec, *EmptyResponse) error
 	CreateFile(context.Context, *File, *Response) error
 	ReadFile(context.Context, *File, *Response) error
+	GetChunkDetailsByIndexInFile(context.Context, *ChunkSpec, *ChunkDetails) error
 }
 
 func RegisterFileServiceHandler(s server.Server, hdlr FileServiceHandler, opts ...server.HandlerOption) error {
@@ -102,6 +114,7 @@ func RegisterFileServiceHandler(s server.Server, hdlr FileServiceHandler, opts .
 		CreateChunk(ctx context.Context, in *ChunkSpec, out *EmptyResponse) error
 		CreateFile(ctx context.Context, in *File, out *Response) error
 		ReadFile(ctx context.Context, in *File, out *Response) error
+		GetChunkDetailsByIndexInFile(ctx context.Context, in *ChunkSpec, out *ChunkDetails) error
 	}
 	type FileService struct {
 		fileService
@@ -124,4 +137,8 @@ func (h *fileServiceHandler) CreateFile(ctx context.Context, in *File, out *Resp
 
 func (h *fileServiceHandler) ReadFile(ctx context.Context, in *File, out *Response) error {
 	return h.FileServiceHandler.ReadFile(ctx, in, out)
+}
+
+func (h *fileServiceHandler) GetChunkDetailsByIndexInFile(ctx context.Context, in *ChunkSpec, out *ChunkDetails) error {
+	return h.FileServiceHandler.GetChunkDetailsByIndexInFile(ctx, in, out)
 }

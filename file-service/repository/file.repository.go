@@ -43,14 +43,13 @@ func (r *FileRepository) Create(ctx context.Context, file *model.File) (*model.F
 	u, _ := uuid.NewV4()
 	file.ID = u.String()
 	key := fmt.Sprintf(composeFileKey(file.ID))
-	maxStoreSize := uint64(math.Pow(2, 32) - 1)
 
 	// initialize needed chunk lists
 	totalChunksCount := uint64(math.Round(float64(file.Size)/float64(file.MaxChunkSize) + 0.5))
 	neededStoresCount := uint32(1)
 
-	if totalChunksCount > maxStoreSize {
-		neededStoresCount = uint32(math.Floor(float64(totalChunksCount) / float64(maxStoreSize)))
+	if totalChunksCount > maxChunkStoreSize {
+		neededStoresCount = uint32(math.Floor(float64(totalChunksCount) / float64(maxChunkStoreSize)))
 	}
 
 	// create Redis hash associated to file

@@ -54,8 +54,7 @@ func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) (strin
 	conn.Send("SET", composeFileChunkBindingKey(spec.FileId, sha2), spec.Index)
 
 	// add chunk as a part of the file
-	var storeIndex uint64 = spec.Index / maxChunkStoreSize
-	conn.Send("HSET", composeFileChunkStoreKey(spec.FileId, storeIndex), spec.Index, sha2)
+	conn.Send("HSET", composeFileChunkStoreKey(spec.FileId, getStoreIndex(spec.Index)), spec.Index, sha2)
 	_, err = conn.Do("EXEC")
 
 	if err != nil {
@@ -63,4 +62,36 @@ func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) (strin
 	}
 
 	return sha2, alreadyCreated, nil
+}
+
+func (r *ChunkRepository) GetByIndexInFile(ctx context.Context, fileId string, index uint64) (*model.Chunk, error) {
+	conn := r.DB.Get()
+	defer conn.Close()
+
+	// obtain chunk key
+	chunkSha2, err := redis.String(conn.Do("HGET", fmt.Sprintf("%v:%v", composeFileKey(fileId), getStoreIndex(index)), fmt.Sprintf("%v", index)))
+	if err != nil {
+		return nil, err
+	}
+	// get all chunk details using its key
+	return r.GetChunk(ctx, chunkSha2)
+}
+
+func (r *ChunkRepository) GetChunk(ctx context.Context, sha2 string) (*model.Chunk, error) {
+	conn := r.DB.Get()
+	defer conn.Close()
+
+	values, err := redis.Values(conn.Do("HGETALL", composeChunkKey(sha2)))
+
+	if err != nil {
+		return nil, err
+	}
+
+	var chunk model.Chunk
+	err = redis.ScanStruct(values, &chunk)
+	if err != nil {
+		return nil, err
+	}
+
+	return &chunk, nil
 }

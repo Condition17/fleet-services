@@ -20,6 +20,7 @@ type FileServiceClient interface {
 	CreateChunk(ctx context.Context, in *ChunkSpec, opts ...grpc.CallOption) (*EmptyResponse, error)
 	CreateFile(ctx context.Context, in *File, opts ...grpc.CallOption) (*Response, error)
 	ReadFile(ctx context.Context, in *File, opts ...grpc.CallOption) (*Response, error)
+	GetChunkDetailsByIndexInFile(ctx context.Context, in *ChunkSpec, opts ...grpc.CallOption) (*ChunkDetails, error)
 }
 
 type fileServiceClient struct {
@@ -57,6 +58,15 @@ func (c *fileServiceClient) ReadFile(ctx context.Context, in *File, opts ...grpc
 	return out, nil
 }
 
+func (c *fileServiceClient) GetChunkDetailsByIndexInFile(ctx context.Context, in *ChunkSpec, opts ...grpc.CallOption) (*ChunkDetails, error) {
+	out := new(ChunkDetails)
+	err := c.cc.Invoke(ctx, "/go.micro.api.fileservice.FileService/GetChunkDetailsByIndexInFile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FileServiceServer is the server API for FileService service.
 // All implementations must embed UnimplementedFileServiceServer
 // for forward compatibility
@@ -64,6 +74,7 @@ type FileServiceServer interface {
 	CreateChunk(context.Context, *ChunkSpec) (*EmptyResponse, error)
 	CreateFile(context.Context, *File) (*Response, error)
 	ReadFile(context.Context, *File) (*Response, error)
+	GetChunkDetailsByIndexInFile(context.Context, *ChunkSpec) (*ChunkDetails, error)
 	mustEmbedUnimplementedFileServiceServer()
 }
 
@@ -79,6 +90,9 @@ func (UnimplementedFileServiceServer) CreateFile(context.Context, *File) (*Respo
 }
 func (UnimplementedFileServiceServer) ReadFile(context.Context, *File) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReadFile not implemented")
+}
+func (UnimplementedFileServiceServer) GetChunkDetailsByIndexInFile(context.Context, *ChunkSpec) (*ChunkDetails, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetChunkDetailsByIndexInFile not implemented")
 }
 func (UnimplementedFileServiceServer) mustEmbedUnimplementedFileServiceServer() {}
 
@@ -147,6 +161,24 @@ func _FileService_ReadFile_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FileService_GetChunkDetailsByIndexInFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChunkSpec)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServiceServer).GetChunkDetailsByIndexInFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/go.micro.api.fileservice.FileService/GetChunkDetailsByIndexInFile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServiceServer).GetChunkDetailsByIndexInFile(ctx, req.(*ChunkSpec))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _FileService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "go.micro.api.fileservice.FileService",
 	HandlerType: (*FileServiceServer)(nil),
@@ -162,6 +194,10 @@ var _FileService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReadFile",
 			Handler:    _FileService_ReadFile_Handler,
+		},
+		{
+			MethodName: "GetChunkDetailsByIndexInFile",
+			Handler:    _FileService_GetChunkDetailsByIndexInFile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

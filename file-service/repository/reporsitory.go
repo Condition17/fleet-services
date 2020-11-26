@@ -36,3 +36,7 @@ func composeFileChunkStoreKey(fileId string, chunkStoreIndex uint64) string {
 func composeFileChunkBindingKey(fileId string, chunkSha2 string) string {
 	return fmt.Sprintf("%s:%s", composeFileKey(fileId), composeChunkKey(chunkSha2))
 }
+
+func getStoreIndex(chunkIndex uint64) uint64 {
+	return uint64(chunkIndex / maxChunkStoreSize)
+}
