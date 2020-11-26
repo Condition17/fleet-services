@@ -44,6 +44,7 @@ func NewResourceManagerServiceEndpoints() []*api.Endpoint {
 type ResourceManagerService interface {
 	ProvisionFileSystem(ctx context.Context, in *FileSystemSpec, opts ...client.CallOption) (*EmptyResponse, error)
 	ProvisionExecutorInstance(ctx context.Context, in *ExecutorInstanceSpec, opts ...client.CallOption) (*EmptyResponse, error)
+	GetFileSystem(ctx context.Context, in *FileSystemSpec, opts ...client.CallOption) (*FileSystemDetails, error)
 }
 
 type resourceManagerService struct {
@@ -78,17 +79,29 @@ func (c *resourceManagerService) ProvisionExecutorInstance(ctx context.Context, 
 	return out, nil
 }
 
+func (c *resourceManagerService) GetFileSystem(ctx context.Context, in *FileSystemSpec, opts ...client.CallOption) (*FileSystemDetails, error) {
+	req := c.c.NewRequest(c.name, "ResourceManagerService.GetFileSystem", in)
+	out := new(FileSystemDetails)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for ResourceManagerService service
 
 type ResourceManagerServiceHandler interface {
 	ProvisionFileSystem(context.Context, *FileSystemSpec, *EmptyResponse) error
 	ProvisionExecutorInstance(context.Context, *ExecutorInstanceSpec, *EmptyResponse) error
+	GetFileSystem(context.Context, *FileSystemSpec, *FileSystemDetails) error
 }
 
 func RegisterResourceManagerServiceHandler(s server.Server, hdlr ResourceManagerServiceHandler, opts ...server.HandlerOption) error {
 	type resourceManagerService interface {
 		ProvisionFileSystem(ctx context.Context, in *FileSystemSpec, out *EmptyResponse) error
 		ProvisionExecutorInstance(ctx context.Context, in *ExecutorInstanceSpec, out *EmptyResponse) error
+		GetFileSystem(ctx context.Context, in *FileSystemSpec, out *FileSystemDetails) error
 	}
 	type ResourceManagerService struct {
 		resourceManagerService
@@ -107,4 +120,8 @@ func (h *resourceManagerServiceHandler) ProvisionFileSystem(ctx context.Context,
 
 func (h *resourceManagerServiceHandler) ProvisionExecutorInstance(ctx context.Context, in *ExecutorInstanceSpec, out *EmptyResponse) error {
 	return h.ResourceManagerServiceHandler.ProvisionExecutorInstance(ctx, in, out)
+}
+
+func (h *resourceManagerServiceHandler) GetFileSystem(ctx context.Context, in *FileSystemSpec, out *FileSystemDetails) error {
+	return h.ResourceManagerServiceHandler.GetFileSystem(ctx, in, out)
 }

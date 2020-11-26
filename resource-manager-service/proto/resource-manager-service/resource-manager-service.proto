@@ -5,6 +5,36 @@ package go.micro.service.resourcemanagerservice;
 service ResourceManagerService {
 	rpc ProvisionFileSystem(FileSystemSpec) returns (EmptyResponse) {} 
 	rpc ProvisionExecutorInstance(ExecutorInstanceSpec) returns (EmptyResponse) {}
+	rpc GetFileSystem(FileSystemSpec) returns (FileSystemDetails) {}
+}
+
+message User {
+	uint32 id = 1;
+  string name = 2;
+  string company = 3;
+  string email = 4;
+}
+
+message TestRun {
+	uint32 id = 1;
+	string name = 2;
+	string fileId = 3;
+	uint32 userId = 4;
+	User user = 5;
+}
+
+message FileSystem {
+	uint32 id = 1;
+	string IP = 2;
+	string name = 3;
+	int64 fileShareCapacityGb = 4;
+	string fileShareName = 5;
+	uint32 testRunId = 6;
+	TestRun testRun = 7;
+}
+
+message FileSystemDetails {
+	FileSystem fileSystem = 1;
 }
 
 message FileSystemSpec {

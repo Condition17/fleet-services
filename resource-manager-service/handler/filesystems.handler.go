@@ -13,11 +13,26 @@ import (
 	"github.com/Condition17/fleet-services/resource-manager-service/model"
 	proto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
+	microErrors "github.com/micro/go-micro/v2/errors"
 	"google.golang.org/api/file/v1"
+	"gorm.io/gorm"
 )
 
 const MIN_FILESTORE_CAPACITY_GB int64 = 1024
 const MAX_FILESTORE_CAPACITY_GB int64 = 63900
+
+func (h *Handler) GetFileSystem(ctx context.Context, req *proto.FileSystemSpec, res *proto.FileSystemDetails) error {
+	result, err := h.FileSystemRepository.GetByTestRunId(req.TestRunId)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return microErrors.NotFound(h.Service.Name(), fmt.Sprintf("%v", err))
+		}
+		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+	}
+	res.FileSystem = model.UnmarshalFileSystem(result)
+
+	return nil
+}
 
 func (h *Handler) ProvisionFileSystem(ctx context.Context, req *proto.FileSystemSpec, res *proto.EmptyResponse) error {
 	var requestedSizeGb int64 = int64(math.Round(float64(req.SizeInBytes)/float64(math.Pow10(9)) + 0.5))
