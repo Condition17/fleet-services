@@ -5,6 +5,7 @@ go 1.14
 replace github.com/Condition17/fleet-services/binary-builder => ./.
 
 require (
+	cloud.google.com/go/storage v1.10.0
 	github.com/Condition17/fleet-services/file-service v0.0.0-20201126204404-b8ea3fa6a45c
 	github.com/Condition17/fleet-services/lib v0.0.0-20201126204404-b8ea3fa6a45c
 	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20201126204404-b8ea3fa6a45c
