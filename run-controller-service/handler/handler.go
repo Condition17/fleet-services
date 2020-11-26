@@ -29,9 +29,9 @@ type EventHandler struct {
 func NewHandler(service micro.Service) func(broker.Event) error {
 	var handler EventHandler = EventHandler{
 		BaseHandler:            baseservice.NewBaseHandler(service),
-		FileService:            fileServiceProto.NewFileService(lib.GetFullExternalServiceName("file-service"), client.DefaultClient),
+		FileService:            fileServiceProto.NewFileService(lib.GetFullExternalServiceName("fileservice"), client.DefaultClient),
 		TestRunService:         testRunServiceProto.NewTestRunService(lib.GetFullExternalServiceName("test-run-service"), client.DefaultClient),
-		ResourceManagerService: resourceManagerProto.NewResourceManagerService(lib.GetFullExternalServiceName("resource-manager-service"), client.DefaultClient),
+		ResourceManagerService: resourceManagerProto.NewResourceManagerService(lib.GetFullExternalServiceName("ResourceManagerService"), client.DefaultClient),
 	}
 
 	return func(e broker.Event) error {

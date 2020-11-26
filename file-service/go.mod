@@ -7,6 +7,7 @@ go 1.13
 replace (
 	github.com/Condition17/fleet-services/file-service => ./.
 	github.com/coreos/etcd => github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0
+	google.golang.org/grpc => google.golang.org/grpc v1.30.0
 )
 
 require (

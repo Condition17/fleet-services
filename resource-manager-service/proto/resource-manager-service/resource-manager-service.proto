@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package go.micro.service.resourcemanagerservice;
+package go.micro.api.ResourceManagerService;
 
 service ResourceManagerService {
 	rpc ProvisionFileSystem(FileSystemSpec) returns (EmptyResponse) {} 

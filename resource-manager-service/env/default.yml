@@ -1,4 +1,4 @@
-"SERVICE_NAME": "go.micro.api.resource-manager-service"
+"SERVICE_NAME": "go.micro.api.ResourceManagerService"
 "DB_HOST": "127.0.0.1"
 "DB_USER": "postgres"
 "DB_NAME": "fleet"
