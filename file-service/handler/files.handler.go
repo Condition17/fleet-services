@@ -26,7 +26,8 @@ func (h *Handler) CreateFile(ctx context.Context, req *pb.File, res *pb.Response
 
 func (h *Handler) ReadFile(ctx context.Context, req *pb.File, res *pb.Response) error {
 	file, err := h.FileRepository.Read(ctx, model.MarshalFile(req).ID)
-	if file == nil {
+
+	if file == nil || file.ID == "" {
 		return errors.NotFound(h.Service.Name(), "File not found")
 	}
 
