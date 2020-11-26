@@ -58,7 +58,7 @@ func (h *Handler) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.Em
 	return nil
 }
 
-func (h *Handler) GetChunkDetailsByIndexInFile(ctx context.Context, req *pb.ChunkSpec, res *pb.ChunkDetails) error {
+func (h *Handler) GetChunkDetailsByIndexInFile(ctx context.Context, req *pb.ChunkSpec, res *pb.Chunk) error {
 	if req.FileId == "" {
 		return errors.BadRequest(h.Service.Name(), "Invalid request")
 	}
@@ -71,7 +71,7 @@ func (h *Handler) GetChunkDetailsByIndexInFile(ctx context.Context, req *pb.Chun
 	if chunk == nil {
 		return errors.NotFound(h.Service.Name(), "Chunk not found.")
 	}
-	res.Chunk = model.UnmarshalChunk(chunk)
+	res = model.UnmarshalChunk(chunk)
 
 	return nil
 }

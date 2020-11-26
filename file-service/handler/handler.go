@@ -7,8 +7,6 @@ import (
 	"github.com/micro/go-micro/v2/broker"
 )
 
-const gcsUploadTopic string = "chunk-gcs-upload"
-
 type Handler struct {
 	baseservice.BaseHandler
 	FileRepository  repository.FileRepository

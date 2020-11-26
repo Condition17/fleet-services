@@ -6,7 +6,7 @@ service FileService {
 	rpc CreateChunk(ChunkSpec) returns (EmptyResponse) {}
 	rpc CreateFile(File) returns (Response) {}
 	rpc ReadFile(File) returns (Response) {}
-	rpc GetChunkDetailsByIndexInFile(ChunkSpec) returns (ChunkDetails) {}
+	rpc GetChunkDetailsByIndexInFile(ChunkSpec) returns (Chunk) {}
 }
 
 message ChunkSpec {
@@ -18,10 +18,6 @@ message ChunkSpec {
 message Chunk {
 	string sha2 = 1;
 	int64 size = 2;
-}
-
-message ChunkDetails {
-	Chunk chunk = 1;
 }
 
 message ChunkDataMessage {

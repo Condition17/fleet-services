@@ -20,7 +20,7 @@ type FileServiceClient interface {
 	CreateChunk(ctx context.Context, in *ChunkSpec, opts ...grpc.CallOption) (*EmptyResponse, error)
 	CreateFile(ctx context.Context, in *File, opts ...grpc.CallOption) (*Response, error)
 	ReadFile(ctx context.Context, in *File, opts ...grpc.CallOption) (*Response, error)
-	GetChunkDetailsByIndexInFile(ctx context.Context, in *ChunkSpec, opts ...grpc.CallOption) (*ChunkDetails, error)
+	GetChunkDetailsByIndexInFile(ctx context.Context, in *ChunkSpec, opts ...grpc.CallOption) (*Chunk, error)
 }
 
 type fileServiceClient struct {
@@ -58,8 +58,8 @@ func (c *fileServiceClient) ReadFile(ctx context.Context, in *File, opts ...grpc
 	return out, nil
 }
 
-func (c *fileServiceClient) GetChunkDetailsByIndexInFile(ctx context.Context, in *ChunkSpec, opts ...grpc.CallOption) (*ChunkDetails, error) {
-	out := new(ChunkDetails)
+func (c *fileServiceClient) GetChunkDetailsByIndexInFile(ctx context.Context, in *ChunkSpec, opts ...grpc.CallOption) (*Chunk, error) {
+	out := new(Chunk)
 	err := c.cc.Invoke(ctx, "/go.micro.api.fileservice.FileService/GetChunkDetailsByIndexInFile", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ type FileServiceServer interface {
 	CreateChunk(context.Context, *ChunkSpec) (*EmptyResponse, error)
 	CreateFile(context.Context, *File) (*Response, error)
 	ReadFile(context.Context, *File) (*Response, error)
-	GetChunkDetailsByIndexInFile(context.Context, *ChunkSpec) (*ChunkDetails, error)
+	GetChunkDetailsByIndexInFile(context.Context, *ChunkSpec) (*Chunk, error)
 	mustEmbedUnimplementedFileServiceServer()
 }
 
@@ -91,7 +91,7 @@ func (UnimplementedFileServiceServer) CreateFile(context.Context, *File) (*Respo
 func (UnimplementedFileServiceServer) ReadFile(context.Context, *File) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReadFile not implemented")
 }
-func (UnimplementedFileServiceServer) GetChunkDetailsByIndexInFile(context.Context, *ChunkSpec) (*ChunkDetails, error) {
+func (UnimplementedFileServiceServer) GetChunkDetailsByIndexInFile(context.Context, *ChunkSpec) (*Chunk, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetChunkDetailsByIndexInFile not implemented")
 }
 func (UnimplementedFileServiceServer) mustEmbedUnimplementedFileServiceServer() {}
