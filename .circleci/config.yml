@@ -114,7 +114,7 @@ jobs:
       - run:
           name: Compile code for linux
           command: |
-            make build_linux
+            GOOS=linux GOARCH=amd64 go build -o exec/service -v .
 workflows:
   compile_and_upload_file_builder_exec:
     jobs:
