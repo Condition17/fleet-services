@@ -109,8 +109,8 @@ jobs:
     steps:
       - checkout
       - run:
-          - name: cd into file-builder directory
-          - command: cd ~/project/file-builder
+          name: cd into file-builder directory
+          command: cd ~/project/file-builder
       - run:
           name: Compile code for linux
           command: |
