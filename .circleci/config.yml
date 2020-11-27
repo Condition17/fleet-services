@@ -112,7 +112,7 @@ jobs:
       - run:
           name: Compile code for linux
           command: |
-            make build_linux
+            ls
 workflows:
 #  build_and_upload_service_images:
 #    jobs:
