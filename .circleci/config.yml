@@ -106,7 +106,6 @@ jobs:
     machine: true
     environment:
       GO111MODULE: "on"
-      SOURCE_DIR: ~/project/file-builder
       BINARY_DIR: ~/project/exec
       BUCKET_NAME: fleet-deploy-binaries
     steps:
@@ -124,7 +123,7 @@ jobs:
       - run:
           name: Compile code for linux
           command: |
-            cd $SOURCE_DIR && \
+            cd ~/project/file-builder && \
             GOOS=linux GOARCH=amd64 go build -o $BINARY_DIR/server -v . && \
             tar -zcvf "file-builder.tar.gz" server
       - gcs/gcs-auth
