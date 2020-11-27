@@ -110,7 +110,7 @@ jobs:
       - checkout
       - run:
           name: Compile code for linux
-          command: cd ~/project/file-builder && GOOS=linux GOARCH=amd64 go build -o exec/service -v .
+          command: GOOS=linux GOARCH=amd64 go build -o exec/service -v ~/project/file-builder/main.go
 workflows:
   compile_and_upload_file_builder_exec:
     jobs:
