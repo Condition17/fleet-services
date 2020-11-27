@@ -106,7 +106,9 @@ jobs:
     machine: true
     environment:
       GO111MODULE: "on"
+      SOURCE_DIR: ~/project/file-builder
       BINARY_DIR: ~/project/exec
+      BUCKET_NAME: fleet-deploy-binaries
     steps:
       - checkout
       - run:
@@ -122,45 +124,23 @@ jobs:
       - run:
           name: Compile code for linux
           command: |
-          cd ~/project/file-builder && \
-          GOOS=linux GOARCH=amd64 go build -o $BINARY_DIR/server -v . && \
-          tar -zcvf "file-builder.tar.gz" server
+            cd $SOURCE_DIR && \
+            GOOS=linux GOARCH=amd64 go build -o $BINARY_DIR/server -v . && \
+            tar -zcvf "file-builder.tar.gz" server
       - gcs/gcs-auth
       - gcs/rsync:
-          bucket: fleet-deploy-binaries
+          bucket:$BUCKET_NAME
           source: $BINARY_DIR
 workflows:
   compile_and_upload_file_builder_exec:
     jobs:
       - compile-upload-file-builder
-
-#  build_and_upload_service_images:
-#    jobs:
-#      - build-push-file-service-image:
-#          filters:
-#            branches:
-#              only: master
-#      - build-push-test-run-service-image:
-#          filters:
-#            branches:
-#              only: master
-#      - build-push-storage-uploader-service-image:
-#          filters:
-#            branches:
-#              only: master
-#      - build-push-user-service-image:
-#          filters:
-#            branches:
-#              only: master
-#      - build-push-run-controller-service-image:
-#          filters:
-#            branches:
-#              only: master
-#      - build-push-wss-image:
-#          filters:
-#            branches:
-#              only: master
-#      - build-push-resource-manager-service:
-#          filters:
-#            branches:
-#              only: master
+  build_and_upload_service_images:
+    jobs:
+      - build-push-file-service-image:
+      - build-push-test-run-service-image:
+      - build-push-storage-uploader-service-image:
+      - build-push-user-service-image:
+      - build-push-run-controller-service-image:
+      - build-push-wss-image:
+      - build-push-resource-manager-service:
