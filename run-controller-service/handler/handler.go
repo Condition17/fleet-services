@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"github.com/micro/go-micro/v2/metadata"
 	"log"
 
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
@@ -16,7 +17,6 @@ import (
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/broker"
 	"github.com/micro/go-micro/v2/client"
-	"github.com/micro/go-micro/v2/metadata"
 )
 
 type EventHandler struct {
@@ -59,6 +59,8 @@ func (h EventHandler) HandleEvent(event *proto.Event) {
 		h.handleFileSystemCreated(ctx, event)
 	case events.EXECUTOR_INSTANCE_CREATED:
 		h.handleExecutorInstanceCreated(ctx, event)
+	case events.FILE_ASSEMBLY_SUCCEEDED:
+		h.handleFileAssemblySuccess(ctx, event)
 	default:
 		log.Printf("The event with type '%s' is not a recognized fleet test run pipeline event", event.Type)
 	}
@@ -69,7 +71,7 @@ func (h EventHandler) sendErrorToWssQueue(ctx context.Context, err error) {
 }
 
 func (h EventHandler) handleTestRunCreated(ctx context.Context, event *proto.Event) {
-	// unmarshal event speciffic data
+	// unmarshal event specific data
 	var eventData *proto.TestRunCreatedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
 		log.Println(errors.EventUnmarshalError(event.Data, event))
@@ -112,7 +114,7 @@ func (h EventHandler) handleTestRunCreated(ctx context.Context, event *proto.Eve
 }
 
 func (h EventHandler) handleFileUploaded(ctx context.Context, event *proto.Event) {
-	// unmarshal event speciffic data
+	// unmarshal event specific data
 	var eventData *proto.FileUploadedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
 		log.Println(errors.EventUnmarshalError(event.Data, event))
@@ -154,7 +156,7 @@ func (h EventHandler) handleFileUploaded(ctx context.Context, event *proto.Event
 }
 
 func (h EventHandler) handleFileSystemCreated(ctx context.Context, event *proto.Event) {
-	// unmarshal event speciffic data
+	// unmarshal event specific data
 	var eventData *proto.FileSystemCreateEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
 		log.Println(errors.EventUnmarshalError(event.Data, event))
@@ -172,10 +174,10 @@ func (h EventHandler) handleFileSystemCreated(ctx context.Context, event *proto.
 }
 
 func (h EventHandler) handleExecutorInstanceCreated(ctx context.Context, event *proto.Event) {
-	// unmarshal event speciffic data
+	// unmarshal event specific data
 	var eventData *proto.ExecutorInstanceCreateEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
-		log.Println(errors.EventUnmarshalError(event.Data, event))
+		log.Println(errors.EventUnmarshalError(event.Data, err))
 		return
 	}
 
@@ -188,6 +190,24 @@ func (h EventHandler) handleExecutorInstanceCreated(ctx context.Context, event *
 	// send executor instance created event
 	wssEventData, _ := json.Marshal(&proto.FileSystemCreateEventData{TestRunId: eventData.TestRunId})
 	h.SendEventToWssQueue(ctx, events.WSS_EXECUTOR_INSTANCE_CREATION_COMPLETED, wssEventData)
+}
+
+func (h EventHandler) handleFileAssemblySuccess(ctx context.Context, event *proto.Event) {
+	// unmarshal event specific data
+	var eventData *proto.FileAssemblySucceededEventData
+	if err := json.Unmarshal(event.Data, &eventData); err != nil {
+		log.Println(errors.EventUnmarshalError(event.Data, err))
+		return
+	}
+
+	// append wss event target bytes to context
+	if err := h.appendTestRunUserBytesToContext(&ctx, eventData.TestRunId); err != nil {
+		log.Println(err)
+		return
+	}
+	// send wss event
+	log.Println("Sending wss event now. EventData:", eventData)
+	h.SendEventToWssQueue(ctx, events.WSS_FILE_SUCCESSFULLY_ASSEMBLED, event.Data)
 }
 
 func (h EventHandler) appendTestRunUserBytesToContext(ctx *context.Context, testRunId uint32) error {

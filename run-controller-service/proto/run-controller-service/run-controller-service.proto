@@ -67,3 +67,7 @@ message FileSystemCreateEventData {
 message ExecutorInstanceCreateEventData {
 	uint32 testRunId = 1;
 }
+
+message FileAssemblySucceededEventData {
+	uint32 testRunId = 1;
+}
