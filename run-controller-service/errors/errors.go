@@ -70,3 +70,15 @@ func FileSystemCreationError(target interface{}, errorDetails interface{}) error
 		},
 	}
 }
+
+
+func AssembleFileRequestError(target interface{}, errorDetails interface{}) error {
+	return &Error{
+		Code:           1004,
+		DisplayMessage: "Error encountered while requesting file assembly.",
+		Details: map[string]string{
+			"target": fmt.Sprintf("%v", target),
+			"error":  fmt.Sprintf("%v", errorDetails),
+		},
+	}
+}

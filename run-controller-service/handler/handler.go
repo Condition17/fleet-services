@@ -3,13 +3,12 @@ package handler
 import (
 	"context"
 	"encoding/json"
-	"github.com/micro/go-micro/v2/metadata"
-	"log"
-
+	fileBuilderProto "github.com/Condition17/fleet-services/file-builder/proto/file-builder"
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/Condition17/fleet-services/lib"
 	baseservice "github.com/Condition17/fleet-services/lib/base-service"
 	resourceManagerProto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service"
+	"github.com/Condition17/fleet-services/run-controller-service/config"
 	"github.com/Condition17/fleet-services/run-controller-service/errors"
 	"github.com/Condition17/fleet-services/run-controller-service/events"
 	proto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
@@ -17,6 +16,9 @@ import (
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/broker"
 	"github.com/micro/go-micro/v2/client"
+	"github.com/micro/go-micro/v2/metadata"
+	"google.golang.org/grpc"
+	"log"
 )
 
 type EventHandler struct {
@@ -24,30 +26,21 @@ type EventHandler struct {
 	FileService            fileServiceProto.FileService
 	TestRunService         testRunServiceProto.TestRunService
 	ResourceManagerService resourceManagerProto.ResourceManagerService
+	FileBuilderService     fileBuilderProto.FileBuilderClient
 }
 
-//conn, err := grpc.Dial("localhost:8090", grpc.WithInsecure())
-//if err != nil {
-//log.Fatalf("Did not connect: %v", err)
-//}
-//fmt.Println("Connection:", conn)
-//defer conn.Close()
-//
-//client := proto.NewBinaryBuilderClient(conn)
-//if resp, err := client.Hello(context.Background(), &proto.EmptyMessage{}); err != nil {
-//fmt.Println("Error:", err)
-//return
-//} else {
-//fmt.Println("Call response:", resp)
-//return
-//}
-
 func NewHandler(service micro.Service) func(broker.Event) error {
+	fileBuilderServiceClient, err := getFileBuilderServiceClient()
+	if err != nil {
+		log.Fatalln("Error encountered while setting up connection with file builder service:", err)
+	}
+
 	var handler EventHandler = EventHandler{
 		BaseHandler:            baseservice.NewBaseHandler(service),
 		FileService:            fileServiceProto.NewFileService(lib.GetFullExternalServiceName("fileservice"), client.DefaultClient),
 		TestRunService:         testRunServiceProto.NewTestRunService(lib.GetFullExternalServiceName("test-run-service"), client.DefaultClient),
 		ResourceManagerService: resourceManagerProto.NewResourceManagerService(lib.GetFullExternalServiceName("ResourceManagerService"), client.DefaultClient),
+		FileBuilderService:     fileBuilderServiceClient,
 	}
 
 	return func(e broker.Event) error {
@@ -60,6 +53,16 @@ func NewHandler(service micro.Service) func(broker.Event) error {
 
 		return nil
 	}
+}
+
+func getFileBuilderServiceClient() (fileBuilderProto.FileBuilderClient, error) {
+	configs := config.GetConfig()
+	conn, err := grpc.Dial(configs.FileBuilderServiceUrl, grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+
+	return fileBuilderProto.NewFileBuilderClient(conn), nil
 }
 
 func (h EventHandler) HandleEvent(event *proto.Event) {
@@ -187,6 +190,13 @@ func (h EventHandler) handleFileSystemCreated(ctx context.Context, event *proto.
 	// send wss event
 	wssEventData, _ := json.Marshal(&proto.FileSystemCreateEventData{TestRunId: eventData.TestRunId})
 	h.SendEventToWssQueue(ctx, events.WSS_FILE_SYSTEM_CREATION_COMPLETED, wssEventData)
+
+	// trigger file assembly process
+	fileAssembleRequest := &fileBuilderProto.FileAssembleRequest{TestRunId: eventData.TestRunId}
+	if _, err := h.FileBuilderService.AssembleFile(ctx, fileAssembleRequest); err != nil {
+		h.sendErrorToWssQueue(ctx, errors.AssembleFileRequestError(fileAssembleRequest, err.Error()))
+		return
+	}
 }
 
 func (h EventHandler) handleExecutorInstanceCreated(ctx context.Context, event *proto.Event) {
@@ -222,7 +232,6 @@ func (h EventHandler) handleFileAssemblySuccess(ctx context.Context, event *prot
 		return
 	}
 	// send wss event
-	log.Println("Sending wss event now. EventData:", eventData)
 	h.SendEventToWssQueue(ctx, events.WSS_FILE_SUCCESSFULLY_ASSEMBLED, event.Data)
 }
 
