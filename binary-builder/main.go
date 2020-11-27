@@ -28,16 +28,39 @@ import (
 //	return &proto.EmptyMessage{}, nil
 //}
 
-const ChunkHandlersCount = 10
-const ChunksQueueSize = 100
-const ChunksBucketName = "fleet-files-chunks"
+const (
+	ChunkHandlersCount = 10
+	ChunksQueueSize = 100
+	ChunksBucketName = "fleet-files-chunks"
+)
+
+type FileBuildEventType string
+const (
+	chunkProcessed FileBuildEventType = "chunkProcessed"
+	chunkProcessingError FileBuildEventType = "chunkProcessingError"
+)
+
 var mu sync.Mutex = sync.Mutex{}
 
 type ChunkDetails struct {
+	BuildFile BuildFile
 	Sha2 string
-	File *os.File
 	FileOffset uint64
 }
+
+type BuildFile struct {
+	MountVolumePath string
+	File *os.File
+	Spec *fileServicePb.File
+	BuildUpdatesChan chan FileBuildEvent
+}
+
+type FileBuildEvent struct {
+	Type FileBuildEventType
+	Error error
+	Payload ChunkDetails
+}
+
 var done chan bool = make(chan bool)
 var chunksQueue chan ChunkDetails = make(chan ChunkDetails, ChunksQueueSize)
 
@@ -51,19 +74,42 @@ func handleChunkDetails(chunksStorageClient *chunksStorage.Client) {
 		// lock
 		mu.Lock()
 		log.Printf("Writing chunk '%v' at file offset '%v'\n", chunkDetails.Sha2, chunkDetails.FileOffset)
-		_, err = chunkDetails.File.Seek(int64(chunkDetails.FileOffset), 0)
+		_, err = chunkDetails.BuildFile.File.Seek(int64(chunkDetails.FileOffset), 0)
 		if err != nil {
-			log.Printf("Error while seeking file offset (offset: %v): %v\n", chunkDetails.FileOffset, err)
+			chunkDetails.BuildFile.BuildUpdatesChan <- FileBuildEvent{Type: chunkProcessingError, Error: err, Payload: chunkDetails}
 			mu.Unlock()
 			continue
 		}
-		if _, err := io.Copy(chunkDetails.File, chunkBytesReader); err != nil {
-			log.Printf("Error while dowloading chunk (key: %v) bytes: %v\n", chunkDetails.Sha2, err)
+		if _, err := io.Copy(chunkDetails.BuildFile.File, chunkBytesReader); err != nil {
+			chunkDetails.BuildFile.BuildUpdatesChan <- FileBuildEvent{Type: chunkProcessingError, Error: err, Payload: chunkDetails}
 			mu.Unlock()
 			continue
 		}
 		log.Printf("Successfully written chunk '%v' at file offset '%v'\n", chunkDetails.Sha2, chunkDetails.FileOffset)
 		mu.Unlock()
+		chunkDetails.BuildFile.BuildUpdatesChan <- FileBuildEvent{Type: chunkProcessed, Payload: chunkDetails}
+	}
+}
+
+func handleExecutionFeedback(buildFile BuildFile) {
+	var appendedChunksCount uint64 = 0
+	for fileBuildEvent := range buildFile.BuildUpdatesChan {
+		switch fileBuildEvent.Type {
+			case chunkProcessed:
+				appendedChunksCount++
+				if appendedChunksCount == buildFile.Spec.TotalChunksCount {
+					log.Printf("File %v completely assembled\n", buildFile.Spec.Name)
+					// close file
+					buildFile.File.Close()
+					// unmount volume
+					// notify run-state
+				}
+		case chunkProcessingError:
+			// TODO: some retry rule needed - also a retry mechanism should be implemented
+			log.Printf("Error encountered while processing chunk (key: %v): %v\n", fileBuildEvent.Payload.Sha2, fileBuildEvent.Error)
+			chunksQueue <- fileBuildEvent.Payload
+			log.Printf("Chunk (key: %v) re-added to processing queue", fileBuildEvent.Payload.Sha2)
+		}
 	}
 }
 
@@ -118,14 +164,14 @@ func main() {
 
 	// -- create target file - this will be built assembling the downloaded chunks
 	file, _ := os.OpenFile(filepath.Join(fileDir, fileDetails.Name), os.O_CREATE|os.O_RDWR, 0666)
-
-
+	var buildFile BuildFile = BuildFile{File: file, MountVolumePath: fileDir, Spec: fileDetails, BuildUpdatesChan: make(chan FileBuildEvent)}
+	go handleExecutionFeedback(buildFile)
 	for i := uint64(0); i < fileDetails.TotalChunksCount; i++ {
 		res, err := fileServiceClient.GetChunkDetailsByIndexInFile(context.Background(), &fileServicePb.ChunkSpec{FileId: fileDetails.Id, Index: i})
 		if err != nil {
 			log.Fatalf("Error encountered while retrieving chunk (index: %v) details for file (id: %v): %v", i, fileDetails.Id, err)
 		}
-		chunksQueue <- ChunkDetails{Sha2: res.Chunk.Sha2, File: file, FileOffset: i * uint64(fileDetails.MaxChunkSize)}
+		chunksQueue <- ChunkDetails{BuildFile: buildFile, Sha2: res.Chunk.Sha2, FileOffset: i * uint64(fileDetails.MaxChunkSize)}
 	}
 
 	// TODO: remove this after finishing the server layout
