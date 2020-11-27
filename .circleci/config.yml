@@ -101,29 +101,35 @@ jobs:
           image: $IMAGE_NAME
       - gcr/push-image:
           image: $IMAGE_NAME
-  compile-upload-file-builder-exec:
-    description: Compile and upload the file-builder server executable to GCS
+  compile-file-builder:
+    description: Compile file-builder server executable
     docker:
       - image: circleci/golang:latest
       - image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
     environment:
       GO111MODULE: "on"
-      BUCKET_NAME: "fleet-deploy-binaries"
+      GOOS: "linux"
+      GOARCH: "amd64"
     steps:
       - checkout
       - run:
           name: Compile code for linux
-          command: cd ~/project/file-builder && GOOS=linux GOARCH=amd64 go build -o ~/project/exec/file-builder -v .
-      - gcs/gcs-rsync:
+          command: cd ~/project/file-builder && go build -o ~/project/exec/file-builder -v .
+  upload-file-builder :
+    description: Upload file-builder server executable to GCS
+    machine: true
+    environment:
+      BUCKET_NAME: "fleet-deploy-binaries"
+    steps:
+      - gcs/gcs-auth
+      - gcs/rsync:
           bucket: $BUCKET_NAME
           source: ~/project/exec/
 workflows:
   compile_and_upload_file_builder_exec:
     jobs:
-      - compile-upload-file-builder-exec:
-        filters:
-          branches:
-            only: master
+      - compile-upload-file-builder-exec
+      - upload-file-builder
 
 #  build_and_upload_service_images:
 #    jobs:
