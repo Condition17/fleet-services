@@ -107,13 +107,21 @@ jobs:
     environment:
       GO111MODULE: "on"
     steps:
-      - checkout:
-          - path: ~/project/file-builder
+      - checkout
+      - run:
+          - name: cd into file-builder directory
+          - command: cd ~/project/file-builder
       - run:
           name: Compile code for linux
           command: |
             make build_linux
 workflows:
+  compile_and_upload_file_builder_exec:
+    jobs:
+      - compile-upload-file-builder-exec:
+        filters:
+          branches:
+            only: master
 #  build_and_upload_service_images:
 #    jobs:
 #      - build-push-file-service-image:
@@ -144,9 +152,3 @@ workflows:
 #          filters:
 #            branches:
 #              only: master
-  compile_and_upload_file_builder_exec:
-    jobs:
-      - compile-upload-file-builder-exec:
-        filters:
-          branches:
-            only: master
