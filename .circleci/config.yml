@@ -113,11 +113,11 @@ jobs:
       - run:
           name: Install go
           command: |
-            sudo apt-get update && \
-            sudo apt-get -y upgrade && \
+            apt-get update && \
+            apt-get -y upgrade && \
             wget https://dl.google.com/go/go1.15.5.linux-amd64.tar.gz && \
-            sudo tar -C /usr/local -xzf go1.15.5.linux-amd64.tar.gz && \
-            sudo export PATH=$PATH:/usr/local/go/bin && \
+            tar -C /usr/local -xzf go1.15.5.linux-amd64.tar.gz && \
+            export PATH=$PATH:/usr/local/go/bin && \
             go version
       - run:
           name: Ensure the environment is upgraded for gsutil use
