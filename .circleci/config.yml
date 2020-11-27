@@ -103,22 +103,18 @@ jobs:
           image: $IMAGE_NAME
   compile-upload-file-builder:
     description: Compile file-builder server executable
-    docker:
-      - image: ubuntu:18.04
+    machine: true
     environment:
       GO111MODULE: "on"
       GOOS: "linux"
       GOARCH: "amd64"
+      PATH: "$PATH:/usr/local/go/bin"
     steps:
       - run:
           name: Install go
           command: |
-            apt-get update && \
-            apt-get -y upgrade && \
             wget https://dl.google.com/go/go1.15.5.linux-amd64.tar.gz && \
-            tar -C /usr/local -xzf go1.15.5.linux-amd64.tar.gz && \
-            export PATH=$PATH:/usr/local/go/bin && \
-            go version
+            sudo tar -C /usr/local -xzf go1.15.5.linux-amd64.tar.gz
       - run:
           name: Ensure the environment is upgraded for gsutil use
           command: pip install --upgrade pip && pip install --upgrade google-compute-engine
