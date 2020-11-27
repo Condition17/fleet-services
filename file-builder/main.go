@@ -13,8 +13,8 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/Condition17/fleet-services/binary-builder/chunks-storage"
-	"github.com/Condition17/fleet-services/binary-builder/config"
+	"github.com/Condition17/fleet-services/file-builder/chunks-storage"
+	"github.com/Condition17/fleet-services/file-builder/config"
 	proto "github.com/Condition17/fleet-services/file-builder/proto/file-builder"
 	fileServicePb "github.com/Condition17/fleet-services/file-service/proto/file-service/grpc"
 	resourceManagerPb "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service/grpc"
@@ -66,11 +66,11 @@ var (
 	resourceManagerClient resourceManagerPb.ResourceManagerServiceClient
 )
 
-type binaryBuilderServer struct {
-	proto.UnimplementedBinaryBuilderServer
+type fileBuilderServer struct {
+	proto.UnimplementedFileBuilderServer
 }
 
-func (s *binaryBuilderServer) AssembleFile(ctx context.Context, req *proto.FileAssembleRequest) (*proto.EmptyResponse, error) {
+func (s *fileBuilderServer) AssembleFile(ctx context.Context, req *proto.FileAssembleRequest) (*proto.EmptyResponse, error) {
 	testRunId := req.TestRunId
 	// get file system details
 	response, err := resourceManagerClient.GetFileSystem(context.Background(), &resourceManagerPb.FileSystemSpec{TestRunId: testRunId})
@@ -192,7 +192,7 @@ func main() {
 	}
 	grpcServer := grpc.NewServer()
 	defer grpcServer.Stop()
-	proto.RegisterFileBuilderServer(grpcServer, &binaryBuilderServer{})
+	proto.RegisterFileBuilderServer(grpcServer, &fileBuilderServer{})
 
 	conn, err := grpc.Dial(configs.FleetServicesGrpcProxyUrl, grpc.WithInsecure())
 	if err != nil {

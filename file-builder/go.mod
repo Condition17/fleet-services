@@ -7,10 +7,11 @@ replace github.com/Condition17/fleet-services/file-builder => ./.
 require (
 	cloud.google.com/go/pubsub v1.8.3
 	cloud.google.com/go/storage v1.12.0
-	github.com/Condition17/fleet-services/file-service v0.0.0-20201127145314-6f7078d558b3
-	github.com/Condition17/fleet-services/lib v0.0.0-20201127145314-6f7078d558b3
-	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20201127145314-6f7078d558b3
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201127145314-6f7078d558b3
+	github.com/Condition17/fleet-services/binary-builder v0.0.0-20201124203551-1694b744d0ab
+	github.com/Condition17/fleet-services/file-service v0.0.0-20201127155022-4f7d34eb057a
+	github.com/Condition17/fleet-services/lib v0.0.0-20201127155022-4f7d34eb057a
+	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20201127155022-4f7d34eb057a
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201127155022-4f7d34eb057a
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.4 // indirect
 	golang.org/x/sys v0.0.0-20201126233918-771906719818 // indirect
