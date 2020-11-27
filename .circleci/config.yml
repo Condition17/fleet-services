@@ -145,7 +145,8 @@ workflows:
 #            branches:
 #              only: master
   compile_and_upload_file_builder_exec:
-    - compile-upload-file-builder-exec:
-      filters:
-        branches:
-          only: master
+    jobs:
+      - compile-upload-file-builder-exec:
+        filters:
+          branches:
+            only: master
