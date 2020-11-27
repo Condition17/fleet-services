@@ -106,8 +106,6 @@ jobs:
     machine: true
     environment:
       GO111MODULE: "on"
-      GOOS: "linux"
-      GOARCH: "amd64"
     steps:
       - checkout
       - run:
@@ -121,7 +119,7 @@ jobs:
           command: pip install --upgrade pip && pip install --upgrade google-compute-engine
       - run:
           name: Compile code for linux
-          command: cd ~/project/file-builder && go build -o ~/project/exec/file-builder -v .
+          command: cd ~/project/file-builder && GOOS=linux GOARCH=amd64 go build -o ~/project/exec/file-builder -v .
       - gcs/gcs-auth
       - gcs/rsync:
           bucket: fleet-deploy-binaries
