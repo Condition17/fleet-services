@@ -108,14 +108,13 @@ jobs:
       GO111MODULE: "on"
       GOOS: "linux"
       GOARCH: "amd64"
-      PATH: "$PATH:/usr/local/go/bin"
     steps:
       - run:
           name: Install go
           command: |
-            sudo apt-get -y install wget && \
             wget https://dl.google.com/go/go1.15.5.linux-amd64.tar.gz && \
-            sudo tar -C /usr/local -xzf go1.15.5.linux-amd64.tar.gz &&
+            sudo tar -C /usr/local -xzf go1.15.5.linux-amd64.tar.gz && \
+            go version
       - run:
           name: Ensure the environment is upgraded for gsutil use
           command: pip install --upgrade pip && pip install --upgrade google-compute-engine
