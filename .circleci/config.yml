@@ -129,7 +129,7 @@ jobs:
             tar -zcvf "file-builder.tar.gz" server
       - gcs/gcs-auth
       - gcs/rsync:
-          bucket:$BUCKET_NAME
+          bucket: $BUCKET_NAME
           source: $BINARY_DIR
 workflows:
   compile_and_upload_file_builder_exec:
