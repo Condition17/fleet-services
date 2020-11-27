@@ -128,7 +128,7 @@ jobs:
 workflows:
   compile_and_upload_file_builder_exec:
     jobs:
-      - compile-upload-file-builder-exec
+      - compile-file-builder
       - upload-file-builder
 
 #  build_and_upload_service_images:
