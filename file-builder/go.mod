@@ -1,8 +1,8 @@
-module github.com/Condition17/fleet-services/binary-builder
+module github.com/Condition17/fleet-services/file-builder
 
 go 1.14
 
-replace github.com/Condition17/fleet-services/binary-builder => ./.
+replace github.com/Condition17/fleet-services/file-builder => ./.
 
 require (
 	cloud.google.com/go/pubsub v1.8.3
@@ -12,7 +12,6 @@ require (
 	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20201127145314-6f7078d558b3
 	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201127145314-6f7078d558b3
 	github.com/golang/protobuf v1.4.3
-	github.com/gomodule/redigo v1.8.2
 	github.com/google/go-cmp v0.5.4 // indirect
 	golang.org/x/sys v0.0.0-20201126233918-771906719818 // indirect
 	golang.org/x/tools v0.0.0-20201125231158-b5590deeca9b // indirect
