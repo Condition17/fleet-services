@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   gcr: circleci/gcp-gcr@0.8.0
+  gcs: t3n/gcs@0.1.3
 jobs:
   build-push-file-service-image:
     description: Build and push file service image to GCR
@@ -106,11 +107,15 @@ jobs:
       - image: circleci/golang:latest
     environment:
       GO111MODULE: "on"
+      BUCKET_NAME: "fleet-deploy-binaries"
     steps:
       - checkout
       - run:
           name: Compile code for linux
-          command: cd ~/project/file-builder && GOOS=linux GOARCH=amd64 go build -o ~/project/exec/service -v .
+          command: cd ~/project/file-builder && GOOS=linux GOARCH=amd64 go build -o ~/project/exec/file-builder -v .
+      - gcs/gcs-rsync:
+          bucket: $BUCKET_NAME
+          source: ~/project/exec/
 workflows:
   compile_and_upload_file_builder_exec:
     jobs:
