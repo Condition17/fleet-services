@@ -106,8 +106,8 @@ jobs:
     machine: true
     environment:
       GO111MODULE: "on"
-      BINARY_DIR: ~/project/exec
       BUCKET_NAME: fleet-deploy-binaries
+      DEPLOY_ARCHIVE_NAME: file-builder.tar.gz
     steps:
       - checkout
       - run:
@@ -124,12 +124,12 @@ jobs:
           name: Compile code for linux
           command: |
             cd ~/project/file-builder && \
-            GOOS=linux GOARCH=amd64 go build -o $BINARY_DIR/server -v . && \
-            tar -zcvf "file-builder.tar.gz" $BINARY_DIR/server
+            GOOS=linux GOARCH=amd64 go build -o server -v . && \
+            tar -zcvf "${DEPLOY_ARCHIVE_NAME}" server
       - gcs/gcs-auth
       - gcs/rsync:
           bucket: $BUCKET_NAME
-          source: $BINARY_DIR
+          source: ~/project/file-builder/$DEPLOY_ARCHIVE_NAME
 workflows:
   compile_and_upload_file_builder_exec:
     jobs:
