@@ -3,7 +3,6 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/storage-uploader-service/proto" />
-      <excludeFolder url="file://$MODULE_DIR$/test-run-service/proto" />
       <excludeFolder url="file://$MODULE_DIR$/user-service/proto" />
     </content>
     <orderEntry type="inheritedJdk" />

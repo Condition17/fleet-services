@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package FileBuilder;
+
+service FileBuilder {
+  rpc AssembleFile(FileAssembleRequest) returns (EmptyResponse) {}
+}
+
+message FileAssembleRequest {
+  uint32 testRunId = 1;
+}
+
+message EmptyResponse {}
