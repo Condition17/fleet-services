@@ -123,6 +123,7 @@ workflows:
         filters:
           branches:
             only: master
+
 #  build_and_upload_service_images:
 #    jobs:
 #      - build-push-file-service-image:
