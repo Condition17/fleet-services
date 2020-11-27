@@ -119,6 +119,9 @@ jobs:
     description: Upload file-builder server executable to GCS
     machine: true
     steps:
+      - run:
+          name: Ensure the environment is upgraded
+          command: pip install --upgrade pip && pip install --upgrade google-compute-engine
       - gcs/gcs-auth
       - gcs/rsync:
           bucket: fleet-deploy-binaries
