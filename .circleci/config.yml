@@ -105,6 +105,7 @@ jobs:
     description: Compile and upload the file-builder server executable to GCS
     docker:
       - image: circleci/golang:latest
+      - image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
     environment:
       GO111MODULE: "on"
       BUCKET_NAME: "fleet-deploy-binaries"
