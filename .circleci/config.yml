@@ -111,8 +111,8 @@ jobs:
       - run:
           name: Install go
           command: |
-            wget https://dl.google.com/go/go1.15.5.linux-amd64.tar.gz && \
-            sudo tar -C /usr/local -xzf go1.15.5.linux-amd64.tar.gz && \
+            wget https://dl.google.com/go/go1.14.4.linux-amd64.tar.gz && \
+            sudo tar -C /usr/local -xzf go1.14.4.linux-amd64.tar.gz && \
             go version
       - run:
           name: Ensure the environment is upgraded for gsutil use
