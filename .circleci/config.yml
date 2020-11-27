@@ -118,18 +118,18 @@ jobs:
   upload-file-builder :
     description: Upload file-builder server executable to GCS
     machine: true
-    environment:
-      BUCKET_NAME: "fleet-deploy-binaries"
     steps:
       - gcs/gcs-auth
       - gcs/rsync:
-          bucket: $BUCKET_NAME
+          bucket: fleet-deploy-binaries
           source: ~/project/exec/
 workflows:
   compile_and_upload_file_builder_exec:
     jobs:
       - compile-file-builder
-      - upload-file-builder
+      - upload-file-builder:
+          requires:
+            - compile-file-builder
 
 #  build_and_upload_service_images:
 #    jobs:
