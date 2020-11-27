@@ -104,15 +104,15 @@ jobs:
     description: Compile and upload the file-builder server executable to GCS
     docker:
       - image: circleci/golang:latest
-    working_directory: ~/project/file-builder
     environment:
       GO111MODULE: "on"
     steps:
-      - checkout
+      - checkout:
+          - path: ~/project/file-builder
       - run:
           name: Compile code for linux
           command: |
-            ls
+            make build_linux
 workflows:
 #  build_and_upload_service_images:
 #    jobs:
