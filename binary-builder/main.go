@@ -1,7 +1,9 @@
 package main
 
 import (
+	"cloud.google.com/go/pubsub"
 	"context"
+	"encoding/json"
 	"io"
 	"sync"
 
@@ -17,6 +19,7 @@ import (
 	//proto "github.com/Condition17/fleet-services/binary-builder/proto/binary-builder"
 	fileServicePb "github.com/Condition17/fleet-services/file-service/proto/file-service/grpc"
 	resourceManagerPb "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service/grpc"
+	runControllerPb "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 )
 
 //type binaryBuilderServer struct {
@@ -28,6 +31,7 @@ import (
 //	return &proto.EmptyMessage{}, nil
 //}
 
+const runStateTopic = "test-run-state"
 const (
 	ChunkHandlersCount = 10
 	ChunksQueueSize = 100
@@ -51,6 +55,7 @@ type ChunkDetails struct {
 type BuildFile struct {
 	MountVolumePath string
 	File *os.File
+	TestRunId uint32
 	Spec *fileServicePb.File
 	BuildUpdatesChan chan FileBuildEvent
 }
@@ -59,6 +64,10 @@ type FileBuildEvent struct {
 	Type FileBuildEventType
 	Error error
 	Payload ChunkDetails
+}
+
+type PubSubMessage struct {
+	Body interface{}
 }
 
 var done chan bool = make(chan bool)
@@ -91,7 +100,7 @@ func handleChunkDetails(chunksStorageClient *chunksStorage.Client) {
 	}
 }
 
-func handleExecutionFeedback(buildFile BuildFile) {
+func handleExecutionFeedback(buildFile BuildFile, runStateTopic *pubsub.Topic) {
 	var appendedChunksCount uint64 = 0
 	for fileBuildEvent := range buildFile.BuildUpdatesChan {
 		switch fileBuildEvent.Type {
@@ -102,7 +111,32 @@ func handleExecutionFeedback(buildFile BuildFile) {
 					// close file
 					buildFile.File.Close()
 					// unmount volume
-					// notify run-state
+					// TODO: implement this in linux environment
+					// Notify run-state service
+
+					// construct the notification message first
+
+					eventData, _ := json.Marshal(
+						&runControllerPb.FileAssemblySucceededEventData{
+							TestRunId: buildFile.TestRunId,
+						},
+					)
+					msg, _ := json.Marshal(
+						&runControllerPb.Event{
+								Type: "file.assemblySucceeded",
+								Meta: &runControllerPb.EventMetadata{
+									Authorization: []byte(""),
+								},
+								Data: eventData,
+							},
+					)
+					// send notification
+					result := runStateTopic.Publish(context.Background(), &pubsub.Message{Data: msg})
+					id, err := result.Get(context.Background())
+					if err != nil {
+						log.Println("Error encountered sending message to run controller service:", err)
+					}
+					log.Printf("Published message to '%v' topic. Message ID: %v\n", runStateTopic.String(), id)
 				}
 		case chunkProcessingError:
 			// TODO: some retry rule needed - also a retry mechanism should be implemented
@@ -130,6 +164,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error encountered while initializing the chunks storage client: %v", err)
 	}
+
+	// Create pubsub client
+	pubSubClient, err := pubsub.NewClient(context.Background(), configs.GoogleProjectID)
+	if err != nil {
+		log.Fatalf("Error on pubsub.NewClient: %v", err)
+	}
+	// Get test run state topic
+	testRunStateTopic := pubSubClient.Topic(runStateTopic)
 
 	var fileServiceClient fileServicePb.FileServiceClient = fileServicePb.NewFileServiceClient(conn)
 	var resourceManagerClient resourceManagerPb.ResourceManagerServiceClient = resourceManagerPb.NewResourceManagerServiceClient(conn)
@@ -164,8 +206,8 @@ func main() {
 
 	// -- create target file - this will be built assembling the downloaded chunks
 	file, _ := os.OpenFile(filepath.Join(fileDir, fileDetails.Name), os.O_CREATE|os.O_RDWR, 0666)
-	var buildFile BuildFile = BuildFile{File: file, MountVolumePath: fileDir, Spec: fileDetails, BuildUpdatesChan: make(chan FileBuildEvent)}
-	go handleExecutionFeedback(buildFile)
+	var buildFile BuildFile = BuildFile{File: file, MountVolumePath: fileDir, TestRunId: testRunId, Spec: fileDetails, BuildUpdatesChan: make(chan FileBuildEvent)}
+	go handleExecutionFeedback(buildFile, testRunStateTopic)
 	for i := uint64(0); i < fileDetails.TotalChunksCount; i++ {
 		res, err := fileServiceClient.GetChunkDetailsByIndexInFile(context.Background(), &fileServicePb.ChunkSpec{FileId: fileDetails.Id, Index: i})
 		if err != nil {
