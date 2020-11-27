@@ -125,11 +125,12 @@ jobs:
           command: |
             cd ~/project/file-builder && \
             GOOS=linux GOARCH=amd64 go build -o server -v . && \
-            tar -zcvf "${DEPLOY_ARCHIVE_NAME}" server
+            mkdir deploy && \
+            tar -zcvf ./deploy/${DEPLOY_ARCHIVE_NAME} server
       - gcs/gcs-auth
       - gcs/rsync:
           bucket: $BUCKET_NAME
-          source: ~/project/file-builder/$DEPLOY_ARCHIVE_NAME
+          source: ~/project/file-builder/deploy
 workflows:
   compile_and_upload_file_builder_exec:
     jobs:
