@@ -125,7 +125,7 @@ jobs:
           command: |
             cd ~/project/file-builder && \
             GOOS=linux GOARCH=amd64 go build -o $BINARY_DIR/server -v . && \
-            tar -zcvf "file-builder.tar.gz" server
+            tar -zcvf "file-builder.tar.gz" $BINARY_DIR/server
       - gcs/gcs-auth
       - gcs/rsync:
           bucket: $BUCKET_NAME
