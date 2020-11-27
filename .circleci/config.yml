@@ -100,34 +100,52 @@ jobs:
           image: $IMAGE_NAME
       - gcr/push-image:
           image: $IMAGE_NAME
+  compile-upload-file-builder-exec:
+    description: Compile and upload the file-builder server executable to GCS
+    docker:
+      - image: circleci/golang:latest
+    working_directory: ~/project/file-builder
+    environment:
+      GO111MODULE: "on"
+    steps:
+      - checkout
+      - run:
+          name: Compile code for linux
+          command: |
+            make build_linux
 workflows:
-  build_and_upload_service_images:
-    jobs:
-      - build-push-file-service-image:
-          filters:
-            branches:
-              only: master
-      - build-push-test-run-service-image:
-          filters:
-            branches:
-              only: master
-      - build-push-storage-uploader-service-image:
-          filters:
-            branches:
-              only: master
-      - build-push-user-service-image:
-          filters:
-            branches:
-              only: master
-      - build-push-run-controller-service-image:
-          filters:
-            branches:
-              only: master
-      - build-push-wss-image:
-          filters:
-            branches:
-              only: master
-      - build-push-resource-manager-service:
-          filters:
-            branches:
-              only: master
+#  build_and_upload_service_images:
+#    jobs:
+#      - build-push-file-service-image:
+#          filters:
+#            branches:
+#              only: master
+#      - build-push-test-run-service-image:
+#          filters:
+#            branches:
+#              only: master
+#      - build-push-storage-uploader-service-image:
+#          filters:
+#            branches:
+#              only: master
+#      - build-push-user-service-image:
+#          filters:
+#            branches:
+#              only: master
+#      - build-push-run-controller-service-image:
+#          filters:
+#            branches:
+#              only: master
+#      - build-push-wss-image:
+#          filters:
+#            branches:
+#              only: master
+#      - build-push-resource-manager-service:
+#          filters:
+#            branches:
+#              only: master
+  compile_and_upload_file_builder_exec:
+    - compile-upload-file-builder-exec
+      filters:
+        branches:
+          only: master
