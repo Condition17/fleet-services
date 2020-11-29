@@ -10,8 +10,8 @@ replace (
 require (
 	cloud.google.com/go v0.72.0 // indirect
 	cloud.google.com/go/pubsub v1.8.3 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20201129170321-6dff70638039
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201129170321-6dff70638039 // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201129201834-e43d98b1b46f
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201129201834-e43d98b1b46f // indirect
 	github.com/Microsoft/go-winio v0.4.15 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang/protobuf v1.4.3

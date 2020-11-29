@@ -165,7 +165,7 @@ func (h EventHandler) handleFileUploaded(ctx context.Context, event *proto.Event
 	}
 
 	if _, err := h.ResourceManagerService.ProvisionFileSystem(ctx, fileSystemSpec); err != nil {
-		h.sendErrorToWssQueue(ctx, errors.FileSystemCreationError(fileSystemSpec, events.WSS_ERROR))
+		h.sendErrorToWssQueue(ctx, errors.FileSystemCreationError(fileSystemSpec, err))
 		return
 	}
 

@@ -15,7 +15,7 @@ func main() {
 	configs := config.GetConfig()
 	// New Service
 	service := micro.NewService(
-		micro.Name("go.micro.service.run-controller-service"),
+		micro.Name(configs.ServiceName),
 		micro.Broker(googlepubsub.NewBroker(googlepubsub.ProjectID(configs.GoogleProjectID))),
 		micro.Version("latest"),
 	)
@@ -35,24 +35,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// -- remove this block
-	// conn, err := grpc.Dial("localhost:8090", grpc.WithInsecure())
-	// if err != nil {
-	// 	log.Fatalf("Did not connect: %v", err)
-	// }
-	// fmt.Println("Connection:", conn)
-	// defer conn.Close()
-
-	// client := binaryBuilderProto.NewBinaryBuilderClient(conn)
-	// if resp, err := client.Hello(context.Background(), &binaryBuilderProto.EmptyMessage{}); err != nil {
-	// 	fmt.Println("Error:", err)
-	// 	return
-	// } else {
-	// 	fmt.Println("Call response:", resp)
-	// 	return
-	// }
-	// ---
 
 	// Run service
 	if err := service.Run(); err != nil {

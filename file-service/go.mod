@@ -6,14 +6,13 @@ go 1.13
 // see https://github.com/etcd-io/etcd/issues/11154 and https://github.com/etcd-io/etcd/issues/11931.
 replace (
 	github.com/Condition17/fleet-services/file-service => ./.
-	google.golang.org/grpc => google.golang.org/grpc v1.30.0
 	github.com/coreos/etcd => github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0
 )
 
 require (
-	github.com/Condition17/fleet-services/lib v0.0.0-20201129165857-42248d14a4a0
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201129165857-42248d14a4a0
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201129165857-42248d14a4a0 // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201129201834-e43d98b1b46f
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201129201834-e43d98b1b46f
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201129201834-e43d98b1b46f // indirect
 	github.com/Microsoft/go-winio v0.4.15 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
