@@ -10,7 +10,8 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial("35.224.241.90:8080", grpc.WithInsecure())
+	//35.211.182.241:8080
+	conn, err := grpc.Dial("35.211.182.241:8080", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 	}
@@ -18,7 +19,7 @@ func main() {
 	defer conn.Close()
 
 	client := proto.NewFileBuilderClient(conn)
-	if resp, err := client.TestCall(context.Background(), &proto.FileAssembleRequest{TestRunId: 1}); err != nil {
+	if resp, err := client.AssembleFile(context.Background(), &proto.FileAssembleRequest{TestRunId: 27}); err != nil {
 		fmt.Println("Assemble call error:", err)
 		return
 	} else {

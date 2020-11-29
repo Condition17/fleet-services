@@ -16,7 +16,7 @@ func main() {
 	configs := config.GetConfig()
 	// New Service
 	service := micro.NewService(
-		micro.Name("go.micro.api.storage-uploader-service"),
+		micro.Name(configs.ServiceName),
 		micro.Broker(googlepubsub.NewBroker(googlepubsub.ProjectID(configs.GoogleProjectID))),
 		micro.Version("latest"),
 	)

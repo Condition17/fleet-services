@@ -13,10 +13,10 @@ require (
 	cloud.google.com/go v0.72.0 // indirect
 	cloud.google.com/go/pubsub v1.8.3 // indirect
 	cloud.google.com/go/storage v1.12.0
-	github.com/Condition17/fleet-services/file-service v0.0.0-20201129165857-42248d14a4a0
-	github.com/Condition17/fleet-services/lib v0.0.0-20201129165857-42248d14a4a0
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201129165857-42248d14a4a0 // indirect
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201129165857-42248d14a4a0 // indirect
+	github.com/Condition17/fleet-services/file-service v0.0.0-20201129170321-6dff70638039
+	github.com/Condition17/fleet-services/lib v0.0.0-20201129170321-6dff70638039
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201129170321-6dff70638039 // indirect
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201129170321-6dff70638039 // indirect
 	github.com/Microsoft/go-winio v0.4.15 // indirect
 	github.com/golang/protobuf v1.4.3
 	github.com/micro/go-micro v1.18.0

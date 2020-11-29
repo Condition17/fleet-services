@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/pubsub"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/Condition17/fleet-services/file-builder/chunks-storage"
 	"github.com/Condition17/fleet-services/file-builder/config"
@@ -16,6 +17,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"path/filepath"
 	"sync"
 )
 
@@ -69,9 +71,7 @@ type fileBuilderServer struct {
 }
 
 func (s *fileBuilderServer) TestCall(ctx context.Context, req *proto.FileAssembleRequest) (*proto.EmptyResponse, error) {
-	//mountPointAddr := "10.41.254.146"// TODO: fix this
-	//mountPointSource := ":/target"
-	//mountDirPath := path.Join("/mnt/", fmt.Sprintf("testrun_%v", req.TestRunId))
+
 	//// Ensure mount directory is created and ignore any other issue
 	//_ = os.Mkdir(mountDirPath, 0700)
 	//if err := syscall.Mount(mountPointSource, mountDirPath, "nfs", 0, fmt.Sprintf("nolock,addr=%s", mountPointAddr)); err != nil {
@@ -97,39 +97,42 @@ func (s *fileBuilderServer) TestCall(ctx context.Context, req *proto.FileAssembl
 }
 
 func (s *fileBuilderServer) AssembleFile(ctx context.Context, req *proto.FileAssembleRequest) (*proto.EmptyResponse, error) {
-	//testRunId := req.TestRunId
-	//// get file system details
-	//response, err := resourceManagerClient.GetFileSystem(context.Background(), &resourceManagerPb.FileSystemSpec{TestRunId: testRunId})
-	//if err != nil {
-	//	// TODO: return data here to caller
-	//	log.Fatalf("Error encountered while retrieving file system details for the provided test run (id: %v): %v", testRunId, err)
-	//}
-	//var fileSystemDetails *resourceManagerPb.FileSystem = response.FileSystem
+	testRunId := req.TestRunId
+	// get file system details
+	response, err := resourceManagerClient.GetFileSystem(context.Background(), &resourceManagerPb.FileSystemSpec{TestRunId: testRunId})
+	if err != nil {
+		// TODO: return error response here to caller
+		log.Printf("Error encountered while retrieving file system details for the provided test run (id: %v): %v\n", testRunId, err)
+		return nil, errors.New(fmt.Sprintf("Error encountered while retrieving file system details for the provided test run (id: %v): %v", testRunId, err))
+	}
+	var fileSystemDetails *resourceManagerPb.FileSystem = response.FileSystem
 
+	log.Println("Retrieved file system details:", fileSystemDetails)
 	// get file details
-	res, err := fileServiceClient.ReadFile(context.Background(), &fileServicePb.File{Id: "0c405ef4-00a8-4dd5-be38-ea78da194813"})
+	res, err := fileServiceClient.ReadFile(context.Background(), &fileServicePb.File{Id: fileSystemDetails.TestRun.FileId})
 	if err != nil {
 		// TODO: return data to the caller here
-		log.Fatalf("Error encountered while retrieving file details for provided test run (id: %v): %v", 1, err)
+		log.Printf("Error encountered while retrieving file details for provided test run (id: %v): %v\n", 1, err)
+		return nil, errors.New(fmt.Sprintf("Error encountered while retrieving file details for provided test run (id: %v): %v", 1, err))
 	}
 	var fileDetails *fileServicePb.File = res.File
-	log.Println("File details:", fileDetails)
 	// the associated file was found
 
 	// --- mount volume in mount directory
-	//var fileDir string = filepath.Join("./", "mnt/target")
+	var fileDir string = filepath.Join("./", "mnt/target")
 
-	//// -- create target file - this will be built assembling the downloaded chunks
-	//file, _ := os.OpenFile(filepath.Join(fileDir, fileDetails.Name), os.O_CREATE|os.O_RDWR, 0666)
-	//var buildFile BuildFile = BuildFile{File: file, MountVolumePath: fileDir, TestRunId: testRunId, Spec: fileDetails, BuildUpdatesChan: make(chan FileBuildEvent)}
-	//go handleExecutionFeedback(buildFile, testRunStateTopic)
-	//for i := uint64(0); i < fileDetails.TotalChunksCount; i++ {
-	//	res, err := fileServiceClient.GetChunkDetailsByIndexInFile(context.Background(), &fileServicePb.ChunkSpec{FileId: fileDetails.Id, Index: i})
-	//	if err != nil {
-	//		log.Fatalf("Error encountered while retrieving chunk (index: %v) details for file (id: %v): %v", i, fileDetails.Id, err)
-	//	}
-	//	chunksQueue <- ChunkDetails{BuildFile: buildFile, Sha2: res.Chunk.Sha2, FileOffset: i * uint64(fileDetails.MaxChunkSize)}
-	//}
+	// -- create target file - this will be built assembling the downloaded chunks
+	file, _ := os.OpenFile(filepath.Join(fileDir, fileDetails.Name), os.O_CREATE|os.O_RDWR, 0666)
+	var buildFile BuildFile = BuildFile{File: file, MountVolumePath: fileDir, TestRunId: testRunId, Spec: fileDetails, BuildUpdatesChan: make(chan FileBuildEvent)}
+	go handleExecutionFeedback(buildFile, testRunStateTopic)
+	for i := uint64(0); i < fileDetails.TotalChunksCount; i++ {
+		res, err := fileServiceClient.GetChunkDetailsByIndexInFile(context.Background(), &fileServicePb.ChunkSpec{FileId: fileDetails.Id, Index: i})
+		if err != nil {
+			log.Printf("Error encountered while retrieving chunk (index: %v) details for file (id: %v): %v\n", i, fileDetails.Id, err)
+			return nil, errors.New(fmt.Sprintf("Error encountered while retrieving chunk (index: %v) details for file (id: %v): %v", i, fileDetails.Id, err))
+		}
+		chunksQueue <- ChunkDetails{BuildFile: buildFile, Sha2: res.Chunk.Sha2, FileOffset: i * uint64(fileDetails.MaxChunkSize)}
+	}
 
 	return &proto.EmptyResponse{}, nil
 }
@@ -243,14 +246,6 @@ func main() {
 	testRunStateTopic = pubSubClient.Topic(runStateTopic)
 	fileServiceClient = fileServicePb.NewFileServiceClient(conn)
 	resourceManagerClient = resourceManagerPb.NewResourceManagerServiceClient(conn)
-
-	res, err := fileServiceClient.ReadFile(context.Background(), &fileServicePb.File{Id: "0c405ef4-00a8-4dd5-be38-ea78da194813"})
-	if err != nil {
-		// TODO: return data to the caller here
-		log.Fatalf("Error encountered while retrieving file details for provided test run (id: %v): %v", 1, err)
-	}
-	var fileDetails *fileServicePb.File = res.File
-	log.Println("File details:", fileDetails)
 
 	// Simulate server setup
 	for i := 0; i < ChunkHandlersCount; i++ {
