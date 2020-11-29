@@ -9,9 +9,13 @@ tar -xzf file-builder.tar.gz
 
 # Download environment metadata
 mkdir env
-gsutil cp gs://fleet-deploy/env/file-builder env
+gsutil rsync -r gs://fleet-deploy/env/file-builder env
+
+# Install prerequisites for nfs mounting
+sudo apt-get -y update && \
+sudo apt-get -y install nfs-common
 
 # Run server
 chmod +x ./server && \
 export ENV_NAME=prod && \
-./server
+sudo ./server

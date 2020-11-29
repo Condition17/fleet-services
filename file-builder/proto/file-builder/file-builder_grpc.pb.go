@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FileBuilderClient interface {
 	AssembleFile(ctx context.Context, in *FileAssembleRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
-	TestCall(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	TestCall(ctx context.Context, in *FileAssembleRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
 type fileBuilderClient struct {
@@ -38,7 +38,7 @@ func (c *fileBuilderClient) AssembleFile(ctx context.Context, in *FileAssembleRe
 	return out, nil
 }
 
-func (c *fileBuilderClient) TestCall(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+func (c *fileBuilderClient) TestCall(ctx context.Context, in *FileAssembleRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
 	out := new(EmptyResponse)
 	err := c.cc.Invoke(ctx, "/FileBuilder.FileBuilder/TestCall", in, out, opts...)
 	if err != nil {
@@ -52,7 +52,7 @@ func (c *fileBuilderClient) TestCall(ctx context.Context, in *EmptyRequest, opts
 // for forward compatibility
 type FileBuilderServer interface {
 	AssembleFile(context.Context, *FileAssembleRequest) (*EmptyResponse, error)
-	TestCall(context.Context, *EmptyRequest) (*EmptyResponse, error)
+	TestCall(context.Context, *FileAssembleRequest) (*EmptyResponse, error)
 	mustEmbedUnimplementedFileBuilderServer()
 }
 
@@ -63,7 +63,7 @@ type UnimplementedFileBuilderServer struct {
 func (UnimplementedFileBuilderServer) AssembleFile(context.Context, *FileAssembleRequest) (*EmptyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AssembleFile not implemented")
 }
-func (UnimplementedFileBuilderServer) TestCall(context.Context, *EmptyRequest) (*EmptyResponse, error) {
+func (UnimplementedFileBuilderServer) TestCall(context.Context, *FileAssembleRequest) (*EmptyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TestCall not implemented")
 }
 func (UnimplementedFileBuilderServer) mustEmbedUnimplementedFileBuilderServer() {}
@@ -98,7 +98,7 @@ func _FileBuilder_AssembleFile_Handler(srv interface{}, ctx context.Context, dec
 }
 
 func _FileBuilder_TestCall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EmptyRequest)
+	in := new(FileAssembleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func _FileBuilder_TestCall_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/FileBuilder.FileBuilder/TestCall",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileBuilderServer).TestCall(ctx, req.(*EmptyRequest))
+		return srv.(FileBuilderServer).TestCall(ctx, req.(*FileAssembleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

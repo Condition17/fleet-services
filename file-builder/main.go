@@ -10,8 +10,11 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/exec"
+	"path"
 	"path/filepath"
 	"sync"
+	"syscall"
 
 	"github.com/Condition17/fleet-services/file-builder/chunks-storage"
 	"github.com/Condition17/fleet-services/file-builder/config"
@@ -70,8 +73,28 @@ type fileBuilderServer struct {
 	proto.UnimplementedFileBuilderServer
 }
 
-func (s *fileBuilderServer) TestCall(ctx context.Context, req *proto.EmptyRequest) (*proto.EmptyResponse, error) {
-	log.Println("Request received")
+func (s *fileBuilderServer) TestCall(ctx context.Context, req *proto.FileAssembleRequest) (*proto.EmptyResponse, error) {
+	mountPointAddr := "10.41.254.146"// TODO: fix this
+	mountPointSource := ":/target"
+	mountDirPath := path.Join("/mnt/", fmt.Sprintf("testrun_%v", req.TestRunId))
+	if err := syscall.Mount(mountPointSource, mountDirPath, "nfs", 0, fmt.Sprintf("nolock,addr=%s", mountPointAddr)); err != nil {
+		log.Fatalf("Syscall mount error: %v", err)
+	}
+	fmt.Println("NFS successfully mounted.")
+
+	// try file creation in NFS
+	f, err := os.OpenFile(filepath.Join(mountDirPath, "program_file"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	f.Close()
+
+	fmt.Println("Trying to unmount")
+	out, err := exec.Command("umount", "-l", mountDirPath).Output()
+	if err != nil {
+		log.Fatalf("Error unmounting fs: %s | Out: %s", err, out)
+	}
+	fmt.Println("Successfully unmounted")
 	return &proto.EmptyResponse{}, nil
 }
 
