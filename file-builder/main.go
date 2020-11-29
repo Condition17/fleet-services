@@ -17,8 +17,11 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/exec"
+	"path"
 	"path/filepath"
 	"sync"
+	"syscall"
 )
 
 const runStateTopic = "test-run-state"
@@ -70,32 +73,6 @@ type fileBuilderServer struct {
 	proto.UnimplementedFileBuilderServer
 }
 
-func (s *fileBuilderServer) TestCall(ctx context.Context, req *proto.FileAssembleRequest) (*proto.EmptyResponse, error) {
-
-	//// Ensure mount directory is created and ignore any other issue
-	//_ = os.Mkdir(mountDirPath, 0700)
-	//if err := syscall.Mount(mountPointSource, mountDirPath, "nfs", 0, fmt.Sprintf("nolock,addr=%s", mountPointAddr)); err != nil {
-	//	log.Fatalf("Syscall mount error: %v", err)
-	//}
-	//fmt.Println("NFS successfully mounted.")
-	//
-	//// try file creation in NFS
-	//f, err := os.OpenFile(filepath.Join(mountDirPath, "program_file"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//f.Close()
-	//
-	//fmt.Println("Trying to unmount")
-	//out, err := exec.Command("umount", "-l", mountDirPath).Output()
-	//if err != nil {
-	//	log.Fatalf("Error unmounting fs: %s | Out: %s", err, out)
-	//}
-	//_ = os.Remove(mountDirPath)
-	//fmt.Println("Successfully unmounted")
-	return &proto.EmptyResponse{}, nil
-}
-
 func (s *fileBuilderServer) AssembleFile(ctx context.Context, req *proto.FileAssembleRequest) (*proto.EmptyResponse, error) {
 	testRunId := req.TestRunId
 	// get file system details
@@ -112,18 +89,34 @@ func (s *fileBuilderServer) AssembleFile(ctx context.Context, req *proto.FileAss
 	res, err := fileServiceClient.ReadFile(context.Background(), &fileServicePb.File{Id: fileSystemDetails.TestRun.FileId})
 	if err != nil {
 		// TODO: return data to the caller here
-		log.Printf("Error encountered while retrieving file details for provided test run (id: %v): %v\n", 1, err)
-		return nil, errors.New(fmt.Sprintf("Error encountered while retrieving file details for provided test run (id: %v): %v", 1, err))
+		log.Printf("Error encountered while retrieving file details for provided test run (id: %v): %v\n", testRunId, err)
+		return nil, errors.New(fmt.Sprintf("Error encountered while retrieving file details for provided test run (id: %v): %v", testRunId, err))
 	}
 	var fileDetails *fileServicePb.File = res.File
-	// the associated file was found
 
-	// --- mount volume in mount directory
-	var fileDir string = filepath.Join("./", "mnt/target")
+	// create target directory to mount files to
+	nfsIpAddr := fileSystemDetails.IP
+	nfsFileSharePath := fmt.Sprintf(":/%s", fileSystemDetails.FileShareName)
+	mountVolumePath := path.Join("/mnt/", fmt.Sprintf("testrun_%v", req.TestRunId))
+	// Ensure mount directory is created and ignore any other issue
+	_ = os.Mkdir(mountVolumePath, 0700)
+	// --- mount volume
+	fmt.Println("Mounting volume...")
+	if err := syscall.Mount(nfsFileSharePath, mountVolumePath, "nfs", 0, fmt.Sprintf("nolock,addr=%s", nfsIpAddr)); err != nil {
+		log.Printf("Syscall mount error: %v\n", err)
+		return nil, errors.New(fmt.Sprintf("Syscall mount error: %v\n", err))
+	}
+	log.Println("Successfully mounted volume at ", mountVolumePath, "...")
 
 	// -- create target file - this will be built assembling the downloaded chunks
-	file, _ := os.OpenFile(filepath.Join(fileDir, fileDetails.Name), os.O_CREATE|os.O_RDWR, 0666)
-	var buildFile BuildFile = BuildFile{File: file, MountVolumePath: fileDir, TestRunId: testRunId, Spec: fileDetails, BuildUpdatesChan: make(chan FileBuildEvent)}
+	file, _ := os.OpenFile(filepath.Join(mountVolumePath, fileDetails.Name), os.O_CREATE|os.O_RDWR, 0666)
+	var buildFile BuildFile = BuildFile{
+		File: file,
+		MountVolumePath: mountVolumePath,
+		TestRunId: testRunId,
+		Spec: fileDetails,
+		BuildUpdatesChan: make(chan FileBuildEvent),
+	}
 	go handleExecutionFeedback(buildFile, testRunStateTopic)
 	for i := uint64(0); i < fileDetails.TotalChunksCount; i++ {
 		res, err := fileServiceClient.GetChunkDetailsByIndexInFile(context.Background(), &fileServicePb.ChunkSpec{FileId: fileDetails.Id, Index: i})
@@ -174,8 +167,16 @@ func handleExecutionFeedback(buildFile BuildFile, runStateTopic *pubsub.Topic) {
 				log.Printf("File %v completely assembled\n", buildFile.Spec.Name)
 				// close file
 				buildFile.File.Close()
+
 				// unmount volume
-				// TODO: implement this in linux environment
+				fmt.Println("Trying to unmount")
+				out, err := exec.Command("umount", "-l", buildFile.MountVolumePath).Output()
+				if err != nil {
+					log.Fatalf("Error unmounting fs: %s | Out: %s", err, out)
+				}
+				_ = os.Remove(buildFile.MountVolumePath)
+				fmt.Println("Successfully unmounted")
+
 				// Notify run-state service
 
 				// construct the notification message first
@@ -199,6 +200,7 @@ func handleExecutionFeedback(buildFile BuildFile, runStateTopic *pubsub.Topic) {
 				id, err := result.Get(context.Background())
 				if err != nil {
 					log.Println("Error encountered sending message to run controller service:", err)
+					return
 				}
 				log.Printf("Published message to '%v' topic. Message ID: %v\n", runStateTopic.String(), id)
 			}
