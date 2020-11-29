@@ -139,8 +139,8 @@ workflows:
     jobs:
       - build-push-file-service-image
       - build-push-test-run-service-image
-      - build-push-storage-uploader-service-image
-      - build-push-user-service-image
-      - build-push-run-controller-service-image
-      - build-push-wss-image
-      - build-push-resource-manager-service
+#      - build-push-storage-uploader-service-image
+#      - build-push-user-service-image
+#      - build-push-run-controller-service-image
+#      - build-push-wss-image
+#      - build-push-resource-manager-service

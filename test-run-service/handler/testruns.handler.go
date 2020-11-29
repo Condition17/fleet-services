@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/Condition17/fleet-services/lib"
+	"github.com/micro/go-micro/v2/client"
+	"log"
 
 	"github.com/Condition17/fleet-services/lib/auth"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
@@ -12,6 +15,7 @@ import (
 	proto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"
 	microErrors "github.com/micro/go-micro/v2/errors"
 	"gorm.io/gorm"
+	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 )
 
 func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, res *proto.TestRunDetails) error {
@@ -38,6 +42,18 @@ func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, r
 			},
 		},
 	)
+	fileService := fileServiceProto.NewFileService(lib.GetFullExternalServiceName("fileservice"), client.DefaultClient)
+	var fileSpec fileServiceProto.File = fileServiceProto.File{
+		Name:        "test",
+		Size:         10000,
+		MaxChunkSize: 10,
+	}
+	_, err = fileService.CreateFile(ctx, &fileSpec)
+	if err != nil {
+		log.Println("Error:", err)
+		return nil
+	}
+	log.Println("No error encountered");
 	h.SendRunStateEvent(ctx, "test-run.created", eventData)
 
 	return nil
