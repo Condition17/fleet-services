@@ -77,6 +77,7 @@ github.com/Condition17/fleet-services/file-service v0.0.0-20201107223016-b8381b8
 github.com/Condition17/fleet-services/file-service v0.0.0-20201114120241-c6821d09ccf0/go.mod h1:enMZQCAuHM7bbe+UsYdR3pRYdSGizG+9xeroNNjSvfc=
 github.com/Condition17/fleet-services/file-service v0.0.0-20201114193928-f881acfb0b4f/go.mod h1:ZoRXCgp40L8ovzPZFJo5YZonP7iKXGfOP/odQALPK7s=
 github.com/Condition17/fleet-services/file-service v0.0.0-20201115014243-13c85334c9bf/go.mod h1:ZoRXCgp40L8ovzPZFJo5YZonP7iKXGfOP/odQALPK7s=
+github.com/Condition17/fleet-services/file-service v0.0.0-20201115015951-4b854f3e1865 h1:675unFdJ3C+NR1837Nvlrx7W5ftgzv5qguFt3svjr+U=
 github.com/Condition17/fleet-services/file-service v0.0.0-20201115015951-4b854f3e1865/go.mod h1:ZoRXCgp40L8ovzPZFJo5YZonP7iKXGfOP/odQALPK7s=
 github.com/Condition17/fleet-services/lib v0.0.0-20201023200655-da5a0a50b457 h1:6yyG5Op4IL0L/1s+/abcmycQ6ULRluTxo8NDDGS6tzI=
 github.com/Condition17/fleet-services/lib v0.0.0-20201023200655-da5a0a50b457/go.mod h1:PmNtvyWCgbAYmINexByoQDAOauYNPcQbMALDEqImtOI=

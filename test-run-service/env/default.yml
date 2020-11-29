@@ -1,4 +1,4 @@
-"SERVICE_NAME": "go.micro.api.test-run-service"
+"SERVICE_NAME": "go.micro.api.testRunService"
 "DB_HOST": "127.0.0.1"
 "DB_USER": "postgres"
 "DB_NAME": "fleet"

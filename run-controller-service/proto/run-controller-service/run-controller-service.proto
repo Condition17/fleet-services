@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package go.micro.service.runcontrollerservice;
+package go.micro.api.runControllerService;
 
 service RunControllerService {}
 

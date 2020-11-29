@@ -37,9 +37,9 @@ func NewHandler(service micro.Service) func(broker.Event) error {
 
 	var handler EventHandler = EventHandler{
 		BaseHandler:            baseservice.NewBaseHandler(service),
-		FileService:            fileServiceProto.NewFileService(lib.GetFullExternalServiceName("fileservice"), client.DefaultClient),
-		TestRunService:         testRunServiceProto.NewTestRunService(lib.GetFullExternalServiceName("test-run-service"), client.DefaultClient),
-		ResourceManagerService: resourceManagerProto.NewResourceManagerService(lib.GetFullExternalServiceName("ResourceManagerService"), client.DefaultClient),
+		FileService:            fileServiceProto.NewFileService(lib.GetFullExternalServiceName("fileService"), client.DefaultClient),
+		TestRunService:         testRunServiceProto.NewTestRunService(lib.GetFullExternalServiceName("testRunService"), client.DefaultClient),
+		ResourceManagerService: resourceManagerProto.NewResourceManagerService(lib.GetFullExternalServiceName("resourceManagerService"), client.DefaultClient),
 		FileBuilderService:     fileBuilderServiceClient,
 	}
 

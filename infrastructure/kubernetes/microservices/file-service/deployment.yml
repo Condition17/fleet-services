@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: file-service
+  name: fileService
 spec:
   selector:
     matchLabels:
-      app: file-service
+      app: fileService
   template:
     metadata:
       labels:
-        app: file-service
+        app: fileService
     spec:
       serviceAccountName: micro-services
       containers:
-        - name: file-service
+        - name: fileservice
           image: gcr.io/fleet-295921/fleet-file-service
           imagePullPolicy: Always
           command:
