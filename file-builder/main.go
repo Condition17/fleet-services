@@ -190,7 +190,7 @@ func main() {
 	configs := config.GetConfig()
 
 	// Server startup
-	var serverAddr string = fmt.Sprintf("localhost:%v", configs.ServerPort)
+	var serverAddr string = fmt.Sprintf("0.0.0.0:%v", configs.ServerPort)
 	lis, err := net.Listen("tcp", serverAddr)
 	if err != nil {
 		log.Fatalf("Server failed to listen on port ':%v'. Error encountered: %v\n", configs.ServerPort, err)
