@@ -22,6 +22,7 @@ func UnmarshalFileSystem(fileSystem *FileSystem) *proto.FileSystem {
 	testRunData := testRunModels.UnmarshalTestRun(&fileSystem.TestRun)
 	return &proto.FileSystem{
 		Id:                  uint32(fileSystem.ID),
+		IP: 				 fileSystem.IP,
 		Name:                fileSystem.Name,
 		FileShareCapacityGb: fileSystem.FileShareCapacityGb,
 		FileShareName:       fileSystem.FileShareName,
