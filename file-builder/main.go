@@ -70,6 +70,11 @@ type fileBuilderServer struct {
 	proto.UnimplementedFileBuilderServer
 }
 
+func (s *fileBuilderServer) TestCall(ctx context.Context, req *proto.EmptyRequest) (*proto.EmptyResponse, error) {
+	log.Println("Request received")
+	return &proto.EmptyResponse{}, nil
+}
+
 func (s *fileBuilderServer) AssembleFile(ctx context.Context, req *proto.FileAssembleRequest) (*proto.EmptyResponse, error) {
 	testRunId := req.TestRunId
 	// get file system details

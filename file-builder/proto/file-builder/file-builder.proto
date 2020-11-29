@@ -4,10 +4,12 @@ package FileBuilder;
 
 service FileBuilder {
   rpc AssembleFile(FileAssembleRequest) returns (EmptyResponse) {}
+  rpc TestCall(EmptyRequest) returns (EmptyResponse) {}
 }
 
 message FileAssembleRequest {
   uint32 testRunId = 1;
 }
 
+message EmptyRequest {}
 message EmptyResponse {}

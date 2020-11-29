@@ -5,21 +5,21 @@ import (
 	"fmt"
 	"log"
 
-	proto "github.com/Condition17/fleet-services/binary-builder/proto/file-builder"
+	proto "github.com/Condition17/fleet-services/file-builder/proto/file-builder"
 	"google.golang.org/grpc"
 )
 
 func main() {
-	conn, err := grpc.Dial("localhost:8090", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:80", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 	}
 	fmt.Println("Connection:", conn)
 	defer conn.Close()
 
-	client := proto.NewBinaryBuilderClient(conn)
-	if resp, err := client.Hello(context.Background(), &proto.EmptyMessage{}); err != nil {
-		fmt.Println("Error:", err)
+	client := proto.NewFileBuilderClient(conn)
+	if resp, err := client.TestCall(context.Background(), &proto.EmptyRequest{}); err != nil {
+		fmt.Println("Assemble call error:", err)
 		return
 	} else {
 		fmt.Println("Call response:", resp)
