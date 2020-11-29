@@ -106,7 +106,7 @@ jobs:
     machine: true
     environment:
       GO111MODULE: "on"
-      BUCKET_NAME: fleet-deploy-binaries
+      BUCKET_NAME: fleet-deploy/binaries
       DEPLOY_ARCHIVE_NAME: file-builder.tar.gz
     steps:
       - checkout
