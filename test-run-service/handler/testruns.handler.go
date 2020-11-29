@@ -42,7 +42,7 @@ func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, r
 			},
 		},
 	)
-	fileService := fileServiceProto.NewFileService(lib.GetFullExternalServiceName("fileservice"), client.DefaultClient)
+	fileService := fileServiceProto.NewFileService(lib.GetFullExternalServiceName("file-service"), client.DefaultClient)
 	var fileSpec fileServiceProto.File = fileServiceProto.File{
 		Name:        "test",
 		Size:         10000,
