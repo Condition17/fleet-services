@@ -20,7 +20,7 @@ func main() {
 
 	// New Service
 	service := micro.NewService(
-		micro.Name("go.micro.api.fileservice"),
+		micro.Name(config.ServiceName),
 		micro.Broker(googlepubsub.NewBroker(googlepubsub.ProjectID(config.GoogleProjectID))),
 		micro.Version("latest"),
 		// auth middleware
