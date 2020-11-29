@@ -26,11 +26,11 @@ func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 			return fn(reqCtx, req, resp)
 		}
 
-		userServiceClient := userServiceProto.NewUserService(lib.GetFullExternalServiceName("user-service"), client.DefaultClient)
+		userServiceClient := userServiceProto.NewUserService(lib.GetFullExternalServiceName("userService"), client.DefaultClient)
 
 		if _, err := userServiceClient.GetProfile(ctx, &userServiceProto.EmptyRequest{}); err != nil {
 			// The user profile was not found in our database
-			return microErrors.Unauthorized(lib.GetFullExternalServiceName("user-service"), fmt.Sprintf("%v", err))
+			return microErrors.Unauthorized(lib.GetFullExternalServiceName("userService"), fmt.Sprintf("%v", err))
 		}
 
 		return fn(reqCtx, req, resp)
