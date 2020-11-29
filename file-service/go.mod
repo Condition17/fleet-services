@@ -6,14 +6,14 @@ go 1.13
 // see https://github.com/etcd-io/etcd/issues/11154 and https://github.com/etcd-io/etcd/issues/11931.
 replace (
 	github.com/Condition17/fleet-services/file-service => ./.
-	github.com/coreos/etcd => github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0
 	google.golang.org/grpc => google.golang.org/grpc v1.30.0
+	github.com/coreos/etcd => github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0
 )
 
 require (
-	github.com/Condition17/fleet-services/lib v0.0.0-20201129163106-e6b247961762
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201129163106-e6b247961762
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201129163106-e6b247961762 // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201129165857-42248d14a4a0
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201129165857-42248d14a4a0
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201129165857-42248d14a4a0 // indirect
 	github.com/Microsoft/go-winio v0.4.15 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
@@ -58,7 +58,6 @@ require (
 	google.golang.org/grpc v1.33.2
 	google.golang.org/protobuf v1.25.0
 	gorm.io/driver/postgres v1.0.5 // indirect
-	gorm.io/gorm v1.20.6 // indirect
 	honnef.co/go/tools v0.0.1-2020.1.6 // indirect
 	rsc.io/quote/v3 v3.1.0 // indirect
 )
