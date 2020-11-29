@@ -77,6 +77,8 @@ func (s *fileBuilderServer) TestCall(ctx context.Context, req *proto.FileAssembl
 	mountPointAddr := "10.41.254.146"// TODO: fix this
 	mountPointSource := ":/target"
 	mountDirPath := path.Join("/mnt/", fmt.Sprintf("testrun_%v", req.TestRunId))
+	// Ensure mount directory is created and ignore any other issue
+	_ = os.Mkdir(mountDirPath, 0700)
 	if err := syscall.Mount(mountPointSource, mountDirPath, "nfs", 0, fmt.Sprintf("nolock,addr=%s", mountPointAddr)); err != nil {
 		log.Fatalf("Syscall mount error: %v", err)
 	}
@@ -94,6 +96,7 @@ func (s *fileBuilderServer) TestCall(ctx context.Context, req *proto.FileAssembl
 	if err != nil {
 		log.Fatalf("Error unmounting fs: %s | Out: %s", err, out)
 	}
+	_ = os.Remove(mountDirPath)
 	fmt.Println("Successfully unmounted")
 	return &proto.EmptyResponse{}, nil
 }
