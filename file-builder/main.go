@@ -24,6 +24,10 @@ import (
 	"syscall"
 )
 
+
+// TODO: REFACTOR THIS SERVICE
+
+
 const runStateTopic = "test-run-state"
 const (
 	ChunkHandlersCount = 10
