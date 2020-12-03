@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package RiverRunner;
+
+
+service RiverRunner {
+  rpc RunRiver(RunRequest) returns (EmptyResponse) {}
+}
+
+message RunRequest {
+  uint32 testRunId = 1;
+}
+
+message EmptyResponse {}

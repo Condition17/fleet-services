@@ -9,15 +9,8 @@ import (
 
 const riverImageName string = "cconache/river3:latest"
 
-func runRiverContainer(volumePath string, finishChan chan <-bool, errorChan chan <-error) {
-	args := []string{
-		"-bp", "/mount/sage",
-		"-secondsBetweenStats", "2",
-		"-arch", "x64",
-		"-max", "1",
-		"-outputType", "textual",
-	}
-	dockerCmd := fmt.Sprintf("sudo docker run -v %s:/mount %s %s", volumePath, riverImageName, strings.Join(args, " "))
+func runRiverContainer(volumePath string, cmdArgs []string, finishChan chan<- bool, errorChan chan<- error) {
+	dockerCmd := fmt.Sprintf("sudo docker run -v %s:/mount %s %s", volumePath, riverImageName, strings.Join(cmdArgs, " "))
 	if err := exec.Command("/bin/sh", "-c", dockerCmd).Run(); err != nil {
 		errorChan <- err
 	}
@@ -29,12 +22,19 @@ func main() {
 	runFinishChan := make(chan bool)
 	runErrorChan := make(chan error)
 
-	go runRiverContainer(volumePath, runFinishChan, runErrorChan)
+	go runRiverContainer(volumePath,
+		[]string{
+			"-bp", "/mount/sage",
+			"-secondsBetweenStats", "2",
+			"-arch", "x64",
+			"-max", "1",
+			"-outputType", "textual",
+		}, runFinishChan, runErrorChan);
 
 	select {
 	case _ = <-runFinishChan:
 		log.Println("Run successfully finished")
-	case err := <- runErrorChan:
+	case err := <-runErrorChan:
 		log.Printf("River container run encountered error: %v", err)
 	}
 }
