@@ -1,15 +1,19 @@
-module fleet/river-runner
+module github.com/Condition17/fleet-services/river-runner
 
 go 1.14
 
+replace github.com/Condition17/fleet-services/river-runner => ./
+
 require (
-	github.com/Microsoft/go-winio v0.4.15 // indirect
-	github.com/docker/distribution v2.7.1+incompatible // indirect
-	github.com/docker/docker v1.13.1
-	github.com/docker/go-connections v0.4.0 // indirect
-	github.com/docker/go-units v0.4.0 // indirect
-	github.com/opencontainers/go-digest v1.0.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
-	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b // indirect
-	golang.org/x/sys v0.0.0-20201201145000-ef89a241ccb3 // indirect
+	cloud.google.com/go/pubsub v1.9.0
+	github.com/Condition17/fleet-services/file-service v0.0.0-20201203221802-2d8665f2d498
+	github.com/Condition17/fleet-services/lib v0.0.0-20201203221802-2d8665f2d498
+	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20201203221802-2d8665f2d498
+	github.com/golang/protobuf v1.4.3
+	golang.org/x/net v0.0.0-20201202161906-c7110b5ffcbb // indirect
+	golang.org/x/oauth2 v0.0.0-20201203001011-0b49973bad19 // indirect
+	golang.org/x/sys v0.0.0-20201202213521-69691e467435 // indirect
+	golang.org/x/tools v0.0.0-20201204062850-545788942d5f // indirect
+	google.golang.org/grpc v1.34.0
+	google.golang.org/protobuf v1.25.0
 )
