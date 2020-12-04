@@ -2,16 +2,15 @@ package main
 
 import (
 	"cloud.google.com/go/pubsub"
+	"context"
 	"fmt"
+	fileServicePb "github.com/Condition17/fleet-services/file-service/proto/file-service/grpc"
+	resourceManagerPb "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service/grpc"
+	"github.com/Condition17/fleet-services/river-runner/config"
 	"google.golang.org/grpc"
 	"log"
 	"os/exec"
 	"strings"
-	"context"
-	"github.com/Condition17/fleet-services/river-runner/config"
-	resourceManagerPb "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service/grpc"
-	fileServicePb "github.com/Condition17/fleet-services/file-service/proto/file-service/grpc"
-
 )
 
 const riverImageName string = "cconache/river3:latest"
@@ -24,7 +23,7 @@ var (
 )
 
 func runRiverContainer(volumePath string, cmdArgs []string, finishChan chan<- bool, errorChan chan<- error) {
-	dockerCmd := fmt.Sprintf("sudo docker run -v %s:/mount %s %s", volumePath, riverImageName, strings.Join(cmdArgs, " "))
+	dockerCmd := fmt.Sprintf("docker run -v %s:/mount %s %s", volumePath, riverImageName, strings.Join(cmdArgs, " "))
 	if err := exec.Command("/bin/sh", "-c", dockerCmd).Run(); err != nil {
 		errorChan <- err
 	}
@@ -66,23 +65,30 @@ func main() {
 	var fileDetails *fileServicePb.File = res.File
 	log.Println("Retrieved file details:", fileDetails)
 
-	//volumePath := "/Users/cristian_conache/Workspace/learning/river/mount"
-	//runFinishChan := make(chan bool)
-	//runErrorChan := make(chan error)
-	//
-	//go runRiverContainer(volumePath,
-	//	[]string{
-	//		"-bp", fmt.Sprintf("/mount/%s", fileDetails.Name),
-	//		"-secondsBetweenStats", "2",
-	//		"-arch", "x64",
-	//		"-max", "1",
-	//		"-outputType", "textual",
-	//	}, runFinishChan, runErrorChan)
-	//
-	//select {
-	//case _ = <-runFinishChan:
-	//	log.Println("Run successfully finished")
-	//case err := <-runErrorChan:
-	//	log.Printf("River container run encountered error: %v", err)
-	//}
+	// should mount volume at a certain path
+	// TODO: replace this
+	mountVolumePath := "/Users/cristian_conache/go/src/fleet/river-runner/mount"
+
+
+	// Start the river container here
+	runFinishChan := make(chan bool)
+	runErrorChan := make(chan error)
+
+	go runRiverContainer(mountVolumePath,
+		[]string{
+			"-bp", fmt.Sprintf("/mount/%s", fileDetails.Name),
+			"-secondsBetweenStats", "2",
+			"-arch", "x64",
+			"-max", "1",
+			"-outputType", "textual",
+		}, runFinishChan, runErrorChan)
+
+	select {
+	case _ = <-runFinishChan:
+		log.Println("Run successfully finished")
+		// put data on run state queue
+	case err := <-runErrorChan:
+		log.Printf("River container run encountered error: %v", err)
+		// put data on run state queue
+	}
 }
