@@ -258,7 +258,7 @@ func main() {
 		go handleChunkDetails(chunksStorageClient)
 	}
 
-	fmt.Printf("Starting GRPC server on localhost:%v\n", configs.ServerPort)
+	log.Printf("Starting GRPC server on localhost:%v\n", configs.ServerPort)
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to start grpc server: %v", err)
 	}
