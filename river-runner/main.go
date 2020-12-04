@@ -3,10 +3,12 @@ package main
 import (
 	"cloud.google.com/go/pubsub"
 	"context"
+	"encoding/json"
 	"fmt"
 	fileServicePb "github.com/Condition17/fleet-services/file-service/proto/file-service/grpc"
 	resourceManagerPb "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service/grpc"
 	"github.com/Condition17/fleet-services/river-runner/config"
+	runControllerPb "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"google.golang.org/grpc"
 	"log"
 	"os/exec"
@@ -14,6 +16,7 @@ import (
 )
 
 const riverImageName string = "cconache/river3:latest"
+const runStateTopic = "test-run-state"
 
 // GLOBALS -- todo: fix this
 var (
@@ -42,6 +45,16 @@ func main() {
 	log.Println("Connection to fleet services GRPC proxy initiated")
 	defer conn.Close()
 
+	// Create pubsub client
+	pubSubClient, err := pubsub.NewClient(context.Background(), configs.GoogleProjectID)
+	if err != nil {
+		log.Fatalf("Error on pubsub.NewClient: %v", err)
+	}
+
+	// Get test run state topic
+	testRunStateTopic = pubSubClient.Topic(runStateTopic)
+
+	// Initialize clients of external services
 	resourceManagerClient = resourceManagerPb.NewResourceManagerServiceClient(conn)
 	fileServiceClient = fileServicePb.NewFileServiceClient(conn)
 
@@ -91,4 +104,20 @@ func main() {
 		log.Printf("River container run encountered error: %v", err)
 		// put data on run state queue
 	}
+
+	// construct the notification message
+	eventData, _ := json.Marshal(&runControllerPb.RiverRunFinishedEventData{TestRunId: testRunId})
+	// send notification
+	msg, _ := json.Marshal(&runControllerPb.Event{
+			Type: "test-run.finished",
+			Meta: &runControllerPb.EventMetadata{Authorization: []byte("")},
+			Data: eventData,
+	})
+	result := testRunStateTopic.Publish(context.Background(), &pubsub.Message{Data: msg})
+	id, err := result.Get(context.Background())
+	if err != nil {
+		log.Println("Error encountered sending message to run controller service:", err)
+		return
+	}
+	log.Printf("Published message to '%v' topic. Message ID: %v\n", testRunStateTopic.String(), id)
 }
