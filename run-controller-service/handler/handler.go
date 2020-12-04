@@ -8,6 +8,7 @@ import (
 	"github.com/Condition17/fleet-services/lib"
 	baseservice "github.com/Condition17/fleet-services/lib/base-service"
 	resourceManagerProto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service"
+	riverRunnerProto "github.com/Condition17/fleet-services/river-runner/proto/river-runner"
 	"github.com/Condition17/fleet-services/run-controller-service/config"
 	"github.com/Condition17/fleet-services/run-controller-service/errors"
 	"github.com/Condition17/fleet-services/run-controller-service/events"
@@ -27,12 +28,22 @@ type EventHandler struct {
 	TestRunService         testRunServiceProto.TestRunService
 	ResourceManagerService resourceManagerProto.ResourceManagerService
 	FileBuilderService     fileBuilderProto.FileBuilderClient
+	RiverRunnerService     riverRunnerProto.RiverRunnerClient
 }
 
 func NewHandler(service micro.Service) func(broker.Event) error {
-	fileBuilderServiceClient, err := getFileBuilderServiceClient()
-	if err != nil {
+	var err error
+	var fileBuilderServiceClient fileBuilderProto.FileBuilderClient
+	var riverRunnerServiceClient riverRunnerProto.RiverRunnerClient
+
+	if fileBuilderServiceClient, err = getFileBuilderServiceClient(); err != nil {
 		log.Fatalln("Error encountered while setting up connection with file builder service:", err)
+		return nil
+	}
+
+	if riverRunnerServiceClient, err = getRiverRunnerServiceClient(); err != nil {
+		log.Fatalln("Error encountered while setting up connection to river runner service:", err)
+		return nil
 	}
 
 	var handler EventHandler = EventHandler{
@@ -41,6 +52,7 @@ func NewHandler(service micro.Service) func(broker.Event) error {
 		TestRunService:         testRunServiceProto.NewTestRunService(lib.GetFullExternalServiceName("testRunService"), client.DefaultClient),
 		ResourceManagerService: resourceManagerProto.NewResourceManagerService(lib.GetFullExternalServiceName("resourceManagerService"), client.DefaultClient),
 		FileBuilderService:     fileBuilderServiceClient,
+		RiverRunnerService:     riverRunnerServiceClient,
 	}
 
 	return func(e broker.Event) error {
@@ -63,6 +75,16 @@ func getFileBuilderServiceClient() (fileBuilderProto.FileBuilderClient, error) {
 	}
 
 	return fileBuilderProto.NewFileBuilderClient(conn), nil
+}
+
+func getRiverRunnerServiceClient() (riverRunnerProto.RiverRunnerClient, error) {
+	configs := config.GetConfig()
+	conn, err := grpc.Dial(configs.RiverRunnerServiceUrl, grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+
+	return riverRunnerProto.NewRiverRunnerClient(conn), nil
 }
 
 func (h EventHandler) HandleEvent(event *proto.Event) {
@@ -233,6 +255,13 @@ func (h EventHandler) handleFileAssemblySuccess(ctx context.Context, event *prot
 	}
 	// send wss event
 	h.SendEventToWssQueue(ctx, events.WSS_FILE_SUCCESSFULLY_ASSEMBLED, event.Data)
+
+	// trigger river execution
+	runRequest := &riverRunnerProto.RunRequest{TestRunId: eventData.TestRunId}
+	if _, err := h.RiverRunnerService.RunRiver(ctx, runRequest); err != nil {
+		h.sendErrorToWssQueue(ctx, errors.AssembleFileRequestError(runRequest, err.Error()))
+		return
+	}
 }
 
 func (h EventHandler) appendTestRunUserBytesToContext(ctx *context.Context, testRunId uint32) error {

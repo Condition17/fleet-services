@@ -6,6 +6,7 @@ type Config struct {
 	ServiceName           string `json:"SERVICE_NAME"`
 	GoogleProjectID       string `json:"GOOGLE_PROJECT_ID"`
 	FileBuilderServiceUrl string `json:"FILE_BUILDER_SERVICE_URL"`
+	RiverRunnerServiceUrl string `json:"RIVER_RUNNER_SERVICE_URL"`
 }
 
 func GetConfig() Config {

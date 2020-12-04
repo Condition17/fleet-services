@@ -82,3 +82,14 @@ func AssembleFileRequestError(target interface{}, errorDetails interface{}) erro
 		},
 	}
 }
+
+func RiverRunRequestError(target interface{}, errorDetails interface{}) error {
+	return &Error{
+		Code:           1005,
+		DisplayMessage: "Error encountered while requesting file River run.",
+		Details: map[string]string{
+			"target": fmt.Sprintf("%v", target),
+			"error":  fmt.Sprintf("%v", errorDetails),
+		},
+	}
+}

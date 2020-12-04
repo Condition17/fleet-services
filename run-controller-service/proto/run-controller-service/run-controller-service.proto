@@ -71,3 +71,7 @@ message ExecutorInstanceCreateEventData {
 message FileAssemblySucceededEventData {
 	uint32 testRunId = 1;
 }
+
+message RiverRunFinishedEventData {
+	uint32 testRunId = 1;
+}
