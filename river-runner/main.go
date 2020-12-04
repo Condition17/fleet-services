@@ -109,9 +109,9 @@ func main() {
 	eventData, _ := json.Marshal(&runControllerPb.RiverRunFinishedEventData{TestRunId: testRunId})
 	// send notification
 	msg, _ := json.Marshal(&runControllerPb.Event{
-			Type: "test-run.finished",
-			Meta: &runControllerPb.EventMetadata{Authorization: []byte("")},
-			Data: eventData,
+		Type: "test-run.finished",
+		Meta: &runControllerPb.EventMetadata{Authorization: []byte("")},
+		Data: eventData,
 	})
 	result := testRunStateTopic.Publish(context.Background(), &pubsub.Message{Data: msg})
 	id, err := result.Get(context.Background())

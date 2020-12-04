@@ -1,4 +1,4 @@
 SERVICE_NAME: "go.micro.api.runControllerService"
 GOOGLE_PROJECT_ID: "fleet-295921"
-FILE_BUILDER_SERVICE_URL: "localhost:8090",
+FILE_BUILDER_SERVICE_URL: "localhost:8090"
 RIVER_RUNNER_SERVICE_URL: "localhost:8091"

@@ -2,7 +2,7 @@ package events
 
 const (
 	TEST_RUN_CREATED                         = "test-run.created"
-	TEST_RUN_FINISHED						 = "test-run.finished"
+	TEST_RUN_FINISHED                        = "test-run.finished"
 	FILE_CREATED                             = "file.created"
 	FILE_UPLOADED                            = "file.uploaded"
 	FILE_SYSTEM_CREATED                      = "filesystem.created"
@@ -15,5 +15,6 @@ const (
 	WSS_EXECUTOR_INSTANCE_CREATION_START     = "executorInstanceCreationStart"
 	WSS_EXECUTOR_INSTANCE_CREATION_COMPLETED = "executorInstanceCreationCompleted"
 	WSS_FILE_SUCCESSFULLY_ASSEMBLED          = "fileSuccessfullyAssembled"
+	WSS_TEST_RUN_FINSHED                     = "testRunFinished"
 	WSS_ERROR                                = "error"
 )

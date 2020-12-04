@@ -102,6 +102,8 @@ func (h EventHandler) HandleEvent(event *proto.Event) {
 		h.handleExecutorInstanceCreated(ctx, event)
 	case events.FILE_ASSEMBLY_SUCCEEDED:
 		h.handleFileAssemblySuccess(ctx, event)
+	case events.TEST_RUN_FINISHED:
+		h.handleTestRunFinished(ctx, event)
 	default:
 		log.Printf("The event with type '%s' is not a recognized fleet test run pipeline event", event.Type)
 	}
@@ -262,6 +264,23 @@ func (h EventHandler) handleFileAssemblySuccess(ctx context.Context, event *prot
 		h.sendErrorToWssQueue(ctx, errors.AssembleFileRequestError(runRequest, err.Error()))
 		return
 	}
+}
+
+func (h EventHandler) handleTestRunFinished(ctx context.Context, event *proto.Event) {
+	// unmarshal event specific data
+	var eventData *proto.RiverRunFinishedEventData
+	if err := json.Unmarshal(event.Data, &eventData); err != nil {
+		log.Println(errors.EventUnmarshalError(event.Data, err))
+		return
+	}
+
+	// append wss event target bytes to context
+	if err := h.appendTestRunUserBytesToContext(&ctx, eventData.TestRunId); err != nil {
+		log.Println(err)
+		return
+	}
+	// send wss event
+	h.SendEventToWssQueue(ctx, events.WSS_TEST_RUN_FINSHED, event.Data)
 }
 
 func (h EventHandler) appendTestRunUserBytesToContext(ctx *context.Context, testRunId uint32) error {
