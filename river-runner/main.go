@@ -61,7 +61,16 @@ func (s *riverRunnerServer) RunRiver(ctx context.Context, req *proto.RunRequest)
 	nfsFileSharePath := fmt.Sprintf(":/%s", fileSystemDetails.FileShareName)
 	mountVolumePath := path.Join("/mnt/", fmt.Sprintf("testrun_%v", req.TestRunId))
 	// Ensure mount directory is created and ignore any other issue
-	_ = os.Mkdir(mountVolumePath, 0700)
+	_ = os.Mkdir(mountVolumePath, 0777)
+
+	out, err := exec.Command("chmod", "-R", "777", mountVolumePath).Output()
+	if err != nil {
+		// TODO: handle this case
+		log.Printf("Error while setting mounted directory permissions: %s | Out: %s\n", err, out)
+		// TODO: umount here if error
+		return nil, errors.New(fmt.Sprintf("Error while setting mounted directory permissions: %s | Out: %s\n", err, out))
+	}
+
 	// --- mount volume
 	fmt.Println("Mounting volume...")
 	if err := syscall.Mount(nfsFileSharePath, mountVolumePath, "nfs", 0, fmt.Sprintf("nolock,addr=%s", nfsIpAddr)); err != nil {
