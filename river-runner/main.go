@@ -63,14 +63,6 @@ func (s *riverRunnerServer) RunRiver(ctx context.Context, req *proto.RunRequest)
 	// Ensure mount directory is created and ignore any other issue
 	_ = os.Mkdir(mountVolumePath, 0777)
 
-	out, err := exec.Command("chmod", "-R", "777", mountVolumePath).Output()
-	if err != nil {
-		// TODO: handle this case
-		log.Printf("Error while setting mounted directory permissions: %s | Out: %s\n", err, out)
-		// TODO: umount here if error
-		return nil, errors.New(fmt.Sprintf("Error while setting mounted directory permissions: %s | Out: %s\n", err, out))
-	}
-
 	// --- mount volume
 	fmt.Println("Mounting volume...")
 	if err := syscall.Mount(nfsFileSharePath, mountVolumePath, "nfs", 0, fmt.Sprintf("nolock,addr=%s", nfsIpAddr)); err != nil {
@@ -78,6 +70,17 @@ func (s *riverRunnerServer) RunRiver(ctx context.Context, req *proto.RunRequest)
 		return nil, errors.New(fmt.Sprintf("Syscall mount error: %v\n", err))
 	}
 	log.Println("Successfully mounted volume at ", mountVolumePath, "...")
+
+	chmodCmdStr := fmt.Sprintf("chmod -R 777 %s", mountVolumePath)
+	log.Println("Executing command: ", chmodCmdStr)
+	out, err := exec.Command("/bin/sh", "-c", chmodCmdStr).Output()
+	if err != nil {
+		// TODO: handle this case
+		log.Printf("Error while setting mounted directory permissions: %s | Out: %s\n", err, out)
+		// TODO: umount here if error
+		return nil, errors.New(fmt.Sprintf("Error while setting mounted directory permissions: %s | Out: %s\n", err, out))
+	}
+	log.Println("Command ", chmodCmdStr, " successfully executed")
 
 	go func() {
 		runFinishChan := make(chan bool)
