@@ -76,7 +76,7 @@ func (s *riverRunnerServer) RunRiver(ctx context.Context, req *proto.RunRequest)
 
 		go runRiverContainer(mountVolumePath,
 			[]string{
-				"-bp", fmt.Sprintf("%s/%s", mountVolumePath, fileDetails.Name),
+				"-bp", fmt.Sprintf("mount/%s", fileDetails.Name),
 				"-secondsBetweenStats", "2",
 				"-arch", "x64",
 				"-max", "1",
