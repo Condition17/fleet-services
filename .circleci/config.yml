@@ -131,10 +131,43 @@ jobs:
       - gcs/rsync:
           bucket: $BUCKET_NAME
           source: ~/project/file-builder/deploy
+  compile-upload-river-runner:
+    description: Compile river-runner server executable
+    machine: true
+    environment:
+      GO111MODULE: "on"
+      BUCKET_NAME: fleet-deploy/binaries
+      DEPLOY_ARCHIVE_NAME: river-runner.tar.gz
+    steps:
+      - checkout
+      - run:
+          name: Install go
+          command: |
+            wget https://dl.google.com/go/go1.14.4.linux-amd64.tar.gz && \
+            sudo rm -rf /usr/local/go && \
+            sudo tar -C /usr/local -xzf go1.14.4.linux-amd64.tar.gz && \
+            go version
+      - run:
+          name: Ensure the environment is upgraded for gsutil use
+          command: pip install --upgrade pip && pip install --upgrade google-compute-engine
+      - run:
+          name: Compile code for linux
+          command: |
+            cd ~/project/river-runner && \
+            GOOS=linux GOARCH=amd64 go build -o server -v . && \
+            mkdir deploy && \
+            tar -zcvf ./deploy/${DEPLOY_ARCHIVE_NAME} server
+      - gcs/gcs-auth
+      - gcs/rsync:
+          bucket: $BUCKET_NAME
+          source: ~/project/river-runner/deploy
 workflows:
   compile_and_upload_file_builder_exec:
     jobs:
       - compile-upload-file-builder
+  compile_and_upload_river_runner_exec:
+    jobs:
+      - compile-upload-river-runner
   build_and_upload_service_images:
     jobs:
       - build-push-file-service-image
