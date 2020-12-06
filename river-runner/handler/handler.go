@@ -87,8 +87,8 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 			return
 		}
 		// construct and send the notification message
-		eventData, _ := json.Marshal(&runControllerProto.RiverRunFinishedEventData{TestRunId: req.TestRunId})
-		_ = h.sendRunStateEvent(context.Background(), runStateEvents.TEST_RUN_FINISHED, eventData)
+		eventData, _ := json.Marshal(&runControllerProto.FileEvaluationFinishedEventData{TestRunId: req.TestRunId})
+		_ = h.sendRunStateEvent(context.Background(), runStateEvents.FileEvaluationFinished, eventData)
 	}()
 
 	return &proto.EmptyResponse{}, nil
