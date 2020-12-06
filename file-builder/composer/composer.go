@@ -160,7 +160,6 @@ func (c *Composer) handleOperationUpdates(fileSpec *FileSpec) {
 		switch composeEvent.Type {
 		case chunkProcessingSuccess:
 			appendedChunksCount++
-			log.Printf("Chunk processing success event (%v/%v): %v\n", appendedChunksCount, fileSpec.TotalChunksCount, composeEvent)
 			if appendedChunksCount == fileSpec.TotalChunksCount {
 				_ = fileSpec.FileOnDisk.Close()
 				c.operationFeedback[fileSpec].SuccessChan <- struct{}{}
