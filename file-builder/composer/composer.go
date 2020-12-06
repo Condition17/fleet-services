@@ -152,6 +152,7 @@ func (c *Composer) runChunkDownloader() {
 	chunkDetails.File.Unlock()
 	log.Printf("Lock released")
 	c.operationUpdateChan[chunkDetails.File] <- FileComposeEvent{Type: chunkProcessingSuccess, Payload: chunkDetails}
+	c.runChunkDownloader()
 }
 
 func (c *Composer) handleOperationUpdates(fileSpec *FileSpec) {
