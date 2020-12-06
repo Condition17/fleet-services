@@ -99,7 +99,7 @@ func (h EventHandler) HandleEvent(event *proto.Event) {
 		h.handleFileChunksUploaded(ctx, event)
 	case events.FileSystemProvisioned:
 		h.handleFileSystemProvisioned(ctx, event)
-	case events.EXECUTOR_INSTANCE_CREATED:
+	case events.ExecutorInstanceProvisioned:
 		h.handleExecutorInstanceCreated(ctx, event)
 	case events.FILE_ASSEMBLY_SUCCEEDED:
 		h.handleFileAssemblySuccess(ctx, event)
@@ -215,7 +215,7 @@ func (h EventHandler) handleFileChunksUploaded(ctx context.Context, event *proto
 
 func (h EventHandler) handleFileSystemProvisioned(ctx context.Context, event *proto.Event) {
 	// unmarshal event specific data
-	var eventData *proto.FileSystemCreateEventData
+	var eventData *proto.FileSystemProvisionedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
 		log.Println(errors.EventUnmarshalError(event.Data, event))
 		return
@@ -226,21 +226,25 @@ func (h EventHandler) handleFileSystemProvisioned(ctx context.Context, event *pr
 		log.Println(err)
 		return
 	}
-	// send wss event
-	wssEventData, _ := json.Marshal(&proto.FileSystemCreateEventData{TestRunId: eventData.TestRunId})
-	h.SendEventToWssQueue(ctx, events.WSS_FILE_SYSTEM_CREATION_COMPLETED, wssEventData)
 
-	// trigger file assembly process
+	// update test run state - mark file system provisioning as done
+	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.ProvisionFsDone, []byte{})
+
+	// trigger tested file assembly
 	fileAssembleRequest := &fileBuilderProto.FileAssembleRequest{TestRunId: eventData.TestRunId}
 	if _, err := h.FileBuilderService.AssembleFile(ctx, fileAssembleRequest); err != nil {
-		h.sendErrorToWssQueue(ctx, errors.AssembleFileRequestError(fileAssembleRequest, err.Error()))
+		log.Println("Error calling FileBuilderService.AssembleFile: ", err)
+		h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Error, []byte(errors.FileSystemCreationError(fileAssembleRequest, err).Error()))
 		return
 	}
+
+	// update test run state to mark that file assembly process started
+	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.AssembleFile, []byte{})
 }
 
 func (h EventHandler) handleExecutorInstanceCreated(ctx context.Context, event *proto.Event) {
 	// unmarshal event specific data
-	var eventData *proto.ExecutorInstanceCreateEventData
+	var eventData *proto.ExecutorInstanceProvisionedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
 		log.Println(errors.EventUnmarshalError(event.Data, err))
 		return
@@ -253,7 +257,7 @@ func (h EventHandler) handleExecutorInstanceCreated(ctx context.Context, event *
 	}
 
 	// send executor instance created event
-	wssEventData, _ := json.Marshal(&proto.FileSystemCreateEventData{TestRunId: eventData.TestRunId})
+	wssEventData, _ := json.Marshal(&proto.ExecutorInstanceProvisionedEventData{TestRunId: eventData.TestRunId})
 	h.SendEventToWssQueue(ctx, events.WSS_EXECUTOR_INSTANCE_CREATION_COMPLETED, wssEventData)
 }
 

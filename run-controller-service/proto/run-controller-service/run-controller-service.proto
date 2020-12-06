@@ -66,11 +66,11 @@ message FileUploadCompletedEventData {
 	string fileId = 2;
 }
 
-message FileSystemCreateEventData {
+message FileSystemProvisionedEventData {
 	uint32 testRunId = 1;
 }
 
-message ExecutorInstanceCreateEventData {
+message ExecutorInstanceProvisionedEventData {
 	uint32 testRunId = 1;
 }
 
