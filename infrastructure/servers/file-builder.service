@@ -1,0 +1,19 @@
+[Unit]
+Description=Fleet file-builder server
+
+[Service]
+WorkingDirectory=/root/file-builder-deploy
+ExecStartPre=gsutil rsync -r gs://fleet-deploy/file-builder /root/file-builder-deploy
+ExecStartPre=tar -xzf file-builder.tar.gz
+ExecStartPre=rm file-builder.tar.gz
+ExecStartPre=chmod +x server
+ExecStart=/root/file-builder-deploy/server
+User=root
+Group=root
+Restart=always
+
+Environment=ENV_NAME=prod
+Environment=GOOGLE_APPLICATION_CREDENTIALS=/root/application_credentials.key.json
+
+[Install]
+WantedBy=multi-user.target

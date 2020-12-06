@@ -1,0 +1,19 @@
+[Unit]
+Description=Fleet river-runner server
+
+[Service]
+WorkingDirectory=/root/river-runner-deploy
+ExecStartPre=gsutil rsync -r gs://fleet-deploy/river-runner /root/river-runner-deploy
+ExecStartPre=tar -xzf river-runner.tar.gz
+ExecStartPre=rm river-runner.tar.gz
+ExecStartPre=chmod +x server
+ExecStart=/root/river-runner-deploy/server
+User=root
+Group=root
+Restart=always
+
+Environment=ENV_NAME=prod
+Environment=GOOGLE_APPLICATION_CREDENTIALS=/root/application_credentials.key.json
+
+[Install]
+WantedBy=multi-user.target
