@@ -127,7 +127,6 @@ func (c *Composer) runChunkDownloader() {
 
 	// get lock on chunk's associated file
 	chunkDetails.File.Lock()
-	log.Printf("Lock taken")
 	// re-check if file is still available for assembling process
 	if !c.fileAvailableForComposing(chunkDetails.File) {
 		c.runChunkDownloader()
@@ -150,8 +149,8 @@ func (c *Composer) runChunkDownloader() {
 	}
 	log.Printf("Successfully written chunk '%v' at file offset '%v'\n", chunkDetails.Sha2, chunkDetails.Offset)
 	chunkDetails.File.Unlock()
-	log.Printf("Lock released")
 	c.operationUpdateChan[chunkDetails.File] <- FileComposeEvent{Type: chunkProcessingSuccess, Payload: chunkDetails}
+
 	c.runChunkDownloader()
 }
 
