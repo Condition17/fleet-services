@@ -38,8 +38,8 @@ func NewHandler(service micro.Service) func(broker.Event) error {
 	var riverRunnerServiceClient riverRunnerProto.RiverRunnerClient
 
 	if fileBuilderServiceClient, err = getFileBuilderServiceClient(); err != nil {
-		//log.Fatalln("Error encountered while setting up connection with file builder service:", err)
-		//return nil
+		log.Fatalln("Error encountered while setting up connection with file builder service:", err)
+		return nil
 	}
 
 	if riverRunnerServiceClient, err = getRiverRunnerServiceClient(); err != nil {
@@ -100,18 +100,14 @@ func (h EventHandler) HandleEvent(event *proto.Event) {
 	case events.FileSystemProvisioned:
 		h.handleFileSystemProvisioned(ctx, event)
 	case events.ExecutorInstanceProvisioned:
-		h.handleExecutorInstanceCreated(ctx, event)
-	case events.FILE_ASSEMBLY_SUCCEEDED:
+		h.handleExecutorInstanceProvisioned(ctx, event)
+	case events.FileAssemblySuccess:
 		h.handleFileAssemblySuccess(ctx, event)
 	case events.TEST_RUN_FINISHED:
 		h.handleTestRunFinished(ctx, event)
 	default:
 		log.Printf("The event with type '%s' is not a recognized fleet test run pipeline event", event.Type)
 	}
-}
-
-func (h EventHandler) sendErrorToWssQueue(ctx context.Context, err error) {
-	h.SendEventToWssQueue(ctx, events.WSS_ERROR, []byte(err.Error()))
 }
 
 func (h EventHandler) handleTestRunInitiated(ctx context.Context, event *proto.Event) {
@@ -130,7 +126,8 @@ func (h EventHandler) handleTestRunInitiated(ctx context.Context, event *proto.E
 	}
 	createFileResp, err := h.FileService.CreateFile(ctx, &fileSpec)
 	if err != nil {
-		h.sendErrorToWssQueue(ctx, errors.FileCreationError(eventData.TestRunSpec, err.Error()))
+		log.Printf("Error encountered while creating file for test run (id: %v):%v\n", eventData.TestRunSpec.Id, err.Error())
+		h.changeTestRunState(ctx, eventData.TestRunSpec.Id, testRunStates.TestRunState.Error, []byte(err.Error()))
 		return
 	}
 
@@ -140,7 +137,8 @@ func (h EventHandler) handleTestRunInitiated(ctx context.Context, event *proto.E
 		FileId:    createFileResp.File.Id,
 	}
 	if _, err := h.TestRunService.AssignFile(ctx, &assignmentDetails); err != nil {
-		h.sendErrorToWssQueue(ctx, errors.FileAssignError(eventData.TestRunSpec, err.Error()))
+		log.Printf("Error while assigning file (id: %v) to test run (id: %v):%v\n", assignmentDetails.FileId, assignmentDetails.TestRunId, err.Error())
+		h.changeTestRunState(ctx, eventData.TestRunSpec.Id, testRunStates.TestRunState.Error, []byte(errors.FileAssignError(eventData.TestRunSpec, err).Error()))
 		return
 	}
 
@@ -190,7 +188,8 @@ func (h EventHandler) handleFileChunksUploaded(ctx context.Context, event *proto
 	testRunDetailsResp, err := h.TestRunService.GetByFileId(ctx, &testRunServiceProto.FileSpec{Id: fileSpec.Id})
 
 	if err != nil {
-		h.sendErrorToWssQueue(ctx, errors.TestRunRetrievalError(eventData, err.Error()))
+		log.Println("Error calling h.TestRunService.GetByFileId: ", err)
+		h.changeTestRunState(ctx, testRunDetailsResp.TestRun.Id, testRunStates.TestRunState.Error, []byte(err.Error()))
 		return
 	}
 
@@ -223,7 +222,8 @@ func (h EventHandler) handleFileSystemProvisioned(ctx context.Context, event *pr
 
 	// append wss event target bytes to context
 	if err := h.appendTestRunUserBytesToContext(&ctx, eventData.TestRunId); err != nil {
-		log.Println(err)
+		log.Println("Error appending test run's user bytes to context:", err)
+		h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Error, []byte(errors.TestRunUserBytesContextAppendError(eventData, err).Error()))
 		return
 	}
 
@@ -234,7 +234,7 @@ func (h EventHandler) handleFileSystemProvisioned(ctx context.Context, event *pr
 	fileAssembleRequest := &fileBuilderProto.FileAssembleRequest{TestRunId: eventData.TestRunId}
 	if _, err := h.FileBuilderService.AssembleFile(ctx, fileAssembleRequest); err != nil {
 		log.Println("Error calling FileBuilderService.AssembleFile: ", err)
-		h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Error, []byte(errors.FileSystemCreationError(fileAssembleRequest, err).Error()))
+		h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Error, []byte(errors.AssembleFileRequestError(fileAssembleRequest, err).Error()))
 		return
 	}
 
@@ -242,7 +242,7 @@ func (h EventHandler) handleFileSystemProvisioned(ctx context.Context, event *pr
 	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.AssembleFile, []byte{})
 }
 
-func (h EventHandler) handleExecutorInstanceCreated(ctx context.Context, event *proto.Event) {
+func (h EventHandler) handleExecutorInstanceProvisioned(ctx context.Context, event *proto.Event) {
 	// unmarshal event specific data
 	var eventData *proto.ExecutorInstanceProvisionedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
@@ -250,15 +250,14 @@ func (h EventHandler) handleExecutorInstanceCreated(ctx context.Context, event *
 		return
 	}
 
-	// append wss event target bytes to context
-	if err := h.appendTestRunUserBytesToContext(&ctx, eventData.TestRunId); err != nil {
-		log.Println(err)
-		return
-	}
+	// update test run state - mark executor instance provisioning as done
+	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.ProvisionExecutorInstanceDone, []byte{})
 
-	// send executor instance created event
-	wssEventData, _ := json.Marshal(&proto.ExecutorInstanceProvisionedEventData{TestRunId: eventData.TestRunId})
-	h.SendEventToWssQueue(ctx, events.WSS_EXECUTOR_INSTANCE_CREATION_COMPLETED, wssEventData)
+	// here file execution should be triggered
+	// IGNORE IT FOR NOW - do this only if changing pipeline architecture
+
+	// update test run state to mark that file execution process started
+	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Evaluating, []byte{})
 }
 
 func (h EventHandler) handleFileAssemblySuccess(ctx context.Context, event *proto.Event) {
@@ -271,18 +270,23 @@ func (h EventHandler) handleFileAssemblySuccess(ctx context.Context, event *prot
 
 	// append wss event target bytes to context
 	if err := h.appendTestRunUserBytesToContext(&ctx, eventData.TestRunId); err != nil {
-		log.Println(err)
+		log.Println("Error appending test run's user bytes to context:", err)
+		h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Error, []byte(errors.TestRunUserBytesContextAppendError(eventData, err).Error()))
 		return
 	}
-	// send wss event
-	h.SendEventToWssQueue(ctx, events.WSS_FILE_SUCCESSFULLY_ASSEMBLED, event.Data)
+	// update test run state - mark file assembly process as done
+	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.AssembleFileDone, []byte{})
 
-	// trigger river execution
+	// trigger River execution
 	runRequest := &riverRunnerProto.RunRequest{TestRunId: eventData.TestRunId}
 	if _, err := h.RiverRunnerService.RunRiver(ctx, runRequest); err != nil {
-		h.sendErrorToWssQueue(ctx, errors.AssembleFileRequestError(runRequest, err.Error()))
+		log.Println("Error calling RiverRunnerService.RunRiver: ", err)
+		h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Error, []byte(errors.RiverRunRequestError(runRequest, err).Error()))
 		return
 	}
+
+	// update test run state - mark run process started
+	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Evaluating, []byte{})
 }
 
 func (h EventHandler) handleTestRunFinished(ctx context.Context, event *proto.Event) {

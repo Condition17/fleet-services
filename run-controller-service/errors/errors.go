@@ -93,3 +93,14 @@ func RiverRunRequestError(target interface{}, errorDetails interface{}) error {
 		},
 	}
 }
+
+func TestRunUserBytesContextAppendError(target interface{}, errorDetails interface{}) error {
+	return &Error{
+		Code:           1006,
+		DisplayMessage: "Error appending test run's user bytes to context.",
+		Details: map[string]string{
+			"target": fmt.Sprintf("%v", target),
+			"error":  fmt.Sprintf("%v", errorDetails),
+		},
+	}
+}
