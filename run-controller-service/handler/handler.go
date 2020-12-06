@@ -103,8 +103,8 @@ func (h EventHandler) HandleEvent(event *proto.Event) {
 		h.handleExecutorInstanceProvisioned(ctx, event)
 	case events.FileAssemblySuccess:
 		h.handleFileAssemblySuccess(ctx, event)
-	case events.TEST_RUN_FINISHED:
-		h.handleTestRunFinished(ctx, event)
+	case events.FileEvaluationFinished:
+		h.handleFileEvaluationFinished(ctx, event)
 	default:
 		log.Printf("The event with type '%s' is not a recognized fleet test run pipeline event", event.Type)
 	}
@@ -289,9 +289,9 @@ func (h EventHandler) handleFileAssemblySuccess(ctx context.Context, event *prot
 	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Evaluating, []byte{})
 }
 
-func (h EventHandler) handleTestRunFinished(ctx context.Context, event *proto.Event) {
+func (h EventHandler) handleFileEvaluationFinished(ctx context.Context, event *proto.Event) {
 	// unmarshal event specific data
-	var eventData *proto.RiverRunFinishedEventData
+	var eventData *proto.FileEvaluationFinishedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
 		log.Println(errors.EventUnmarshalError(event.Data, err))
 		return
@@ -299,11 +299,14 @@ func (h EventHandler) handleTestRunFinished(ctx context.Context, event *proto.Ev
 
 	// append wss event target bytes to context
 	if err := h.appendTestRunUserBytesToContext(&ctx, eventData.TestRunId); err != nil {
-		log.Println(err)
+		log.Println("Error appending test run's user bytes to context:", err)
+		h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Error, []byte(errors.TestRunUserBytesContextAppendError(eventData, err).Error()))
 		return
 	}
-	// send wss event
-	h.SendEventToWssQueue(ctx, events.WSS_TEST_RUN_FINSHED, event.Data)
+	// TODO: add logic to mark test run as failed or succeeded
+	// update test run state - mark it as finished or succeeded
+	// HARDCODED succeeded for now
+	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Succeeded, []byte{})
 }
 
 func (h EventHandler) appendTestRunUserBytesToContext(ctx *context.Context, testRunId uint32) error {

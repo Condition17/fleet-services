@@ -78,6 +78,6 @@ message FileAssemblySucceededEventData {
 	uint32 testRunId = 1;
 }
 
-message RiverRunFinishedEventData {
+message FileEvaluationFinishedEventData {
 	uint32 testRunId = 1;
 }

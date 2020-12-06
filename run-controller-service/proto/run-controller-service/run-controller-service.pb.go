@@ -811,7 +811,7 @@ func (x *FileAssemblySucceededEventData) GetTestRunId() uint32 {
 	return 0
 }
 
-type RiverRunFinishedEventData struct {
+type FileEvaluationFinishedEventData struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -819,8 +819,8 @@ type RiverRunFinishedEventData struct {
 	TestRunId uint32 `protobuf:"varint,1,opt,name=testRunId,proto3" json:"testRunId,omitempty"`
 }
 
-func (x *RiverRunFinishedEventData) Reset() {
-	*x = RiverRunFinishedEventData{}
+func (x *FileEvaluationFinishedEventData) Reset() {
+	*x = FileEvaluationFinishedEventData{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -828,13 +828,13 @@ func (x *RiverRunFinishedEventData) Reset() {
 	}
 }
 
-func (x *RiverRunFinishedEventData) String() string {
+func (x *FileEvaluationFinishedEventData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RiverRunFinishedEventData) ProtoMessage() {}
+func (*FileEvaluationFinishedEventData) ProtoMessage() {}
 
-func (x *RiverRunFinishedEventData) ProtoReflect() protoreflect.Message {
+func (x *FileEvaluationFinishedEventData) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -846,12 +846,12 @@ func (x *RiverRunFinishedEventData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RiverRunFinishedEventData.ProtoReflect.Descriptor instead.
-func (*RiverRunFinishedEventData) Descriptor() ([]byte, []int) {
+// Deprecated: Use FileEvaluationFinishedEventData.ProtoReflect.Descriptor instead.
+func (*FileEvaluationFinishedEventData) Descriptor() ([]byte, []int) {
 	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *RiverRunFinishedEventData) GetTestRunId() uint32 {
+func (x *FileEvaluationFinishedEventData) GetTestRunId() uint32 {
 	if x != nil {
 		return x.TestRunId
 	}
@@ -951,13 +951,13 @@ var file_proto_run_controller_service_run_controller_service_proto_rawDesc = []b
 	0x69, 0x6c, 0x65, 0x41, 0x73, 0x73, 0x65, 0x6d, 0x62, 0x6c, 0x79, 0x53, 0x75, 0x63, 0x63, 0x65,
 	0x65, 0x64, 0x65, 0x64, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12, 0x1c, 0x0a,
 	0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d,
-	0x52, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x22, 0x39, 0x0a, 0x19, 0x52,
-	0x69, 0x76, 0x65, 0x72, 0x52, 0x75, 0x6e, 0x46, 0x69, 0x6e, 0x69, 0x73, 0x68, 0x65, 0x64, 0x45,
-	0x76, 0x65, 0x6e, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74,
-	0x52, 0x75, 0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x74, 0x65, 0x73,
-	0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x32, 0x16, 0x0a, 0x14, 0x52, 0x75, 0x6e, 0x43, 0x6f, 0x6e,
-	0x74, 0x72, 0x6f, 0x6c, 0x6c, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x52, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x22, 0x3f, 0x0a, 0x1f, 0x46,
+	0x69, 0x6c, 0x65, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x46, 0x69, 0x6e,
+	0x69, 0x73, 0x68, 0x65, 0x64, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12, 0x1c,
+	0x0a, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0d, 0x52, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x32, 0x16, 0x0a, 0x14,
+	0x52, 0x75, 0x6e, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x6c, 0x65, 0x72, 0x53, 0x65, 0x72,
+	0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -988,7 +988,7 @@ var file_proto_run_controller_service_run_controller_service_proto_goTypes = []i
 	(*FileSystemProvisionedEventData)(nil),       // 11: go.micro.api.runControllerService.FileSystemProvisionedEventData
 	(*ExecutorInstanceProvisionedEventData)(nil), // 12: go.micro.api.runControllerService.ExecutorInstanceProvisionedEventData
 	(*FileAssemblySucceededEventData)(nil),       // 13: go.micro.api.runControllerService.FileAssemblySucceededEventData
-	(*RiverRunFinishedEventData)(nil),            // 14: go.micro.api.runControllerService.RiverRunFinishedEventData
+	(*FileEvaluationFinishedEventData)(nil),      // 14: go.micro.api.runControllerService.FileEvaluationFinishedEventData
 }
 var file_proto_run_controller_service_run_controller_service_proto_depIdxs = []int32{
 	0, // 0: go.micro.api.runControllerService.Event.meta:type_name -> go.micro.api.runControllerService.EventMetadata
@@ -1178,7 +1178,7 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 			}
 		}
 		file_proto_run_controller_service_run_controller_service_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RiverRunFinishedEventData); i {
+			switch v := v.(*FileEvaluationFinishedEventData); i {
 			case 0:
 				return &v.state
 			case 1:
