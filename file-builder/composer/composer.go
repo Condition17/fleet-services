@@ -21,7 +21,7 @@ const (
 )
 
 type FileSpec struct {
-	mu               *sync.Mutex
+	sync.Mutex
 	ParentDir        string
 	FileOnDisk       *os.File
 	Id               string
@@ -126,7 +126,7 @@ func (c *Composer) runChunkDownloader() {
 	}
 
 	// get lock on chunk's associated file
-	chunkDetails.File.mu.Lock()
+	chunkDetails.File.Lock()
 	// re-check if file is still available for assembling process
 	if !c.fileAvailableForComposing(chunkDetails.File) {
 		c.runChunkDownloader()
@@ -139,16 +139,16 @@ func (c *Composer) runChunkDownloader() {
 			Error:   errors.New(fmt.Sprintf("Error encountered obtaining object reader for chunk (key: %v): %v\n", chunkDetails.Sha2, err)),
 			Payload: chunkDetails,
 		}
-		chunkDetails.File.mu.Unlock()
+		chunkDetails.File.Unlock()
 		c.runChunkDownloader()
 	}
 	if _, err := io.Copy(chunkDetails.File.FileOnDisk, chunkBytesReader); err != nil {
 		c.operationUpdateChan[chunkDetails.File] <- FileComposeEvent{Type: chunkProcessingError, Error: err, Payload: chunkDetails}
-		chunkDetails.File.mu.Unlock()
+		chunkDetails.File.Unlock()
 		c.runChunkDownloader()
 	}
 	log.Printf("Successfully written chunk '%v' at file offset '%v'\n", chunkDetails.Sha2, chunkDetails.Offset)
-	chunkDetails.File.mu.Unlock()
+	chunkDetails.File.Unlock()
 	c.operationUpdateChan[chunkDetails.File] <- FileComposeEvent{Type: chunkProcessingSuccess, Payload: chunkDetails}
 }
 
