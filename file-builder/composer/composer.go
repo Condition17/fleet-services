@@ -157,33 +157,33 @@ func (c *Composer) runChunkDownloader() {
 
 func (c *Composer) handleOperationUpdates(fileSpec *FileSpec) {
 	var appendedChunksCount uint64 = 0
-	composeEvent := <-c.operationUpdateChan[fileSpec]
-	switch composeEvent.Type {
-	case chunkProcessingSuccess:
-		appendedChunksCount++
-		log.Printf("Chunk processing success event (%v/%v): %v\n",appendedChunksCount, fileSpec.TotalChunksCount, composeEvent)
-		if appendedChunksCount == fileSpec.TotalChunksCount {
-			_ = fileSpec.FileOnDisk.Close()
-			c.operationFeedback[fileSpec].SuccessChan <- struct{}{}
-			delete(c.operationUpdateChan, fileSpec)
-			delete(c.operationFeedback, fileSpec)
-			return
-		}
-	case chunkProcessingError:
-		log.Printf("Error encountered while processing chunk. Event details: %v\n", composeEvent)
-		if (composeEvent.Payload != ChunkDetails{} && composeEvent.Payload.ReProcessCount < reProcessCountLimit) {
-			composeEvent.Payload.ReProcessCount++
-			c.chunksDetailsQueue <- composeEvent.Payload
-			log.Printf("Chunk (key: %v) re-added to processing queue", composeEvent.Payload.Sha2)
-		} else {
-			log.Printf("File compose process aborted for file (id: %v)\n", composeEvent.Payload.File.Id)
-			c.operationFeedback[fileSpec].ErrorChan <- composeEvent.Error
-			delete(c.operationUpdateChan, fileSpec)
-			delete(c.operationFeedback, fileSpec)
-			return
+	for composeEvent := range c.operationUpdateChan[fileSpec] {
+		switch composeEvent.Type {
+		case chunkProcessingSuccess:
+			appendedChunksCount++
+			log.Printf("Chunk processing success event (%v/%v): %v\n", appendedChunksCount, fileSpec.TotalChunksCount, composeEvent)
+			if appendedChunksCount == fileSpec.TotalChunksCount {
+				_ = fileSpec.FileOnDisk.Close()
+				c.operationFeedback[fileSpec].SuccessChan <- struct{}{}
+				delete(c.operationUpdateChan, fileSpec)
+				delete(c.operationFeedback, fileSpec)
+				return
+			}
+		case chunkProcessingError:
+			log.Printf("Error encountered while processing chunk. Event details: %v\n", composeEvent)
+			if (composeEvent.Payload != ChunkDetails{} && composeEvent.Payload.ReProcessCount < reProcessCountLimit) {
+				composeEvent.Payload.ReProcessCount++
+				c.chunksDetailsQueue <- composeEvent.Payload
+				log.Printf("Chunk (key: %v) re-added to processing queue", composeEvent.Payload.Sha2)
+			} else {
+				log.Printf("File compose process aborted for file (id: %v)\n", composeEvent.Payload.File.Id)
+				c.operationFeedback[fileSpec].ErrorChan <- composeEvent.Error
+				delete(c.operationUpdateChan, fileSpec)
+				delete(c.operationFeedback, fileSpec)
+				return
+			}
 		}
 	}
-	c.handleOperationUpdates(fileSpec)
 }
 
 func (c *Composer) fileAvailableForComposing(file *FileSpec) bool {
