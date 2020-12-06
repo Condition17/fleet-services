@@ -13,7 +13,7 @@ import (
 	proto "github.com/Condition17/fleet-services/river-runner/proto/river-runner"
 	riverSdk "github.com/Condition17/fleet-services/river/sdk"
 	runStateEvents "github.com/Condition17/fleet-services/run-controller-service/events"
-	runControllerPb "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
+	runControllerProto"github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"google.golang.org/grpc"
 	"log"
 	"path"
@@ -87,7 +87,7 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 			return
 		}
 		// construct and send the notification message
-		eventData, _ := json.Marshal(&runControllerPb.RiverRunFinishedEventData{TestRunId: req.TestRunId})
+		eventData, _ := json.Marshal(&runControllerProto.RiverRunFinishedEventData{TestRunId: req.TestRunId})
 		_ = h.sendRunStateEvent(context.Background(), runStateEvents.TEST_RUN_FINISHED, eventData)
 	}()
 
@@ -95,9 +95,9 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 }
 
 func (h *Handler) sendRunStateEvent(ctx context.Context, eventType string, data []byte) error {
-	msg, _ := json.Marshal(&runControllerPb.Event{
+	msg, _ := json.Marshal(&runControllerProto.Event{
 		Type: eventType,
-		Meta: &runControllerPb.EventMetadata{Authorization: []byte("")},
+		Meta: &runControllerProto.EventMetadata{Authorization: []byte("")},
 		Data: data,
 	})
 	result := h.runStateTopic.Publish(ctx, &pubsub.Message{Data: msg})

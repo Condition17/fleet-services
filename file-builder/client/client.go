@@ -19,7 +19,7 @@ func main() {
 	defer conn.Close()
 
 	client := proto.NewFileBuilderClient(conn)
-	if resp, err := client.AssembleFile(context.Background(), &proto.FileAssembleRequest{TestRunId: 34}); err != nil {
+	if resp, err := client.AssembleFile(context.Background(), &proto.FileAssembleRequest{TestRunId: 100}); err != nil {
 		fmt.Println("Assemble call error:", err)
 		return
 	} else {

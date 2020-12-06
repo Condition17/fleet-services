@@ -39,7 +39,6 @@ func main() {
 	}
 
 	proto.RegisterRiverRunnerServer(grpcServer, handler.NewHandler(conn, pubSubClient))
-	// Get test run state topic
 
 	log.Printf("Starting GRPC server on localhost:%v\n", configs.ServerPort)
 	if err := grpcServer.Serve(lis); err != nil {
