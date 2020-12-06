@@ -12,14 +12,15 @@ import (
 	"github.com/Condition17/fleet-services/resource-manager-service/config"
 	"github.com/Condition17/fleet-services/resource-manager-service/model"
 	proto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service"
+	runStateEvents "github.com/Condition17/fleet-services/run-controller-service/events"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	microErrors "github.com/micro/go-micro/v2/errors"
 	"google.golang.org/api/file/v1"
 	"gorm.io/gorm"
 )
 
-const MIN_FILESTORE_CAPACITY_GB int64 = 1024
-const MAX_FILESTORE_CAPACITY_GB int64 = 63900
+const MinFilestoreCapacityGb int64 = 1024
+const MaxFilestoreCapacityGb int64 = 63900
 
 func (h *Handler) GetFileSystem(ctx context.Context, req *proto.FileSystemSpec, res *proto.FileSystemDetails) error {
 	result, err := h.FileSystemRepository.GetByTestRunId(req.TestRunId)
@@ -36,14 +37,14 @@ func (h *Handler) GetFileSystem(ctx context.Context, req *proto.FileSystemSpec, 
 
 func (h *Handler) ProvisionFileSystem(ctx context.Context, req *proto.FileSystemSpec, res *proto.EmptyResponse) error {
 	var requestedSizeGb int64 = int64(math.Round(float64(req.SizeInBytes)/float64(math.Pow10(9)) + 0.5))
-	var neededFsCapacityGb = int64(math.Max(float64(MIN_FILESTORE_CAPACITY_GB), float64(requestedSizeGb)))
+	var neededFsCapacityGb = int64(math.Max(float64(MinFilestoreCapacityGb), float64(requestedSizeGb)))
 
-	if neededFsCapacityGb > MAX_FILESTORE_CAPACITY_GB {
+	if neededFsCapacityGb > MaxFilestoreCapacityGb {
 		return errors.New(fmt.Sprintf(
 			"Requested capacity in Gb: %v for testrun (id: %v). Could not create file system bigger than %vGb\n",
 			neededFsCapacityGb,
 			req.TestRunId,
-			MAX_FILESTORE_CAPACITY_GB,
+			MaxFilestoreCapacityGb,
 		))
 	}
 
@@ -93,8 +94,8 @@ func (h *Handler) executePostFSCreateOperationSteps(testRunId uint32, op *file.O
 	}
 
 	// send data to run controller service
-	fsCreatedEventData, _ := json.Marshal(&runControllerProto.FileSystemCreateEventData{TestRunId: testRunId})
-	h.SendRunStateEvent(context.Background(), "filesystem.created", fsCreatedEventData)
+	fsCreatedEventData, _ := json.Marshal(&runControllerProto.FileSystemProvisionedEventData{TestRunId: testRunId})
+	h.SendRunStateEvent(context.Background(), runStateEvents.FileSystemProvisioned, fsCreatedEventData)
 }
 
 func (h *Handler) waitForFSOperationToFinish(op *file.Operation) (*file.Operation, error) {

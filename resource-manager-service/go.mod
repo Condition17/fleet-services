@@ -10,21 +10,17 @@ replace (
 )
 
 require (
-	cloud.google.com/go v0.72.0 // indirect
-	cloud.google.com/go/pubsub v1.8.3 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20201129203036-3e4b08765fd8
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201129203036-3e4b08765fd8
-	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201129203036-3e4b08765fd8
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201129203036-3e4b08765fd8
+	github.com/Condition17/fleet-services/lib v0.0.0-20201206221626-e5b9674ec1ac
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201206221626-e5b9674ec1ac
+	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201206221626-e5b9674ec1ac
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201206221626-e5b9674ec1ac
 	github.com/golang/protobuf v1.4.3
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
 	github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b // indirect
-	golang.org/x/oauth2 v0.0.0-20201109201403-9fd604954f58 // indirect
-	google.golang.org/api v0.35.0
+	google.golang.org/api v0.36.0
 	google.golang.org/protobuf v1.25.0
 	gorm.io/driver/postgres v1.0.5
-	gorm.io/gorm v1.20.7
+	gorm.io/gorm v1.20.8
 )

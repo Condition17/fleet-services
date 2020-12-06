@@ -13,15 +13,16 @@ import (
 	"github.com/Condition17/fleet-services/resource-manager-service/config"
 	"github.com/Condition17/fleet-services/resource-manager-service/model"
 	proto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service"
+	runStateEvents "github.com/Condition17/fleet-services/run-controller-service/events"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 )
 
 var (
-	CONFIGS            config.Config = config.GetConfig()
-	STARTUP_SCRIPT_URL string        = "https://storage.googleapis.com/fleet-metadata/setup.sh"
-	MACHINE_TYPE       string        = fmt.Sprintf("zones/%s/machineTypes/e2-small", CONFIGS.ResourcesDeployLocations)
-	DISK_SIZE_GB       int64         = 10
-	DISK_SOURCE_IMAGE  string        = "projects/debian-cloud/global/images/debian-10-buster-v20201112"
+	CONFIGS          config.Config = config.GetConfig()
+	StartupScriptUrl string        = "https://storage.googleapis.com/fleet-metadata/setup.sh"
+	MachineType      string        = fmt.Sprintf("zones/%s/machineTypes/e2-small", CONFIGS.ResourcesDeployLocations)
+	DiskSizeGb       int64         = 10
+	DiskSourceImage  string        = "projects/debian-cloud/global/images/debian-10-buster-v20201112"
 )
 
 func (h *Handler) ProvisionExecutorInstance(ctx context.Context, req *proto.ExecutorInstanceSpec, res *proto.EmptyResponse) error {
@@ -62,8 +63,8 @@ func (h *Handler) executePostInstanceInsertOperationSteps(testRunId uint32, op *
 	}
 
 	// send data to run controller service
-	execInstanceCreatedEventData, _ := json.Marshal(&runControllerProto.ExecutorInstanceCreateEventData{TestRunId: testRunId})
-	h.SendRunStateEvent(context.Background(), "executorinstance.created", execInstanceCreatedEventData)
+	execInstanceCreatedEventData, _ := json.Marshal(&runControllerProto.ExecutorInstanceProvisionedEventData{TestRunId: testRunId})
+	h.SendRunStateEvent(context.Background(), runStateEvents.ExecutorInstanceProvisioned, execInstanceCreatedEventData)
 }
 
 func (h *Handler) waitForComputeOperationToFinish(op *compute.Operation) (*compute.Operation, error) {
@@ -106,19 +107,19 @@ func (h *Handler) buildComputeInstanceConfig(name string) *compute.Instance {
 			Items: []*compute.MetadataItems{
 				&compute.MetadataItems{
 					Key:   "startup-script-url",
-					Value: &STARTUP_SCRIPT_URL,
+					Value: &StartupScriptUrl,
 				},
 			},
 		},
-		MachineType: MACHINE_TYPE,
+		MachineType: MachineType,
 		Disks: []*compute.AttachedDisk{
 			&compute.AttachedDisk{
 				AutoDelete: true,
 				Boot:       true,
 				Mode:       "READ_WRITE",
 				InitializeParams: &compute.AttachedDiskInitializeParams{
-					DiskSizeGb:  DISK_SIZE_GB,
-					SourceImage: DISK_SOURCE_IMAGE,
+					DiskSizeGb:  DiskSizeGb,
+					SourceImage: DiskSourceImage,
 				},
 			},
 		},
