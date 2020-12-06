@@ -2,10 +2,11 @@ package events
 
 const (
 	TestRunInitiated                         = "test-run.initiated"
+	FileChunksUploaded                       = "file.chunksUploaded"
+	WssTestRunStateChanged                   = "wss.test_run_state_changed"
 	TEST_RUN_CREATED                         = "test-run.created"
 	TEST_RUN_FINISHED                        = "test-run.finished"
 	FILE_CREATED                             = "file.created"
-	FILE_UPLOADED                            = "file.uploaded"
 	FILE_SYSTEM_CREATED                      = "filesystem.created"
 	EXECUTOR_INSTANCE_CREATED                = "executorinstance.created"
 	FILE_ASSEMBLY_SUCCEEDED                  = "file.assemblySucceeded"
