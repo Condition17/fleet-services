@@ -10,9 +10,9 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/lib v0.0.0-20201206215626-f08cb717fda8
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201206215626-f08cb717fda8
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201206215626-f08cb717fda8 // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201206220350-25d202d13b9a
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201206220350-25d202d13b9a
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201206220350-25d202d13b9a // indirect
 	github.com/Microsoft/go-winio v0.4.15 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
@@ -27,7 +27,6 @@ require (
 	github.com/google/martian/v3 v3.1.0 // indirect
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
-	github.com/jackc/pgx/v4 v4.9.2 // indirect
 	github.com/kevinburke/ssh_config v0.0.0-20201106050909-4977a11b4351 // indirect
 	github.com/lib/pq v1.8.0 // indirect
 	github.com/micro/go-micro v1.18.0
