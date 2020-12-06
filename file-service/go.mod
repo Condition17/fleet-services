@@ -10,13 +10,12 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/lib v0.0.0-20201129201834-e43d98b1b46f
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201129201834-e43d98b1b46f
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201129201834-e43d98b1b46f // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201206215626-f08cb717fda8
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201206215626-f08cb717fda8
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201206215626-f08cb717fda8 // indirect
 	github.com/Microsoft/go-winio v0.4.15 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
-	github.com/envoyproxy/go-control-plane v0.9.4 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-delve/delve v1.5.0 // indirect
 	github.com/go-git/go-git/v5 v5.2.0 // indirect
@@ -26,7 +25,6 @@ require (
 	github.com/golang/protobuf v1.4.3
 	github.com/gomodule/redigo v1.8.3
 	github.com/google/martian/v3 v3.1.0 // indirect
-	github.com/google/pprof v0.0.0-20201023163331-3e6fc7fc9c4c // indirect
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/jackc/pgx/v4 v4.9.2 // indirect
@@ -38,7 +36,6 @@ require (
 	github.com/micro/go-plugins/registry/kubernetes/v2 v2.9.1
 	github.com/miekg/dns v1.1.35 // indirect
 	github.com/mitchellh/hashstructure v1.1.0 // indirect
-	github.com/nats-io/jwt v1.2.0 // indirect
 	github.com/nats-io/nats.go v1.10.0 // indirect
 	github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
@@ -49,12 +46,12 @@ require (
 	go.uber.org/zap v1.16.0 // indirect
 	golang.org/x/exp v0.0.0-20201008143054-e3b2a7f2fdc7 // indirect
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
-	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b // indirect
+	golang.org/x/sys v0.0.0-20201204225414-ed752295db88 // indirect
 	golang.org/x/text v0.3.4 // indirect
 	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e // indirect
+	golang.org/x/tools v0.0.0-20201204222352-654352759326 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20201119123407-9b1e624d6bc4 // indirect
-	google.golang.org/grpc v1.33.2
+	google.golang.org/grpc v1.34.0
 	google.golang.org/protobuf v1.25.0
 	gorm.io/driver/postgres v1.0.5 // indirect
 	honnef.co/go/tools v0.0.1-2020.1.6 // indirect

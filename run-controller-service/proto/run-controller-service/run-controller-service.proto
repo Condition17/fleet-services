@@ -32,8 +32,14 @@ message TestRunInitiatedEventData {
 	FileSpec	fileSpec = 2;
 }
 
-message FileUploadedEventData {
+message FileChunksUploadedEventData {
 	FileSpec fileSpec = 2;
+}
+
+message TestRunStateChangedEvent {
+	uint32 testRunId = 1;
+	string state = 2;
+	string stateMetadata = 3;
 }
 
 // Events sent to WSS

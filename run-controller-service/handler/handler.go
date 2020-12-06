@@ -6,7 +6,7 @@ import (
 	fileBuilderProto "github.com/Condition17/fleet-services/file-builder/proto/file-builder"
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/Condition17/fleet-services/lib"
-	baseservice "github.com/Condition17/fleet-services/lib/base-service"
+	baseService "github.com/Condition17/fleet-services/lib/base-service"
 	resourceManagerProto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service"
 	riverRunnerProto "github.com/Condition17/fleet-services/river-runner/proto/river-runner"
 	"github.com/Condition17/fleet-services/run-controller-service/config"
@@ -14,6 +14,7 @@ import (
 	"github.com/Condition17/fleet-services/run-controller-service/events"
 	proto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	testRunServiceProto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"
+	testRunStates "github.com/Condition17/fleet-services/test-run-service/run-states"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/broker"
 	"github.com/micro/go-micro/v2/client"
@@ -23,7 +24,7 @@ import (
 )
 
 type EventHandler struct {
-	baseservice.BaseHandler
+	baseService.BaseHandler
 	FileService            fileServiceProto.FileService
 	TestRunService         testRunServiceProto.TestRunService
 	ResourceManagerService resourceManagerProto.ResourceManagerService
@@ -37,17 +38,17 @@ func NewHandler(service micro.Service) func(broker.Event) error {
 	var riverRunnerServiceClient riverRunnerProto.RiverRunnerClient
 
 	if fileBuilderServiceClient, err = getFileBuilderServiceClient(); err != nil {
-		log.Fatalln("Error encountered while setting up connection with file builder service:", err)
-		return nil
+		//log.Fatalln("Error encountered while setting up connection with file builder service:", err)
+		//return nil
 	}
 
 	if riverRunnerServiceClient, err = getRiverRunnerServiceClient(); err != nil {
-		log.Fatalln("Error encountered while setting up connection to river runner service:", err)
-		return nil
+		//log.Fatalln("Error encountered while setting up connection to river runner service:", err)
+		//return nil
 	}
 
 	var handler EventHandler = EventHandler{
-		BaseHandler:            baseservice.NewBaseHandler(service),
+		BaseHandler:            baseService.NewBaseHandler(service),
 		FileService:            fileServiceProto.NewFileService(lib.GetFullExternalServiceName("fileService"), client.DefaultClient),
 		TestRunService:         testRunServiceProto.NewTestRunService(lib.GetFullExternalServiceName("testRunService"), client.DefaultClient),
 		ResourceManagerService: resourceManagerProto.NewResourceManagerService(lib.GetFullExternalServiceName("resourceManagerService"), client.DefaultClient),
@@ -94,10 +95,10 @@ func (h EventHandler) HandleEvent(event *proto.Event) {
 	switch event.Type {
 	case events.TestRunInitiated:
 		h.handleTestRunInitiated(ctx, event)
-	case events.FILE_UPLOADED:
-		h.handleFileUploaded(ctx, event)
-	case events.FILE_SYSTEM_CREATED:
-		h.handleFileSystemCreated(ctx, event)
+	case events.FileChunksUploaded:
+		h.handleFileChunksUploaded(ctx, event)
+	case events.FileSystemProvisioned:
+		h.handleFileSystemProvisioned(ctx, event)
 	case events.EXECUTOR_INSTANCE_CREATED:
 		h.handleExecutorInstanceCreated(ctx, event)
 	case events.FILE_ASSEMBLY_SUCCEEDED:
@@ -115,7 +116,7 @@ func (h EventHandler) sendErrorToWssQueue(ctx context.Context, err error) {
 
 func (h EventHandler) handleTestRunInitiated(ctx context.Context, event *proto.Event) {
 	// unmarshal event specific data
-	var eventData *proto.TestRunCreatedEventData
+	var eventData *proto.TestRunInitiatedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
 		log.Println(errors.EventUnmarshalError(event.Data, event))
 		return
@@ -143,22 +144,40 @@ func (h EventHandler) handleTestRunInitiated(ctx context.Context, event *proto.E
 		return
 	}
 
-	// send information to the client through WS service
-	wssEventData, _ := json.Marshal(&proto.FileEntityCreatedEventData{
-		TestRunId: assignmentDetails.TestRunId,
-		FileSpec: &proto.FileSpec{
-			Id:           assignmentDetails.FileId,
-			Name:         fileSpec.Name,
-			Size:         fileSpec.Size,
-			MaxChunkSize: fileSpec.MaxChunkSize,
-		},
+	stateChangeMetadata, _ := json.Marshal(&proto.FileSpec{
+		Id:           assignmentDetails.FileId,
+		Name:         fileSpec.Name,
+		Size:         fileSpec.Size,
+		MaxChunkSize: fileSpec.MaxChunkSize,
 	})
-	h.SendEventToWssQueue(ctx, events.WSS_FILE_ENTITY_CREATED, wssEventData)
+	h.changeTestRunState(ctx, assignmentDetails.TestRunId, testRunStates.TestRunState.FileUpload, stateChangeMetadata)
 }
 
-func (h EventHandler) handleFileUploaded(ctx context.Context, event *proto.Event) {
+func (h EventHandler) changeTestRunState(ctx context.Context, testRunId uint32, newState testRunStates.TestRunStateType, stateMetadata []byte) {
+	var newStateSpec testRunServiceProto.TestRunStateSpec = testRunServiceProto.TestRunStateSpec{
+		TestRunId: testRunId,
+		State: string(newState),
+		StateMetadata: string(stateMetadata),
+	}
+	if _, err := h.TestRunService.ChangeState(ctx, &newStateSpec); err != nil {
+		if newState != testRunStates.TestRunState.Error {
+			// Modify test run state if encountered an error while interacting with test run service
+			// Do this only if the initial (un-transmitted) state as not an error state
+			h.changeTestRunState(ctx, testRunId, testRunStates.TestRunState.Error, []byte(err.Error()))
+		} else {
+			log.Printf("Could not set error state for test run (id:%v)\n", testRunId)
+		}
+		return
+	}
+
+	// Send state change data to WSS
+	newStateSpecBytes, _ := json.Marshal(&newStateSpec)
+	h.SendEventToWssQueue(ctx, events.WssTestRunStateChanged, newStateSpecBytes)
+}
+
+func (h EventHandler) handleFileChunksUploaded(ctx context.Context, event *proto.Event) {
 	// unmarshal event specific data
-	var eventData *proto.FileUploadedEventData
+	var eventData *proto.FileChunksUploadedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
 		log.Println(errors.EventUnmarshalError(event.Data, event))
 		return
@@ -175,12 +194,8 @@ func (h EventHandler) handleFileUploaded(ctx context.Context, event *proto.Event
 		return
 	}
 
-	// send data to the client using WSS
-	wssUploadCompletedEventData, _ := json.Marshal(&proto.FileUploadCompletedEventData{
-		TestRunId: testRunDetailsResp.TestRun.Id,
-		FileId:    fileSpec.Id,
-	})
-	h.SendEventToWssQueue(ctx, events.WSS_FILE_UPLOAD_COMPLETED, wssUploadCompletedEventData)
+	// update test run state
+	h.changeTestRunState(ctx, testRunDetailsResp.TestRun.Id, testRunStates.TestRunState.FileUploadDone, []byte{})
 
 	// request file system provisioning to resource manager service
 	var fileSystemSpec *resourceManagerProto.FileSystemSpec = &resourceManagerProto.FileSystemSpec{
@@ -189,16 +204,16 @@ func (h EventHandler) handleFileUploaded(ctx context.Context, event *proto.Event
 	}
 
 	if _, err := h.ResourceManagerService.ProvisionFileSystem(ctx, fileSystemSpec); err != nil {
-		h.sendErrorToWssQueue(ctx, errors.FileSystemCreationError(fileSystemSpec, err))
+		log.Println("Error calling ResourceManagerService.ProvisionFileSystem: ", err)
+		h.changeTestRunState(ctx, testRunDetailsResp.TestRun.Id, testRunStates.TestRunState.Error, []byte(errors.FileSystemCreationError(fileSystemSpec, err).Error()))
 		return
 	}
 
-	// send file system creation start event to WSS
-	wssEventData, _ := json.Marshal(&proto.FileSystemCreateEventData{TestRunId: testRunDetailsResp.TestRun.Id})
-	h.SendEventToWssQueue(ctx, events.WSS_FILE_SYSTEM_CREATION_START, wssEventData)
+	// update test run state to reflect that file system provisioning was started
+	h.changeTestRunState(ctx, testRunDetailsResp.TestRun.Id, testRunStates.TestRunState.ProvisionFs, []byte{})
 }
 
-func (h EventHandler) handleFileSystemCreated(ctx context.Context, event *proto.Event) {
+func (h EventHandler) handleFileSystemProvisioned(ctx context.Context, event *proto.Event) {
 	// unmarshal event specific data
 	var eventData *proto.FileSystemCreateEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {

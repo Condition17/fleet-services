@@ -324,7 +324,7 @@ func (x *TestRunInitiatedEventData) GetFileSpec() *FileSpec {
 	return nil
 }
 
-type FileUploadedEventData struct {
+type FileChunksUploadedEventData struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -332,8 +332,8 @@ type FileUploadedEventData struct {
 	FileSpec *FileSpec `protobuf:"bytes,2,opt,name=fileSpec,proto3" json:"fileSpec,omitempty"`
 }
 
-func (x *FileUploadedEventData) Reset() {
-	*x = FileUploadedEventData{}
+func (x *FileChunksUploadedEventData) Reset() {
+	*x = FileChunksUploadedEventData{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -341,13 +341,13 @@ func (x *FileUploadedEventData) Reset() {
 	}
 }
 
-func (x *FileUploadedEventData) String() string {
+func (x *FileChunksUploadedEventData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FileUploadedEventData) ProtoMessage() {}
+func (*FileChunksUploadedEventData) ProtoMessage() {}
 
-func (x *FileUploadedEventData) ProtoReflect() protoreflect.Message {
+func (x *FileChunksUploadedEventData) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -359,16 +359,79 @@ func (x *FileUploadedEventData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FileUploadedEventData.ProtoReflect.Descriptor instead.
-func (*FileUploadedEventData) Descriptor() ([]byte, []int) {
+// Deprecated: Use FileChunksUploadedEventData.ProtoReflect.Descriptor instead.
+func (*FileChunksUploadedEventData) Descriptor() ([]byte, []int) {
 	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *FileUploadedEventData) GetFileSpec() *FileSpec {
+func (x *FileChunksUploadedEventData) GetFileSpec() *FileSpec {
 	if x != nil {
 		return x.FileSpec
 	}
 	return nil
+}
+
+type TestRunStateChangedEvent struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	TestRunId     uint32 `protobuf:"varint,1,opt,name=testRunId,proto3" json:"testRunId,omitempty"`
+	State         string `protobuf:"bytes,2,opt,name=state,proto3" json:"state,omitempty"`
+	StateMetadata string `protobuf:"bytes,3,opt,name=stateMetadata,proto3" json:"stateMetadata,omitempty"`
+}
+
+func (x *TestRunStateChangedEvent) Reset() {
+	*x = TestRunStateChangedEvent{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *TestRunStateChangedEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TestRunStateChangedEvent) ProtoMessage() {}
+
+func (x *TestRunStateChangedEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TestRunStateChangedEvent.ProtoReflect.Descriptor instead.
+func (*TestRunStateChangedEvent) Descriptor() ([]byte, []int) {
+	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *TestRunStateChangedEvent) GetTestRunId() uint32 {
+	if x != nil {
+		return x.TestRunId
+	}
+	return 0
+}
+
+func (x *TestRunStateChangedEvent) GetState() string {
+	if x != nil {
+		return x.State
+	}
+	return ""
+}
+
+func (x *TestRunStateChangedEvent) GetStateMetadata() string {
+	if x != nil {
+		return x.StateMetadata
+	}
+	return ""
 }
 
 type WssEvent struct {
@@ -384,7 +447,7 @@ type WssEvent struct {
 func (x *WssEvent) Reset() {
 	*x = WssEvent{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[6]
+		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -397,7 +460,7 @@ func (x *WssEvent) String() string {
 func (*WssEvent) ProtoMessage() {}
 
 func (x *WssEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[6]
+	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -410,7 +473,7 @@ func (x *WssEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WssEvent.ProtoReflect.Descriptor instead.
 func (*WssEvent) Descriptor() ([]byte, []int) {
-	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{6}
+	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *WssEvent) GetType() string {
@@ -447,7 +510,7 @@ type WssErrorEventData struct {
 func (x *WssErrorEventData) Reset() {
 	*x = WssErrorEventData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[7]
+		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -460,7 +523,7 @@ func (x *WssErrorEventData) String() string {
 func (*WssErrorEventData) ProtoMessage() {}
 
 func (x *WssErrorEventData) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[7]
+	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -473,7 +536,7 @@ func (x *WssErrorEventData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WssErrorEventData.ProtoReflect.Descriptor instead.
 func (*WssErrorEventData) Descriptor() ([]byte, []int) {
-	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{7}
+	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *WssErrorEventData) GetType() string {
@@ -509,7 +572,7 @@ type FileEntityCreatedEventData struct {
 func (x *FileEntityCreatedEventData) Reset() {
 	*x = FileEntityCreatedEventData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[8]
+		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -522,7 +585,7 @@ func (x *FileEntityCreatedEventData) String() string {
 func (*FileEntityCreatedEventData) ProtoMessage() {}
 
 func (x *FileEntityCreatedEventData) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[8]
+	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -535,7 +598,7 @@ func (x *FileEntityCreatedEventData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FileEntityCreatedEventData.ProtoReflect.Descriptor instead.
 func (*FileEntityCreatedEventData) Descriptor() ([]byte, []int) {
-	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{8}
+	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *FileEntityCreatedEventData) GetTestRunId() uint32 {
@@ -564,7 +627,7 @@ type FileUploadCompletedEventData struct {
 func (x *FileUploadCompletedEventData) Reset() {
 	*x = FileUploadCompletedEventData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[9]
+		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -577,7 +640,7 @@ func (x *FileUploadCompletedEventData) String() string {
 func (*FileUploadCompletedEventData) ProtoMessage() {}
 
 func (x *FileUploadCompletedEventData) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[9]
+	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -590,7 +653,7 @@ func (x *FileUploadCompletedEventData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FileUploadCompletedEventData.ProtoReflect.Descriptor instead.
 func (*FileUploadCompletedEventData) Descriptor() ([]byte, []int) {
-	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{9}
+	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *FileUploadCompletedEventData) GetTestRunId() uint32 {
@@ -618,7 +681,7 @@ type FileSystemCreateEventData struct {
 func (x *FileSystemCreateEventData) Reset() {
 	*x = FileSystemCreateEventData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[10]
+		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -631,7 +694,7 @@ func (x *FileSystemCreateEventData) String() string {
 func (*FileSystemCreateEventData) ProtoMessage() {}
 
 func (x *FileSystemCreateEventData) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[10]
+	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -644,7 +707,7 @@ func (x *FileSystemCreateEventData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FileSystemCreateEventData.ProtoReflect.Descriptor instead.
 func (*FileSystemCreateEventData) Descriptor() ([]byte, []int) {
-	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{10}
+	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *FileSystemCreateEventData) GetTestRunId() uint32 {
@@ -665,7 +728,7 @@ type ExecutorInstanceCreateEventData struct {
 func (x *ExecutorInstanceCreateEventData) Reset() {
 	*x = ExecutorInstanceCreateEventData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[11]
+		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -678,7 +741,7 @@ func (x *ExecutorInstanceCreateEventData) String() string {
 func (*ExecutorInstanceCreateEventData) ProtoMessage() {}
 
 func (x *ExecutorInstanceCreateEventData) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[11]
+	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -691,7 +754,7 @@ func (x *ExecutorInstanceCreateEventData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExecutorInstanceCreateEventData.ProtoReflect.Descriptor instead.
 func (*ExecutorInstanceCreateEventData) Descriptor() ([]byte, []int) {
-	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{11}
+	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ExecutorInstanceCreateEventData) GetTestRunId() uint32 {
@@ -712,7 +775,7 @@ type FileAssemblySucceededEventData struct {
 func (x *FileAssemblySucceededEventData) Reset() {
 	*x = FileAssemblySucceededEventData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[12]
+		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -725,7 +788,7 @@ func (x *FileAssemblySucceededEventData) String() string {
 func (*FileAssemblySucceededEventData) ProtoMessage() {}
 
 func (x *FileAssemblySucceededEventData) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[12]
+	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -738,7 +801,7 @@ func (x *FileAssemblySucceededEventData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FileAssemblySucceededEventData.ProtoReflect.Descriptor instead.
 func (*FileAssemblySucceededEventData) Descriptor() ([]byte, []int) {
-	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{12}
+	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *FileAssemblySucceededEventData) GetTestRunId() uint32 {
@@ -759,7 +822,7 @@ type RiverRunFinishedEventData struct {
 func (x *RiverRunFinishedEventData) Reset() {
 	*x = RiverRunFinishedEventData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[13]
+		mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -772,7 +835,7 @@ func (x *RiverRunFinishedEventData) String() string {
 func (*RiverRunFinishedEventData) ProtoMessage() {}
 
 func (x *RiverRunFinishedEventData) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[13]
+	mi := &file_proto_run_controller_service_run_controller_service_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -785,7 +848,7 @@ func (x *RiverRunFinishedEventData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RiverRunFinishedEventData.ProtoReflect.Descriptor instead.
 func (*RiverRunFinishedEventData) Descriptor() ([]byte, []int) {
-	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{13}
+	return file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *RiverRunFinishedEventData) GetTestRunId() uint32 {
@@ -837,55 +900,63 @@ var file_proto_run_controller_service_run_controller_service_proto_rawDesc = []b
 	0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x72, 0x75, 0x6e,
 	0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x6c, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
 	0x65, 0x2e, 0x46, 0x69, 0x6c, 0x65, 0x53, 0x70, 0x65, 0x63, 0x52, 0x08, 0x66, 0x69, 0x6c, 0x65,
-	0x53, 0x70, 0x65, 0x63, 0x22, 0x60, 0x0a, 0x15, 0x46, 0x69, 0x6c, 0x65, 0x55, 0x70, 0x6c, 0x6f,
-	0x61, 0x64, 0x65, 0x64, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12, 0x47, 0x0a,
-	0x08, 0x66, 0x69, 0x6c, 0x65, 0x53, 0x70, 0x65, 0x63, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x2b, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x72,
-	0x75, 0x6e, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x6c, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76,
-	0x69, 0x63, 0x65, 0x2e, 0x46, 0x69, 0x6c, 0x65, 0x53, 0x70, 0x65, 0x63, 0x52, 0x08, 0x66, 0x69,
-	0x6c, 0x65, 0x53, 0x70, 0x65, 0x63, 0x22, 0x4a, 0x0a, 0x08, 0x57, 0x73, 0x73, 0x45, 0x76, 0x65,
-	0x6e, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x06, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x12, 0x12,
-	0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x64, 0x61,
-	0x74, 0x61, 0x22, 0x69, 0x0a, 0x11, 0x57, 0x73, 0x73, 0x45, 0x72, 0x72, 0x6f, 0x72, 0x45, 0x76,
-	0x65, 0x6e, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x26, 0x0a, 0x0e, 0x64,
-	0x69, 0x73, 0x70, 0x6c, 0x61, 0x79, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x0e, 0x64, 0x69, 0x73, 0x70, 0x6c, 0x61, 0x79, 0x4d, 0x65, 0x73, 0x73,
-	0x61, 0x67, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x22, 0x83, 0x01,
-	0x0a, 0x1a, 0x46, 0x69, 0x6c, 0x65, 0x45, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x43, 0x72, 0x65, 0x61,
-	0x74, 0x65, 0x64, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12, 0x1c, 0x0a, 0x09,
-	0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52,
-	0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x12, 0x47, 0x0a, 0x08, 0x66, 0x69,
-	0x6c, 0x65, 0x53, 0x70, 0x65, 0x63, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2b, 0x2e, 0x67,
-	0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x72, 0x75, 0x6e, 0x43,
-	0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x6c, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
-	0x2e, 0x46, 0x69, 0x6c, 0x65, 0x53, 0x70, 0x65, 0x63, 0x52, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x53,
-	0x70, 0x65, 0x63, 0x22, 0x54, 0x0a, 0x1c, 0x46, 0x69, 0x6c, 0x65, 0x55, 0x70, 0x6c, 0x6f, 0x61,
-	0x64, 0x43, 0x6f, 0x6d, 0x70, 0x6c, 0x65, 0x74, 0x65, 0x64, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44,
-	0x61, 0x74, 0x61, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49,
-	0x64, 0x12, 0x16, 0x0a, 0x06, 0x66, 0x69, 0x6c, 0x65, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x06, 0x66, 0x69, 0x6c, 0x65, 0x49, 0x64, 0x22, 0x39, 0x0a, 0x19, 0x46, 0x69, 0x6c,
-	0x65, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x45, 0x76, 0x65,
-	0x6e, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75,
-	0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52,
-	0x75, 0x6e, 0x49, 0x64, 0x22, 0x3f, 0x0a, 0x1f, 0x45, 0x78, 0x65, 0x63, 0x75, 0x74, 0x6f, 0x72,
-	0x49, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x45, 0x76,
-	0x65, 0x6e, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52,
-	0x75, 0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x74, 0x65, 0x73, 0x74,
-	0x52, 0x75, 0x6e, 0x49, 0x64, 0x22, 0x3e, 0x0a, 0x1e, 0x46, 0x69, 0x6c, 0x65, 0x41, 0x73, 0x73,
-	0x65, 0x6d, 0x62, 0x6c, 0x79, 0x53, 0x75, 0x63, 0x63, 0x65, 0x65, 0x64, 0x65, 0x64, 0x45, 0x76,
-	0x65, 0x6e, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52,
-	0x75, 0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x74, 0x65, 0x73, 0x74,
-	0x52, 0x75, 0x6e, 0x49, 0x64, 0x22, 0x39, 0x0a, 0x19, 0x52, 0x69, 0x76, 0x65, 0x72, 0x52, 0x75,
-	0x6e, 0x46, 0x69, 0x6e, 0x69, 0x73, 0x68, 0x65, 0x64, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44, 0x61,
+	0x53, 0x70, 0x65, 0x63, 0x22, 0x66, 0x0a, 0x1b, 0x46, 0x69, 0x6c, 0x65, 0x43, 0x68, 0x75, 0x6e,
+	0x6b, 0x73, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x65, 0x64, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44,
+	0x61, 0x74, 0x61, 0x12, 0x47, 0x0a, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x53, 0x70, 0x65, 0x63, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2b, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x6f,
+	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x72, 0x75, 0x6e, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x6c,
+	0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x46, 0x69, 0x6c, 0x65, 0x53, 0x70,
+	0x65, 0x63, 0x52, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x53, 0x70, 0x65, 0x63, 0x22, 0x74, 0x0a, 0x18,
+	0x54, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x65, 0x43, 0x68, 0x61, 0x6e,
+	0x67, 0x65, 0x64, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74,
+	0x52, 0x75, 0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x74, 0x65, 0x73,
+	0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x74, 0x61, 0x74, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x73, 0x74, 0x61, 0x74, 0x65, 0x12, 0x24, 0x0a, 0x0d,
+	0x73, 0x74, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x0d, 0x73, 0x74, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61,
+	0x74, 0x61, 0x22, 0x4a, 0x0a, 0x08, 0x57, 0x73, 0x73, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x12, 0x12,
+	0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79,
+	0x70, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x0c, 0x52, 0x06, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61,
+	0x74, 0x61, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x69,
+	0x0a, 0x11, 0x57, 0x73, 0x73, 0x45, 0x72, 0x72, 0x6f, 0x72, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44,
+	0x61, 0x74, 0x61, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x26, 0x0a, 0x0e, 0x64, 0x69, 0x73, 0x70, 0x6c,
+	0x61, 0x79, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x0e, 0x64, 0x69, 0x73, 0x70, 0x6c, 0x61, 0x79, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12,
+	0x18, 0x0a, 0x07, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x07, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x22, 0x83, 0x01, 0x0a, 0x1a, 0x46, 0x69,
+	0x6c, 0x65, 0x45, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x45,
+	0x76, 0x65, 0x6e, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74,
+	0x52, 0x75, 0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x74, 0x65, 0x73,
+	0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x12, 0x47, 0x0a, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x53, 0x70,
+	0x65, 0x63, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2b, 0x2e, 0x67, 0x6f, 0x2e, 0x6d, 0x69,
+	0x63, 0x72, 0x6f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x72, 0x75, 0x6e, 0x43, 0x6f, 0x6e, 0x74, 0x72,
+	0x6f, 0x6c, 0x6c, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x46, 0x69, 0x6c,
+	0x65, 0x53, 0x70, 0x65, 0x63, 0x52, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x53, 0x70, 0x65, 0x63, 0x22,
+	0x54, 0x0a, 0x1c, 0x46, 0x69, 0x6c, 0x65, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x43, 0x6f, 0x6d,
+	0x70, 0x6c, 0x65, 0x74, 0x65, 0x64, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12,
+	0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0d, 0x52, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x12, 0x16, 0x0a,
+	0x06, 0x66, 0x69, 0x6c, 0x65, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x66,
+	0x69, 0x6c, 0x65, 0x49, 0x64, 0x22, 0x39, 0x0a, 0x19, 0x46, 0x69, 0x6c, 0x65, 0x53, 0x79, 0x73,
+	0x74, 0x65, 0x6d, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44, 0x61,
 	0x74, 0x61, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x18,
 	0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64,
-	0x32, 0x16, 0x0a, 0x14, 0x52, 0x75, 0x6e, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x6c, 0x65,
-	0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x22, 0x3f, 0x0a, 0x1f, 0x45, 0x78, 0x65, 0x63, 0x75, 0x74, 0x6f, 0x72, 0x49, 0x6e, 0x73, 0x74,
+	0x61, 0x6e, 0x63, 0x65, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44,
+	0x61, 0x74, 0x61, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49,
+	0x64, 0x22, 0x3e, 0x0a, 0x1e, 0x46, 0x69, 0x6c, 0x65, 0x41, 0x73, 0x73, 0x65, 0x6d, 0x62, 0x6c,
+	0x79, 0x53, 0x75, 0x63, 0x63, 0x65, 0x65, 0x64, 0x65, 0x64, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44,
+	0x61, 0x74, 0x61, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49,
+	0x64, 0x22, 0x39, 0x0a, 0x19, 0x52, 0x69, 0x76, 0x65, 0x72, 0x52, 0x75, 0x6e, 0x46, 0x69, 0x6e,
+	0x69, 0x73, 0x68, 0x65, 0x64, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12, 0x1c,
+	0x0a, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0d, 0x52, 0x09, 0x74, 0x65, 0x73, 0x74, 0x52, 0x75, 0x6e, 0x49, 0x64, 0x32, 0x16, 0x0a, 0x14,
+	0x52, 0x75, 0x6e, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x6c, 0x65, 0x72, 0x53, 0x65, 0x72,
+	0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -900,28 +971,29 @@ func file_proto_run_controller_service_run_controller_service_proto_rawDescGZIP(
 	return file_proto_run_controller_service_run_controller_service_proto_rawDescData
 }
 
-var file_proto_run_controller_service_run_controller_service_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_proto_run_controller_service_run_controller_service_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_proto_run_controller_service_run_controller_service_proto_goTypes = []interface{}{
 	(*EventMetadata)(nil),                   // 0: go.micro.api.runControllerService.EventMetadata
 	(*Event)(nil),                           // 1: go.micro.api.runControllerService.Event
 	(*TestRunSpec)(nil),                     // 2: go.micro.api.runControllerService.TestRunSpec
 	(*FileSpec)(nil),                        // 3: go.micro.api.runControllerService.FileSpec
 	(*TestRunInitiatedEventData)(nil),       // 4: go.micro.api.runControllerService.TestRunInitiatedEventData
-	(*FileUploadedEventData)(nil),           // 5: go.micro.api.runControllerService.FileUploadedEventData
-	(*WssEvent)(nil),                        // 6: go.micro.api.runControllerService.WssEvent
-	(*WssErrorEventData)(nil),               // 7: go.micro.api.runControllerService.WssErrorEventData
-	(*FileEntityCreatedEventData)(nil),      // 8: go.micro.api.runControllerService.FileEntityCreatedEventData
-	(*FileUploadCompletedEventData)(nil),    // 9: go.micro.api.runControllerService.FileUploadCompletedEventData
-	(*FileSystemCreateEventData)(nil),       // 10: go.micro.api.runControllerService.FileSystemCreateEventData
-	(*ExecutorInstanceCreateEventData)(nil), // 11: go.micro.api.runControllerService.ExecutorInstanceCreateEventData
-	(*FileAssemblySucceededEventData)(nil),  // 12: go.micro.api.runControllerService.FileAssemblySucceededEventData
-	(*RiverRunFinishedEventData)(nil),       // 13: go.micro.api.runControllerService.RiverRunFinishedEventData
+	(*FileChunksUploadedEventData)(nil),     // 5: go.micro.api.runControllerService.FileChunksUploadedEventData
+	(*TestRunStateChangedEvent)(nil),        // 6: go.micro.api.runControllerService.TestRunStateChangedEvent
+	(*WssEvent)(nil),                        // 7: go.micro.api.runControllerService.WssEvent
+	(*WssErrorEventData)(nil),               // 8: go.micro.api.runControllerService.WssErrorEventData
+	(*FileEntityCreatedEventData)(nil),      // 9: go.micro.api.runControllerService.FileEntityCreatedEventData
+	(*FileUploadCompletedEventData)(nil),    // 10: go.micro.api.runControllerService.FileUploadCompletedEventData
+	(*FileSystemCreateEventData)(nil),       // 11: go.micro.api.runControllerService.FileSystemCreateEventData
+	(*ExecutorInstanceCreateEventData)(nil), // 12: go.micro.api.runControllerService.ExecutorInstanceCreateEventData
+	(*FileAssemblySucceededEventData)(nil),  // 13: go.micro.api.runControllerService.FileAssemblySucceededEventData
+	(*RiverRunFinishedEventData)(nil),       // 14: go.micro.api.runControllerService.RiverRunFinishedEventData
 }
 var file_proto_run_controller_service_run_controller_service_proto_depIdxs = []int32{
 	0, // 0: go.micro.api.runControllerService.Event.meta:type_name -> go.micro.api.runControllerService.EventMetadata
 	2, // 1: go.micro.api.runControllerService.TestRunInitiatedEventData.testRunSpec:type_name -> go.micro.api.runControllerService.TestRunSpec
 	3, // 2: go.micro.api.runControllerService.TestRunInitiatedEventData.fileSpec:type_name -> go.micro.api.runControllerService.FileSpec
-	3, // 3: go.micro.api.runControllerService.FileUploadedEventData.fileSpec:type_name -> go.micro.api.runControllerService.FileSpec
+	3, // 3: go.micro.api.runControllerService.FileChunksUploadedEventData.fileSpec:type_name -> go.micro.api.runControllerService.FileSpec
 	3, // 4: go.micro.api.runControllerService.FileEntityCreatedEventData.fileSpec:type_name -> go.micro.api.runControllerService.FileSpec
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
@@ -997,7 +1069,7 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 			}
 		}
 		file_proto_run_controller_service_run_controller_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FileUploadedEventData); i {
+			switch v := v.(*FileChunksUploadedEventData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1009,7 +1081,7 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 			}
 		}
 		file_proto_run_controller_service_run_controller_service_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*WssEvent); i {
+			switch v := v.(*TestRunStateChangedEvent); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1021,7 +1093,7 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 			}
 		}
 		file_proto_run_controller_service_run_controller_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*WssErrorEventData); i {
+			switch v := v.(*WssEvent); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1033,7 +1105,7 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 			}
 		}
 		file_proto_run_controller_service_run_controller_service_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FileEntityCreatedEventData); i {
+			switch v := v.(*WssErrorEventData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1045,7 +1117,7 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 			}
 		}
 		file_proto_run_controller_service_run_controller_service_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FileUploadCompletedEventData); i {
+			switch v := v.(*FileEntityCreatedEventData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1057,7 +1129,7 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 			}
 		}
 		file_proto_run_controller_service_run_controller_service_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FileSystemCreateEventData); i {
+			switch v := v.(*FileUploadCompletedEventData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1069,7 +1141,7 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 			}
 		}
 		file_proto_run_controller_service_run_controller_service_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ExecutorInstanceCreateEventData); i {
+			switch v := v.(*FileSystemCreateEventData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1081,7 +1153,7 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 			}
 		}
 		file_proto_run_controller_service_run_controller_service_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FileAssemblySucceededEventData); i {
+			switch v := v.(*ExecutorInstanceCreateEventData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1093,6 +1165,18 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 			}
 		}
 		file_proto_run_controller_service_run_controller_service_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FileAssemblySucceededEventData); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_run_controller_service_run_controller_service_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*RiverRunFinishedEventData); i {
 			case 0:
 				return &v.state
@@ -1111,7 +1195,7 @@ func file_proto_run_controller_service_run_controller_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_proto_run_controller_service_run_controller_service_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

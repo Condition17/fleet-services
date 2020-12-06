@@ -8,6 +8,7 @@ import (
 
 	"github.com/Condition17/fleet-services/file-service/model"
 
+	runStateEvents "github.com/Condition17/fleet-services/run-controller-service/events"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"github.com/micro/go-micro/v2/errors"
 )
@@ -56,7 +57,7 @@ func (h Handler) HandleChunkStorageUploadSuccess(ctx context.Context, file *pb.F
 	// Notify run controller that the file was uploaded
 	if uint64(uploadedChunksCount) == file.TotalChunksCount {
 		uploadedFileData, _ := json.Marshal(
-			&runControllerProto.FileUploadedEventData{
+			&runControllerProto.FileChunksUploadedEventData{
 				FileSpec: &runControllerProto.FileSpec{
 					Id:           file.Id,
 					Name:         file.Name,
@@ -65,7 +66,7 @@ func (h Handler) HandleChunkStorageUploadSuccess(ctx context.Context, file *pb.F
 				},
 			},
 		)
-		h.SendRunStateEvent(ctx, "file.uploaded", uploadedFileData)
+		h.SendRunStateEvent(ctx, runStateEvents.FileChunksUploaded, uploadedFileData)
 	}
 
 	return nil
