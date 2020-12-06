@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/Condition17/fleet-services/test-run-service/model"
+	"github.com/Condition17/fleet-services/test-run-service/run-states"
 	"gorm.io/gorm"
 )
 
@@ -12,6 +13,7 @@ type TestRunRepository struct {
 }
 
 func (r *TestRunRepository) Create(testRun *model.TestRun) (*model.TestRun, error) {
+	testRun.State = runStates.TestRunState.Initiated
 	if err := r.DB.Create(testRun).Error; err != nil {
 		return nil, err
 	}

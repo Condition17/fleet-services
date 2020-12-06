@@ -2,16 +2,19 @@ package model
 
 import (
 	proto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"
+	"github.com/Condition17/fleet-services/test-run-service/run-states"
 	userModels "github.com/Condition17/fleet-services/user-service/model"
 	"gorm.io/gorm"
 )
 
 type TestRun struct {
 	gorm.Model
-	Name   string `gorm:"not null;type:varchar(100);default:null"`
-	FileID string `gorm:"type:varchar(100)"`
-	UserID uint32
-	User   userModels.User
+	Name          string `gorm:"not null;type:varchar(100);default:null"`
+	FileID        string `gorm:"type:varchar(100)"`
+	UserID        uint32
+	User          userModels.User
+	State         runStates.TestRunStateType
+	StateMetadata string `gorm:"type:text;default:''"`
 }
 
 func MarshalTestRun(testRun *proto.TestRun) *TestRun {
@@ -35,6 +38,8 @@ func UnmarshalTestRun(testRun *TestRun) *proto.TestRun {
 			Company: userData.Company,
 			Email:   userData.Email,
 		},
+		State: string(testRun.State),
+		StateMetadata: testRun.StateMetadata,
 	}
 }
 

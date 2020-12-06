@@ -2,15 +2,19 @@ package handler
 
 import (
 	"context"
+	b64 "encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/Condition17/fleet-services/lib/auth"
+	runStateEvents "github.com/Condition17/fleet-services/run-controller-service/events"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"github.com/Condition17/fleet-services/test-run-service/model"
 	proto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"
+	runStates "github.com/Condition17/fleet-services/test-run-service/run-states"
 	microErrors "github.com/micro/go-micro/v2/errors"
 	"gorm.io/gorm"
+	"reflect"
 )
 
 func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, res *proto.TestRunDetails) error {
@@ -23,9 +27,9 @@ func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, r
 	}
 	res.TestRun = model.UnmarshalTestRun(createdTestRun)
 
-	// send test run created event
+	// send test run initiated event
 	eventData, _ := json.Marshal(
-		&runControllerProto.TestRunCreatedEventData{
+		&runControllerProto.TestRunInitiatedEventData{
 			TestRunSpec: &runControllerProto.TestRunSpec{
 				Id:   uint32(createdTestRun.ID),
 				Name: createdTestRun.Name,
@@ -37,7 +41,7 @@ func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, r
 			},
 		},
 	)
-	h.SendRunStateEvent(ctx, "test-run.created", eventData)
+	h.SendRunStateEvent(ctx, runStateEvents.TestRunInitiated, eventData)
 
 	return nil
 }
@@ -130,4 +134,43 @@ func (h *Handler) AssignFile(ctx context.Context, req *proto.AssignRequest, res 
 	}
 
 	return nil
+}
+
+func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, res *proto.TestRun) error {
+	var isServiceCaller bool = ctx.Value("serviceCaller").(bool)
+
+	if !isServiceCaller {
+		return microErrors.Unauthorized(h.Service.Name(), "Caller not authorized for this operation")
+	}
+
+	testRun, err := h.TestRunRepository.GetTestRunById(req.TestRunId)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return microErrors.NotFound(h.Service.Name(), "Test run not found")
+		}
+		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+	}
+
+	if !isValidTestRunState(req.State) {
+		return microErrors.BadRequest(h.Service.Name(), fmt.Sprintf("State '%v' not recognized as a valid state", req.State))
+	}
+
+	testRun.State = runStates.TestRunStateType(req.State)
+	testRun.StateMetadata = b64.StdEncoding.EncodeToString([]byte(req.StateMetadata))
+	if err := h.TestRunRepository.Update(testRun); err != nil {
+		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+	}
+
+	return nil
+}
+
+func isValidTestRunState(state string) bool {
+	e := reflect.ValueOf(&runStates.TestRunState).Elem()
+	for i:=0; i < e.NumField(); i++ {
+		if e.Field(i).Interface() == runStates.TestRunStateType(state) {
+			return true
+		}
+	}
+
+	return false
 }

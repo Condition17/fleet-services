@@ -10,6 +10,7 @@ service TestRunService {
 	rpc List(EmptyRequest) returns (ListResponse) {}
 	rpc Delete(TestRun) returns (EmptyResponse) {}
 	rpc AssignFile(AssignRequest) returns (EmptyResponse) {}
+	rpc ChangeState(TestRunStateSpec) returns (TestRun) {}
 }
 
 message CreateTestRunRequest {
@@ -31,12 +32,15 @@ message User {
   string email = 4;
 }
 
+
 message TestRun {
 	uint32 id = 1;
 	string name = 2;
 	string fileId = 3;
 	uint32 userId = 4;
 	User user = 5;
+	string state = 6;
+	string stateMetadata = 7;
 }
 
 message TestRunDetails {
@@ -50,6 +54,12 @@ message ListResponse {
 message AssignRequest {
 	uint32 testRunId = 1;
 	string fileId = 2;
+}
+
+message TestRunStateSpec {
+	uint32 testRunId = 1;
+	string state = 2;
+	string stateMetadata = 3;
 }
 
 message EmptyRequest {};

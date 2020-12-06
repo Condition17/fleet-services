@@ -27,7 +27,7 @@ func main() {
 
 	// Automatically migrates the user struct
 	// into database columns/types etc.
-	db.AutoMigrate(&model.TestRun{})
+	_ = db.AutoMigrate(&model.TestRun{})
 
 	pubsub := googlepubsub.NewBroker(googlepubsub.ProjectID(configs.GoogleProjectID))
 	// New Service
