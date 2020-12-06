@@ -106,7 +106,7 @@ jobs:
     machine: true
     environment:
       GO111MODULE: "on"
-      BUCKET_NAME: fleet-deploy/binaries
+      BUCKET_NAME: fleet-deploy/file-builder
       DEPLOY_ARCHIVE_NAME: file-builder.tar.gz
     steps:
       - checkout
@@ -136,7 +136,7 @@ jobs:
     machine: true
     environment:
       GO111MODULE: "on"
-      BUCKET_NAME: fleet-deploy/binaries
+      BUCKET_NAME: fleet-deploy/river-runner
       DEPLOY_ARCHIVE_NAME: river-runner.tar.gz
     steps:
       - checkout
