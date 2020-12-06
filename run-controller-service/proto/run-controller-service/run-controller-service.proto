@@ -27,7 +27,7 @@ message FileSpec {
 	uint32 maxChunkSize = 4;
 }
 
-message TestRunCreatedEventData {
+message TestRunInitiatedEventData {
 	TestRunSpec testRunSpec = 1;
 	FileSpec	fileSpec = 2;
 }

@@ -92,8 +92,8 @@ func (h EventHandler) HandleEvent(event *proto.Event) {
 	ctx := metadata.Set(context.Background(), "Authorization", string(event.Meta.Authorization))
 
 	switch event.Type {
-	case events.TEST_RUN_CREATED:
-		h.handleTestRunCreated(ctx, event)
+	case events.TestRunInitiated:
+		h.handleTestRunInitiated(ctx, event)
 	case events.FILE_UPLOADED:
 		h.handleFileUploaded(ctx, event)
 	case events.FILE_SYSTEM_CREATED:
@@ -113,7 +113,7 @@ func (h EventHandler) sendErrorToWssQueue(ctx context.Context, err error) {
 	h.SendEventToWssQueue(ctx, events.WSS_ERROR, []byte(err.Error()))
 }
 
-func (h EventHandler) handleTestRunCreated(ctx context.Context, event *proto.Event) {
+func (h EventHandler) handleTestRunInitiated(ctx context.Context, event *proto.Event) {
 	// unmarshal event specific data
 	var eventData *proto.TestRunCreatedEventData
 	if err := json.Unmarshal(event.Data, &eventData); err != nil {
@@ -143,7 +143,7 @@ func (h EventHandler) handleTestRunCreated(ctx context.Context, event *proto.Eve
 		return
 	}
 
-	// send informations to the client through WS service
+	// send information to the client through WS service
 	wssEventData, _ := json.Marshal(&proto.FileEntityCreatedEventData{
 		TestRunId: assignmentDetails.TestRunId,
 		FileSpec: &proto.FileSpec{

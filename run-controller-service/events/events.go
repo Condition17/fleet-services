@@ -1,6 +1,7 @@
 package events
 
 const (
+	TestRunInitiated                         = "test-run.initiated"
 	TEST_RUN_CREATED                         = "test-run.created"
 	TEST_RUN_FINISHED                        = "test-run.finished"
 	FILE_CREATED                             = "file.created"
