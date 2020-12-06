@@ -93,7 +93,7 @@ func (h *Handler) AssembleFile(ctx context.Context, req *proto.FileAssembleReque
 		}
 		// construct and send the notification message
 		eventData, _ := json.Marshal(&runControllerProto.FileAssemblySucceededEventData{TestRunId: req.TestRunId})
-		_ = h.sendRunStateEvent(context.Background(), runStateEvents.FILE_ASSEMBLY_SUCCEEDED, eventData)
+		_ = h.sendRunStateEvent(context.Background(), runStateEvents.FileAssemblySuccess, eventData)
 	}()
 	return &proto.EmptyResponse{}, nil
 }
