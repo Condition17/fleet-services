@@ -137,11 +137,11 @@ func (h *Handler) AssignFile(ctx context.Context, req *proto.AssignRequest, res 
 }
 
 func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, res *proto.TestRun) error {
-	var isServiceCaller bool = ctx.Value("serviceCaller").(bool)
-
-	if !isServiceCaller {
-		return microErrors.Unauthorized(h.Service.Name(), "Caller not authorized for this operation")
-	}
+	//var isServiceCaller bool = ctx.Value("serviceCaller").(bool)
+	//
+	//if !isServiceCaller {
+	//	return microErrors.Unauthorized(h.Service.Name(), "Caller not authorized for this operation")
+	//}
 
 	testRun, err := h.TestRunRepository.GetTestRunById(req.TestRunId)
 	if err != nil {
@@ -155,8 +155,18 @@ func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, 
 		return microErrors.BadRequest(h.Service.Name(), fmt.Sprintf("State '%v' not recognized as a valid state", req.State))
 	}
 
+	// if the new state is an error one, store the last valid state in it's associated metadata
+	var stateMetadataBytes []byte
+	if runStates.TestRunState.Error != runStates.TestRunStateType(req.State) {
+		stateMetadataBytes = []byte(req.StateMetadata)
+		testRun.StateMetadata = b64.StdEncoding.EncodeToString([]byte(req.StateMetadata))
+	} else {
+		stateMetadataBytes, _ = json.Marshal(map[string]string{"lastValidState": string(testRun.State), "metadata": req.StateMetadata})
+	}
+
+	testRun.StateMetadata = b64.StdEncoding.EncodeToString(stateMetadataBytes)
 	testRun.State = runStates.TestRunStateType(req.State)
-	testRun.StateMetadata = b64.StdEncoding.EncodeToString([]byte(req.StateMetadata))
+
 	if err := h.TestRunRepository.Update(testRun); err != nil {
 		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
 	}
