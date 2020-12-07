@@ -41,12 +41,14 @@ func (h *Handler) executePostInstanceInsertOperationSteps(testRunId uint32, op *
 	finishedOperation, err := h.waitForComputeOperationToFinish(op)
 	if err != nil {
 		fmt.Printf("Error encountered while waiting compute instance insert operation finish: %v", err)
+		h.SendServiceError(context.Background(), testRunId, err)
 		return
 	}
 
 	createdInstance, err := h.CloudComputeEngineService.Instances.Get(CONFIGS.GoogleProjectID, CONFIGS.ResourcesDeployLocations, fmt.Sprintf("%v", finishedOperation.TargetId)).Do()
 	if err != nil {
 		fmt.Printf("Error encountered while retrieving created instance details: %v", err)
+		h.SendServiceError(context.Background(), testRunId, err)
 		return
 	}
 
@@ -59,6 +61,7 @@ func (h *Handler) executePostInstanceInsertOperationSteps(testRunId uint32, op *
 
 	if err != nil {
 		fmt.Printf("Error encountered on executor instance db entity creation: %v", err)
+		h.SendServiceError(context.Background(), testRunId, err)
 		return
 	}
 

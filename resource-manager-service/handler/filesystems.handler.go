@@ -71,12 +71,14 @@ func (h *Handler) executePostFSCreateOperationSteps(testRunId uint32, op *file.O
 	finishedOperation, err := h.waitForFSOperationToFinish(op)
 	if err != nil {
 		fmt.Printf("Error encountered while waiting filestore create operation finish %v", err)
+		h.SendServiceError(context.Background(), testRunId, err)
 		return
 	}
 
 	var fsInstance file.Instance
 	if err := json.Unmarshal(finishedOperation.Response, &fsInstance); err != nil {
 		fmt.Printf("Error encountered while unmarshalling operation response: %v", err)
+		h.SendServiceError(context.Background(), testRunId, err)
 		return
 	}
 
@@ -90,6 +92,7 @@ func (h *Handler) executePostFSCreateOperationSteps(testRunId uint32, op *file.O
 
 	if err != nil {
 		fmt.Printf("Error encountered on file system db entity creation: %v", err)
+		h.SendServiceError(context.Background(), testRunId, err)
 		return
 	}
 
