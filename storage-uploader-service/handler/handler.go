@@ -20,7 +20,8 @@ type ChunkDataHandler struct {
 
 func (h ChunkDataHandler) HandleChunkDataMessage(chunkDataMessage *fileServiceProto.ChunkDataMessage) {
 	if err := h.StorageClient.UploadChunk(chunkDataMessage.Sha2, chunkDataMessage.Data); err != nil {
-		log.Printf("Error encountered on upload (chunk %v): %v\n", chunkDataMessage.Sha2, err)
+		log.Printf("[SERVICE ERROR]: Error encountered on upload (chunk sha2: %v): %v\n", chunkDataMessage.Sha2, err)
+		h.SendServiceError(context.Background(), chunkDataMessage.TestRunId, err)
 		return
 	}
 
