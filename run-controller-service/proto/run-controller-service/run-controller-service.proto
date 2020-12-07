@@ -30,6 +30,7 @@ message FileSpec {
 
 message TestRunInitiatedEventData {
   TestRunSpec testRunSpec = 1;
+  FileSpec  fileSpec = 2;
 }
 
 message FileChunksUploadedEventData {
