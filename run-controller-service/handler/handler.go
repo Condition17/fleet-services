@@ -105,6 +105,8 @@ func (h EventHandler) HandleEvent(event *proto.Event) {
 		h.handleFileAssemblySuccess(ctx, event)
 	case events.FileEvaluationFinished:
 		h.handleFileEvaluationFinished(ctx, event)
+	case events.ServiceError:
+		h.handleServiceError(ctx, event)
 	default:
 		log.Printf("The event with type '%s' is not a recognized fleet test run pipeline event", event.Type)
 	}
@@ -307,6 +309,25 @@ func (h EventHandler) handleFileEvaluationFinished(ctx context.Context, event *p
 	// update test run state - mark it as finished or succeeded
 	// HARDCODED succeeded for now
 	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Succeeded, []byte{})
+}
+
+func (h EventHandler) handleServiceError(ctx context.Context, event *proto.Event) {
+	// unmarshal event specific data
+	var eventData *proto.ServiceErrorEventData
+	if err := json.Unmarshal(event.Data, &eventData); err != nil {
+		log.Println(errors.EventUnmarshalError(event.Data, err))
+		return
+	}
+
+	// append wss event target bytes to context
+	if err := h.appendTestRunUserBytesToContext(&ctx, eventData.TestRunId); err != nil {
+		log.Println("Error appending test run's user bytes to context:", err)
+		h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Error, []byte(errors.TestRunUserBytesContextAppendError(eventData, err).Error()))
+		return
+	}
+
+	// set run process error
+	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Error, event.Data)
 }
 
 func (h EventHandler) appendTestRunUserBytesToContext(ctx *context.Context, testRunId uint32) error {

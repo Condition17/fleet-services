@@ -36,34 +36,11 @@ message FileChunksUploadedEventData {
 	FileSpec fileSpec = 2;
 }
 
-message TestRunStateChangedEvent {
-	uint32 testRunId = 1;
-	string state = 2;
-	string stateMetadata = 3;
-}
-
 // Events sent to WSS
-
 message WssEvent {
 	string type = 1;
 	bytes target = 2;
 	bytes data = 3;
-}
-
-message WssErrorEventData {
-	string type = 1;
-	string displayMessage = 2;
-	string details = 3;
-}
-
-message FileEntityCreatedEventData {
-	uint32 testRunId = 1;
-	FileSpec fileSpec = 2;
-}
-
-message FileUploadCompletedEventData {
-	uint32 testRunId = 1;
-	string fileId = 2;
 }
 
 message FileSystemProvisionedEventData {
@@ -80,4 +57,10 @@ message FileAssemblySucceededEventData {
 
 message FileEvaluationFinishedEventData {
 	uint32 testRunId = 1;
+}
+
+message ServiceErrorEventData {
+	uint32 testRunId = 1;
+	string source = 2;
+	bytes error = 3;
 }

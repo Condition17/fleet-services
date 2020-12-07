@@ -8,6 +8,7 @@ const (
 	ExecutorInstanceProvisioned = "executorInstance.provisioned"
 	FileAssemblySuccess         = "file.assemblySuccess"
 	FileEvaluationFinished      = "file.evaluationFinished"
+	ServiceError                = "service.error"
 	// Events that are sent using the WSS server to it's client (frontend application in our case)
 	WssTestRunStateChanged = "wss.test_run_state_changed"
 )
