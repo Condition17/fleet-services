@@ -13,6 +13,14 @@ service TestRunService {
 
 message CreateTestRunRequest {
 	TestRun testRun = 1;
+	FileSpec fileSpec = 2;
+}
+
+message FileSpec {
+	string id = 1;
+	string name = 2;
+	int64 size = 3;
+	uint32 maxChunkSize = 4;
 }
 
 message User {

@@ -34,6 +34,11 @@ func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, r
 				Id:   uint32(createdTestRun.ID),
 				Name: createdTestRun.Name,
 			},
+			FileSpec: &runControllerProto.FileSpec{
+				Name:         req.FileSpec.Name,
+				Size:         req.FileSpec.Size,
+				MaxChunkSize: req.FileSpec.MaxChunkSize,
+			},
 		},
 	)
 	h.SendRunStateEvent(ctx, runStateEvents.TestRunInitiated, eventData)

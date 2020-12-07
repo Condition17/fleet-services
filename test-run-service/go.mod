@@ -12,9 +12,9 @@ replace (
 
 require (
 	github.com/Condition17/fleet-services/file-service v0.0.0-20201207224653-a5cdb13fae6e
-	github.com/Condition17/fleet-services/lib v0.0.0-20201207230133-a86fe6b39f04
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201207230133-a86fe6b39f04
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201207230133-a86fe6b39f04
+	github.com/Condition17/fleet-services/lib v0.0.0-20201207231356-25fead6cea9f
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201207231356-25fead6cea9f
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201207231356-25fead6cea9f
 	github.com/ghodss/yaml v1.0.0
 	github.com/golang/protobuf v1.4.3
 	github.com/jackc/pgx/v4 v4.10.0 // indirect
