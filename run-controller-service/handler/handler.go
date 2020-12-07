@@ -43,8 +43,8 @@ func NewHandler(service micro.Service) func(broker.Event) error {
 	}
 
 	if riverRunnerServiceClient, err = getRiverRunnerServiceClient(); err != nil {
-		//log.Fatalln("Error encountered while setting up connection to river runner service:", err)
-		//return nil
+		log.Fatalln("Error encountered while setting up connection to river runner service:", err)
+		return nil
 	}
 
 	var handler EventHandler = EventHandler{

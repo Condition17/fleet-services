@@ -5,62 +5,63 @@ package go.micro.api.runControllerService;
 service RunControllerService {}
 
 message EventMetadata {
-	bytes user = 1;
-	bytes authorization = 2;
+  bytes user = 1;
+  bytes authorization = 2;
 }
 
 message Event {
-	string type = 1;
-	EventMetadata meta = 2;
-	bytes data = 4;
+  string type = 1;
+  EventMetadata meta = 2;
+  bytes data = 4;
 }
 
 message TestRunSpec {
-	uint32 id = 1;
-	string name = 2;
+  uint32 id = 1;
+  string name = 2;
 }
 
 message FileSpec {
-	string id = 1;
-	string name = 2;
-	int64 size = 3;
-	uint32 maxChunkSize = 4;
+  string id = 1;
+  string testRunId = 2;
+  string name = 3;
+  int64 size = 4;
+  uint32 maxChunkSize = 5;
 }
 
 message TestRunInitiatedEventData {
-	TestRunSpec testRunSpec = 1;
-	FileSpec	fileSpec = 2;
+  TestRunSpec testRunSpec = 1;
+  FileSpec  fileSpec = 2;
 }
 
 message FileChunksUploadedEventData {
-	FileSpec fileSpec = 2;
+  FileSpec fileSpec = 2;
 }
 
 // Events sent to WSS
 message WssEvent {
-	string type = 1;
-	bytes target = 2;
-	bytes data = 3;
+  string type = 1;
+  bytes target = 2;
+  bytes data = 3;
 }
 
 message FileSystemProvisionedEventData {
-	uint32 testRunId = 1;
+  uint32 testRunId = 1;
 }
 
 message ExecutorInstanceProvisionedEventData {
-	uint32 testRunId = 1;
+  uint32 testRunId = 1;
 }
 
 message FileAssemblySucceededEventData {
-	uint32 testRunId = 1;
+  uint32 testRunId = 1;
 }
 
 message FileEvaluationFinishedEventData {
-	uint32 testRunId = 1;
+  uint32 testRunId = 1;
 }
 
 message ServiceErrorEventData {
-	uint32 testRunId = 1;
-	string source = 2;
-	bytes error = 3;
+  uint32 testRunId = 1;
+  string source = 2;
+  bytes error = 3;
 }
