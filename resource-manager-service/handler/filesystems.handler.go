@@ -94,8 +94,8 @@ func (h *Handler) executePostFSCreateOperationSteps(testRunId uint32, op *file.O
 	}
 
 	// send data to run controller service
-	fsCreatedEventData, _ := json.Marshal(&runControllerProto.FileSystemProvisionedEventData{TestRunId: testRunId})
-	h.SendRunStateEvent(context.Background(), runStateEvents.FileSystemProvisioned, fsCreatedEventData)
+	fsProvisionedEventData, _ := json.Marshal(&runControllerProto.FileSystemProvisionedEventData{TestRunId: testRunId})
+	h.SendRunStateEvent(context.Background(), runStateEvents.FileSystemProvisioned, fsProvisionedEventData)
 }
 
 func (h *Handler) waitForFSOperationToFinish(op *file.Operation) (*file.Operation, error) {

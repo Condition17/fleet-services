@@ -80,9 +80,11 @@ func (h *Handler) AssembleFile(ctx context.Context, req *proto.FileAssembleReque
 		})
 		select {
 		case <-feedback.SuccessChan:
-
+			log.Println("File successfully assembled")
+			// TODO: THIS IS FOR TESTING PURPOSES - REMOVE IT
+			_ = h.sendServiceError(context.Background(), req.TestRunId, errors.New("file successfully assembled"))
 		case err := <-feedback.ErrorChan:
-			log.Printf("SERVICE ERROR: Error encountered assembling file (id: %v): %v", fileData.Id, err)
+			log.Printf("[SERVICE ERROR] Error encountered assembling file (id: %v): %v", fileData.Id, err)
 			_ = h.sendServiceError(context.Background(), req.TestRunId, err)
 			_ = nfsModule.UmountVolume(mountDirPath)
 			return
@@ -90,7 +92,7 @@ func (h *Handler) AssembleFile(ctx context.Context, req *proto.FileAssembleReque
 
 		// unmount volume
 		if err := nfsModule.UmountVolume(mountDirPath); err != nil {
-			log.Printf("SERVICE ERROR: Error encountered umounting volume (path: %v): %v", mountDirPath, err)
+			log.Printf("[SERVICE ERROR] Error encountered umounting volume (path: %v): %v", mountDirPath, err)
 			_ = h.sendServiceError(context.Background(), req.TestRunId, err)
 			return
 		}
