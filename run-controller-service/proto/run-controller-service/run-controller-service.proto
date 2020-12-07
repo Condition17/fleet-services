@@ -22,7 +22,7 @@ message TestRunSpec {
 
 message FileSpec {
   string id = 1;
-  string testRunId = 2;
+  uint32 testRunId = 2;
   string name = 3;
   int64 size = 4;
   uint32 maxChunkSize = 5;
