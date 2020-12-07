@@ -137,11 +137,11 @@ func (h *Handler) AssignFile(ctx context.Context, req *proto.AssignRequest, res 
 }
 
 func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, res *proto.TestRun) error {
-	//var isServiceCaller bool = ctx.Value("serviceCaller").(bool)
-	//
-	//if !isServiceCaller {
-	//	return microErrors.Unauthorized(h.Service.Name(), "Caller not authorized for this operation")
-	//}
+	var isServiceCaller bool = ctx.Value("serviceCaller").(bool)
+
+	if !isServiceCaller {
+		return microErrors.Unauthorized(h.Service.Name(), "Caller not authorized for this operation")
+	}
 
 	testRun, err := h.TestRunRepository.GetTestRunById(req.TestRunId)
 	if err != nil {
