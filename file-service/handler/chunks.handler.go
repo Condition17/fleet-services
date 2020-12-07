@@ -39,21 +39,25 @@ func (h *Handler) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.Em
 		return err
 	}
 
-	if uploadedToStorage == true {
-		if err := h.HandleChunkStorageUploadSuccess(ctx, model.UnmarshalFile(file)); err != nil {
-			log.Printf("Error encountered while handling chunk storage upload success: %v", err)
+	go func() {
+		if uploadedToStorage == true {
+			if err := h.HandleChunkStorageUploadSuccess(ctx, model.UnmarshalFile(file)); err != nil {
+				log.Printf("[SERVICE ERROR]: Error while handling chunk storage upload success: %v", err)
+				h.SendServiceError(context.Background(), file.TestRunId, err)
+			}
+
+			return
 		}
 
-		return nil
-	}
-
-	uploadData, _ := json.Marshal(&pb.ChunkDataMessage{
-		Sha2:          chunkSHA2,
-		Data:          req.Data,
-		FileId:        req.FileId,
-		Authorization: auth.GetAuthorizationBytesFromContext(ctx),
-	})
-	h.SendChunkDataToUploadQueue(ctx, uploadData)
+		uploadData, _ := json.Marshal(&pb.ChunkDataMessage{
+			Sha2:          chunkSHA2,
+			Data:          req.Data,
+			FileId:        req.FileId,
+			TestRunId:     file.TestRunId,
+			Authorization: auth.GetAuthorizationBytesFromContext(ctx),
+		})
+		h.SendChunkDataToUploadQueue(ctx, uploadData)
+	}()
 
 	return nil
 }

@@ -44,7 +44,7 @@ func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) (strin
 
 	conn.Send("MULTI")
 	if !alreadyCreated {
-		// create chunk
+		// create chunk entity
 		var hashData *model.Chunk = &model.Chunk{Sha2: sha2, Size: int64(len(spec.Data))}
 		conn.Send("HSET", redis.Args{}.Add(hashKey).AddFlat(hashData)...)
 		// TODO: add data to action upload queue

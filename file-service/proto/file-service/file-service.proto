@@ -3,51 +3,54 @@ syntax = "proto3";
 package go.micro.api.fileService;
 
 service FileService {
-	rpc CreateChunk(ChunkSpec) returns (EmptyResponse) {}
-	rpc CreateFile(File) returns (Response) {}
-	rpc ReadFile(File) returns (Response) {}
-	rpc GetChunkDetailsByIndexInFile(ChunkSpec) returns (ChunkDetails) {}
+  rpc CreateChunk(ChunkSpec) returns (EmptyResponse) {}
+  rpc CreateFile(File) returns (Response) {}
+  rpc ReadFile(File) returns (Response) {}
+  rpc GetChunkDetailsByIndexInFile(ChunkSpec) returns (ChunkDetails) {}
 }
 
 message ChunkSpec {
-	string fileId = 1;
-	uint64 index = 2;
-	bytes data = 3;
+  string fileId = 1;
+  uint64 index = 2;
+  bytes data = 3;
 }
 
 message Chunk {
-	string sha2 = 1;
-	int64 size = 2;
+  string sha2 = 1;
+  int64 size = 2;
 }
 
 message ChunkDetails {
-	Chunk chunk = 1;
+  Chunk chunk = 1;
 }
 
 message ChunkDataMessage {
-	string fileId = 1;
-	string sha2 = 2;
-	bytes data = 3;
-	bytes authorization = 4;
+  string fileId = 1;
+  uint32 testRunId = 2;
+  string sha2 = 3;
+  bytes data = 4;
+  bytes authorization = 5;
 }
 
 message File {
-	string id = 1;
-	string name = 2;
-	int64 size = 3;
-	uint32 maxChunkSize = 4;
-	uint32 chunksStoresCount = 5;
-	uint64 totalChunksCount = 6;
+  string id = 1;
+  string name = 2;
+  int64 size = 3;
+  uint32 maxChunkSize = 4;
+  uint32 chunksStoresCount = 5;
+  uint64 totalChunksCount = 6;
+  uint32 testRunId = 7;
 }
 
 message EmptyResponse {}
 
 message Response {
-	File file = 2;
+  File file = 2;
 }
 
 message FileChunkUploadedEventData {
-	string fileId = 1;
-	uint64 totalChunksCount = 2;
-	uint64 uploadedChunksCount =3;
+  string fileId = 1;
+  uint32 testRunId = 2;
+  uint64 totalChunksCount = 3;
+  uint64 uploadedChunksCount = 4;
 }

@@ -3,6 +3,8 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"log"
 
 	"github.com/Condition17/fleet-services/file-service/model"
@@ -15,25 +17,25 @@ func (h Handler) HandleEvent(e broker.Event) {
 	var message *proto.ChunkDataMessage
 
 	if err := json.Unmarshal(e.Message().Body, &message); err != nil {
-		log.Printf("Error encountered while unmarshaling chunk data message %v\n", message)
+		log.Printf("Error encountered while unmarshaling chunk data message %v: %v\n", message, err)
 		return
 	}
 
 	file, err := h.FileRepository.Read(context.Background(), message.FileId)
 	if file == nil {
-		log.Printf("File entity not found: %v\n", message.FileId)
+		h.SendServiceError(context.Background(), message.TestRunId, errors.New(fmt.Sprintf("file entity not found:%v", message.FileId)))
 		return
 	}
 
 	if err != nil {
-		log.Printf("Error encountered while retrieving file entity: %v\n", err)
+		h.SendServiceError(context.Background(), message.TestRunId, errors.New(fmt.Sprintf("error retrieving file entity (id: %v): %v\n", message.FileId, err)))
 		return
 	}
 
-	// fmt.Printf("Received event - chunk uploaded - authorization: %s", string(message.Authorization))
 	ctx := metadata.Set(context.Background(), "Authorization", string(message.Authorization))
 	if err := h.HandleChunkStorageUploadSuccess(ctx, model.UnmarshalFile(file)); err != nil {
-		log.Printf("Error encountered: %v\n", err)
+		log.Printf("[SERVICE ERROR]: Error while handling chunk storage upload success: %v", err)
+		h.SendServiceError(context.Background(), file.TestRunId, err)
 		return
 	}
 }

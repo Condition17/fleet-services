@@ -49,6 +49,7 @@ func (h Handler) HandleChunkStorageUploadSuccess(ctx context.Context, file *pb.F
 	eventData, _ := json.Marshal(
 		&pb.FileChunkUploadedEventData{
 			FileId:              file.Id,
+			TestRunId:           file.TestRunId,
 			TotalChunksCount:    file.TotalChunksCount,
 			UploadedChunksCount: uint64(uploadedChunksCount),
 		})
@@ -63,6 +64,7 @@ func (h Handler) HandleChunkStorageUploadSuccess(ctx context.Context, file *pb.F
 					Name:         file.Name,
 					Size:         file.Size,
 					MaxChunkSize: file.MaxChunkSize,
+					TestRunId:    file.TestRunId,
 				},
 			},
 		)
