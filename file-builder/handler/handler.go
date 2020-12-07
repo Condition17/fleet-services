@@ -22,6 +22,7 @@ import (
 
 type Handler struct {
 	proto.UnimplementedFileBuilderServer
+	serviceName           string
 	resourceManagerClient resourceManagerProto.ResourceManagerServiceClient
 	fileServiceClient     fileServiceProto.FileServiceClient
 	fileComposer          *fileComposer.Composer
@@ -32,6 +33,7 @@ func NewHandler(externalServicesConn *grpc.ClientConn, pubSubClient pubsub.Clien
 	fileServiceClient := fileServiceProto.NewFileServiceClient(externalServicesConn)
 
 	return &Handler{
+		serviceName:           "File builder",
 		fileComposer:          fileComposer.NewComposer(chunksStorageClient, fileServiceClient),
 		resourceManagerClient: resourceManagerProto.NewResourceManagerServiceClient(externalServicesConn),
 		fileServiceClient:     fileServiceClient,
@@ -77,18 +79,19 @@ func (h *Handler) AssembleFile(ctx context.Context, req *proto.FileAssembleReque
 			ParentDir:        mountDirPath,
 		})
 		select {
-			case <-feedback.SuccessChan:
+		case <-feedback.SuccessChan:
 
-			case err := <-feedback.ErrorChan:
-				// TODO: send async error message
-				log.Printf("Error encountered while assembling file (id: %v): %v", fileData.Id, err)
-				_ = nfsModule.UmountVolume(mountDirPath)
-				return
+		case err := <-feedback.ErrorChan:
+			log.Printf("SERVICE ERROR: Error encountered assembling file (id: %v): %v", fileData.Id, err)
+			_ = h.sendServiceError(context.Background(), req.TestRunId, err)
+			_ = nfsModule.UmountVolume(mountDirPath)
+			return
 		}
 
 		// unmount volume
 		if err := nfsModule.UmountVolume(mountDirPath); err != nil {
-			// TODO: send async error message
+			log.Printf("SERVICE ERROR: Error encountered umounting volume (path: %v): %v", mountDirPath, err)
+			_ = h.sendServiceError(context.Background(), req.TestRunId, err)
 			return
 		}
 		// construct and send the notification message
@@ -96,6 +99,11 @@ func (h *Handler) AssembleFile(ctx context.Context, req *proto.FileAssembleReque
 		_ = h.sendRunStateEvent(context.Background(), runStateEvents.FileAssemblySuccess, eventData)
 	}()
 	return &proto.EmptyResponse{}, nil
+}
+
+func (h *Handler) sendServiceError(ctx context.Context, testRunId uint32, err error) error {
+	eventData, _ := json.Marshal(&runControllerProto.ServiceErrorEventData{Source: h.serviceName, TestRunId: testRunId, Error: []byte(err.Error())})
+	return h.sendRunStateEvent(ctx, runStateEvents.ServiceError, eventData)
 }
 
 func (h *Handler) sendRunStateEvent(ctx context.Context, eventType string, data []byte) error {
@@ -108,7 +116,7 @@ func (h *Handler) sendRunStateEvent(ctx context.Context, eventType string, data 
 	id, err := result.Get(ctx)
 
 	if err != nil {
-		log.Println("Error encountered sending message to run controller service:", err)
+		log.Println("Error sending message to run controller service:", err)
 		return err
 	}
 	log.Printf("Published message to '%v' topic. Message ID: %v\n", h.runStateTopic.String(), id)
