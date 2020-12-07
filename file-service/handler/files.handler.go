@@ -11,9 +11,15 @@ import (
 	runStateEvents "github.com/Condition17/fleet-services/run-controller-service/events"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"github.com/micro/go-micro/v2/errors"
+	microErrors "github.com/micro/go-micro/v2/errors"
 )
 
 func (h *Handler) CreateFile(ctx context.Context, req *pb.File, res *pb.Response) error {
+	// Check at least testRunId - it is crucial
+	if req.TestRunId == 0 {
+		return microErrors.BadRequest(h.Service.Name(), "TestRunId field is required")
+	}
+
 	file, err := h.FileRepository.Create(context.Background(), model.MarshalFile(req))
 	if err != nil {
 		return err
