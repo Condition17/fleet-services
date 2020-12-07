@@ -13,7 +13,7 @@ import (
 	proto "github.com/Condition17/fleet-services/river-runner/proto/river-runner"
 	riverSdk "github.com/Condition17/fleet-services/river/sdk"
 	runStateEvents "github.com/Condition17/fleet-services/run-controller-service/events"
-	runControllerProto"github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
+	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"google.golang.org/grpc"
 	"log"
 	"path"
@@ -21,6 +21,7 @@ import (
 
 type Handler struct {
 	proto.UnimplementedRiverRunnerServer
+	serviceName           string
 	resourceManagerClient resourceManagerProto.ResourceManagerServiceClient
 	fileServiceClient     fileServiceProto.FileServiceClient
 	runStateTopic         *pubsub.Topic
@@ -28,6 +29,7 @@ type Handler struct {
 
 func NewHandler(externalServicesConn *grpc.ClientConn, pubSubClient *pubsub.Client) *Handler {
 	return &Handler{
+		serviceName:           "RiverRunner",
 		resourceManagerClient: resourceManagerProto.NewResourceManagerServiceClient(externalServicesConn),
 		fileServiceClient:     fileServiceProto.NewFileServiceClient(externalServicesConn),
 		runStateTopic:         pubSubClient.Topic(topics.RunStateTopic),
@@ -74,8 +76,8 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 		)
 
 		if err != nil {
-			// TODO: send async error message
-			log.Printf("River run command error: %v", err)
+			log.Printf("[SERVICE ERROR] River run command error: %v", err)
+			_ = h.sendServiceError(context.Background(), req.TestRunId, err)
 			_ = nfsModule.UmountVolume(mountDirPath)
 			return
 		}
@@ -83,7 +85,8 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 
 		// unmount volume
 		if err = nfsModule.UmountVolume(mountDirPath); err != nil {
-			// TODO: send async error message
+			log.Printf("[SERVICE ERROR] Error encountered umounting volume (path: %v): %v", mountDirPath, err)
+			_ = h.sendServiceError(context.Background(), req.TestRunId, err)
 			return
 		}
 		// construct and send the notification message
@@ -92,6 +95,11 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 	}()
 
 	return &proto.EmptyResponse{}, nil
+}
+
+func (h *Handler) sendServiceError(ctx context.Context, testRunId uint32, err error) error {
+	eventData, _ := json.Marshal(&runControllerProto.ServiceErrorEventData{Source: h.serviceName, TestRunId: testRunId, Error: []byte(err.Error())})
+	return h.sendRunStateEvent(ctx, runStateEvents.ServiceError, eventData)
 }
 
 func (h *Handler) sendRunStateEvent(ctx context.Context, eventType string, data []byte) error {
