@@ -34,11 +34,6 @@ func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, r
 				Id:   uint32(createdTestRun.ID),
 				Name: createdTestRun.Name,
 			},
-			FileSpec: &runControllerProto.FileSpec{
-				Name:         req.FileSpec.Name,
-				Size:         req.FileSpec.Size,
-				MaxChunkSize: req.FileSpec.MaxChunkSize,
-			},
 		},
 	)
 	h.SendRunStateEvent(ctx, runStateEvents.TestRunInitiated, eventData)
@@ -60,20 +55,6 @@ func (h *Handler) Get(ctx context.Context, req *proto.TestRun, res *proto.TestRu
 	return nil
 }
 
-func (h *Handler) GetByFileId(ctx context.Context, req *proto.FileSpec, res *proto.TestRunDetails) error {
-	user, _ := auth.GetUserFromDecodedToken(ctx)
-	result, err := h.TestRunRepository.GetTestRunByFileId(user.Id, req.Id)
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return microErrors.NotFound(h.Service.Name(), "No test run associated with the speciffied file was found")
-		}
-		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
-	}
-	res.TestRun = model.UnmarshalTestRun(result)
-
-	return nil
-}
-
 func (h *Handler) GetById(ctx context.Context, req *proto.TestRun, res *proto.TestRunDetails) error {
 	var isServiceCaller bool = ctx.Value("serviceCaller").(bool)
 
@@ -84,7 +65,7 @@ func (h *Handler) GetById(ctx context.Context, req *proto.TestRun, res *proto.Te
 	result, err := h.TestRunRepository.GetTestRunById(req.Id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return microErrors.NotFound(h.Service.Name(), "No test run associated with the speciffied id was found")
+			return microErrors.NotFound(h.Service.Name(), "No test run associated with the specified id was found")
 		}
 		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
 	}
@@ -107,29 +88,6 @@ func (h *Handler) List(ctx context.Context, req *proto.EmptyRequest, res *proto.
 func (h *Handler) Delete(ctx context.Context, req *proto.TestRun, res *proto.EmptyResponse) error {
 	user, _ := auth.GetUserFromDecodedToken(ctx)
 	if err := h.TestRunRepository.Delete(user.Id, req.Id); err != nil {
-		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
-	}
-
-	return nil
-}
-
-func (h *Handler) AssignFile(ctx context.Context, req *proto.AssignRequest, res *proto.EmptyResponse) error {
-	user, _ := auth.GetUserFromDecodedToken(ctx)
-	testRun, err := h.TestRunRepository.GetUserTestRun(user.Id, req.TestRunId)
-
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return microErrors.NotFound(h.Service.Name(), "Test run not found")
-		}
-		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
-	}
-
-	if testRun.FileID != "" {
-		return microErrors.Conflict(h.Service.Name(), "Test run already has a file assigned to it.")
-	}
-
-	testRun.FileID = req.FileId
-	if err := h.TestRunRepository.Update(testRun); err != nil {
 		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
 	}
 

@@ -43,14 +43,6 @@ func (r *TestRunRepository) GetUserTestRun(userId uint32, testRunId uint32) (*mo
 	return &testRun, nil
 }
 
-func (r *TestRunRepository) GetTestRunByFileId(userId uint32, fileId string) (*model.TestRun, error) {
-	var testRun model.TestRun
-	if err := r.DB.First(&testRun, "user_id = ? AND file_id = ?", userId, fileId).Error; err != nil {
-		return nil, err
-	}
-	return &testRun, nil
-}
-
 func (r *TestRunRepository) GetTestRunById(testRunId uint32) (*model.TestRun, error) {
 	var testRun model.TestRun
 

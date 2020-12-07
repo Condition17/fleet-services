@@ -5,24 +5,14 @@ package go.micro.api.testRunService;
 service TestRunService {
 	rpc Create(CreateTestRunRequest) returns (TestRunDetails) {}
 	rpc Get(TestRun) returns (TestRunDetails) {}
-	rpc GetByFileId(FileSpec) returns (TestRunDetails) {}
 	rpc GetById (TestRun) returns (TestRunDetails);
 	rpc List(EmptyRequest) returns (ListResponse) {}
 	rpc Delete(TestRun) returns (EmptyResponse) {}
-	rpc AssignFile(AssignRequest) returns (EmptyResponse) {}
 	rpc ChangeState(TestRunStateSpec) returns (TestRun) {}
 }
 
 message CreateTestRunRequest {
 	TestRun testRun = 1;
-	FileSpec fileSpec = 2;
-}
-
-message FileSpec {
-	string id = 1;
-	string name = 2;
-	int64 size = 3;
-	uint32 maxChunkSize = 4;
 }
 
 message User {
@@ -36,7 +26,6 @@ message User {
 message TestRun {
 	uint32 id = 1;
 	string name = 2;
-	string fileId = 3;
 	uint32 userId = 4;
 	User user = 5;
 	string state = 6;
@@ -49,11 +38,6 @@ message TestRunDetails {
 
 message ListResponse {
 	repeated TestRun testRuns = 1;
-}
-
-message AssignRequest {
-	uint32 testRunId = 1;
-	string fileId = 2;
 }
 
 message TestRunStateSpec {
