@@ -33,7 +33,7 @@ func NewHandler(externalServicesConn *grpc.ClientConn, pubSubClient pubsub.Clien
 	fileServiceClient := fileServiceProto.NewFileServiceClient(externalServicesConn)
 
 	return &Handler{
-		serviceName:           "File builder",
+		serviceName:           "FileBuilder",
 		fileComposer:          fileComposer.NewComposer(chunksStorageClient, fileServiceClient),
 		resourceManagerClient: resourceManagerProto.NewResourceManagerServiceClient(externalServicesConn),
 		fileServiceClient:     fileServiceClient,
@@ -81,8 +81,6 @@ func (h *Handler) AssembleFile(ctx context.Context, req *proto.FileAssembleReque
 		select {
 		case <-feedback.SuccessChan:
 			log.Println("File successfully assembled")
-			// TODO: THIS IS FOR TESTING PURPOSES - REMOVE IT
-			_ = h.sendServiceError(context.Background(), req.TestRunId, errors.New("file successfully assembled"))
 		case err := <-feedback.ErrorChan:
 			log.Printf("[SERVICE ERROR] Error encountered assembling file (id: %v): %v", fileData.Id, err)
 			_ = h.sendServiceError(context.Background(), req.TestRunId, err)
