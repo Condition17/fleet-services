@@ -7,6 +7,7 @@ import (
 
 	"github.com/Condition17/fleet-services/lib/auth"
 	topics "github.com/Condition17/fleet-services/lib/communication"
+	runStateEvents "github.com/Condition17/fleet-services/run-controller-service/events"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/broker"
@@ -19,6 +20,11 @@ type BaseHandler struct {
 
 func NewBaseHandler(service micro.Service) BaseHandler {
 	return BaseHandler{Service: service, MessagesBroker: service.Server().Options().Broker}
+}
+
+func (h *BaseHandler) SendServiceError(ctx context.Context, testRunId uint32, err error) {
+	eventData, _ := json.Marshal(&runControllerProto.ServiceErrorEventData{Source: h.Service.Name(), TestRunId: testRunId, Error: []byte(err.Error())})
+	h.SendRunStateEvent(ctx, runStateEvents.ServiceError, eventData)
 }
 
 func (h *BaseHandler) SendRunStateEvent(ctx context.Context, eventType string, data []byte) {
