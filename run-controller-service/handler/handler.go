@@ -125,6 +125,7 @@ func (h EventHandler) handleTestRunInitiated(ctx context.Context, event *proto.E
 		Name:         eventData.FileSpec.Name,
 		Size:         eventData.FileSpec.Size,
 		MaxChunkSize: eventData.FileSpec.MaxChunkSize,
+		TestRunId:    eventData.TestRunSpec.Id,
 	}
 	createFileResp, err := h.FileService.CreateFile(ctx, &fileSpec)
 	if err != nil {
@@ -132,31 +133,19 @@ func (h EventHandler) handleTestRunInitiated(ctx context.Context, event *proto.E
 		h.changeTestRunState(ctx, eventData.TestRunSpec.Id, testRunStates.TestRunState.Error, []byte(err.Error()))
 		return
 	}
-
-	// assign the created file to the current test run
-	var assignmentDetails testRunServiceProto.AssignRequest = testRunServiceProto.AssignRequest{
-		TestRunId: eventData.TestRunSpec.Id,
-		FileId:    createFileResp.File.Id,
-	}
-	if _, err := h.TestRunService.AssignFile(ctx, &assignmentDetails); err != nil {
-		log.Printf("Error while assigning file (id: %v) to test run (id: %v):%v\n", assignmentDetails.FileId, assignmentDetails.TestRunId, err.Error())
-		h.changeTestRunState(ctx, eventData.TestRunSpec.Id, testRunStates.TestRunState.Error, []byte(errors.FileAssignError(eventData.TestRunSpec, err).Error()))
-		return
-	}
-
 	stateChangeMetadata, _ := json.Marshal(&proto.FileSpec{
-		Id:           assignmentDetails.FileId,
+		Id:           createFileResp.File.Id,
 		Name:         fileSpec.Name,
 		Size:         fileSpec.Size,
 		MaxChunkSize: fileSpec.MaxChunkSize,
 	})
-	h.changeTestRunState(ctx, assignmentDetails.TestRunId, testRunStates.TestRunState.FileUpload, stateChangeMetadata)
+	h.changeTestRunState(ctx, createFileResp.File.TestRunId, testRunStates.TestRunState.FileUpload, stateChangeMetadata)
 }
 
 func (h EventHandler) changeTestRunState(ctx context.Context, testRunId uint32, newState testRunStates.TestRunStateType, stateMetadata []byte) {
 	var newStateSpec testRunServiceProto.TestRunStateSpec = testRunServiceProto.TestRunStateSpec{
-		TestRunId: testRunId,
-		State: string(newState),
+		TestRunId:     testRunId,
+		State:         string(newState),
 		StateMetadata: string(stateMetadata),
 	}
 	if _, err := h.TestRunService.ChangeState(ctx, &newStateSpec); err != nil {
@@ -184,34 +173,23 @@ func (h EventHandler) handleFileChunksUploaded(ctx context.Context, event *proto
 	}
 
 	var fileSpec *proto.FileSpec = eventData.FileSpec
-
-	// get test run associated to the uploaded file
-	var testRunDetailsResp *testRunServiceProto.TestRunDetails
-	testRunDetailsResp, err := h.TestRunService.GetByFileId(ctx, &testRunServiceProto.FileSpec{Id: fileSpec.Id})
-
-	if err != nil {
-		log.Println("Error calling h.TestRunService.GetByFileId: ", err)
-		h.changeTestRunState(ctx, testRunDetailsResp.TestRun.Id, testRunStates.TestRunState.Error, []byte(err.Error()))
-		return
-	}
-
 	// update test run state
-	h.changeTestRunState(ctx, testRunDetailsResp.TestRun.Id, testRunStates.TestRunState.FileUploadDone, []byte{})
+	h.changeTestRunState(ctx, fileSpec.TestRunId, testRunStates.TestRunState.FileUploadDone, []byte{})
 
 	// request file system provisioning to resource manager service
 	var fileSystemSpec *resourceManagerProto.FileSystemSpec = &resourceManagerProto.FileSystemSpec{
-		TestRunId:   testRunDetailsResp.TestRun.Id,
+		TestRunId:   fileSpec.TestRunId,
 		SizeInBytes: fileSpec.Size,
 	}
 
 	if _, err := h.ResourceManagerService.ProvisionFileSystem(ctx, fileSystemSpec); err != nil {
 		log.Println("Error calling ResourceManagerService.ProvisionFileSystem: ", err)
-		h.changeTestRunState(ctx, testRunDetailsResp.TestRun.Id, testRunStates.TestRunState.Error, []byte(errors.FileSystemCreationError(fileSystemSpec, err).Error()))
+		h.changeTestRunState(ctx, fileSpec.TestRunId, testRunStates.TestRunState.Error, []byte(errors.FileSystemCreationError(fileSystemSpec, err).Error()))
 		return
 	}
 
 	// update test run state to reflect that file system provisioning was started
-	h.changeTestRunState(ctx, testRunDetailsResp.TestRun.Id, testRunStates.TestRunState.ProvisionFs, []byte{})
+	h.changeTestRunState(ctx, fileSpec.TestRunId, testRunStates.TestRunState.ProvisionFs, []byte{})
 }
 
 func (h EventHandler) handleFileSystemProvisioned(ctx context.Context, event *proto.Event) {
