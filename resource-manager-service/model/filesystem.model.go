@@ -30,7 +30,6 @@ func UnmarshalFileSystem(fileSystem *FileSystem) *proto.FileSystem {
 		TestRun: &proto.TestRun{
 			Id:     testRunData.Id,
 			Name:   testRunData.Name,
-			FileId: testRunData.FileId,
 			UserId: testRunData.UserId,
 			User: &proto.User{
 				Id:      testRunData.User.Id,

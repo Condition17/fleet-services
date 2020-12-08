@@ -10,9 +10,9 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/lib v0.0.0-20201207222026-479ad251c59d
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201207222026-479ad251c59d
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201207222026-479ad251c59d // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201207230256-fd5e120ba798
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201207230256-fd5e120ba798
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201207230256-fd5e120ba798 // indirect
 	github.com/Microsoft/go-winio v0.4.15 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
@@ -45,8 +45,9 @@ require (
 	go.uber.org/zap v1.16.0 // indirect
 	golang.org/x/exp v0.0.0-20201008143054-e3b2a7f2fdc7 // indirect
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
+	golang.org/x/net v0.0.0-20201207224615-747e23833adb // indirect
 	golang.org/x/oauth2 v0.0.0-20201207163604-931764155e3f // indirect
-	golang.org/x/sys v0.0.0-20201204225414-ed752295db88 // indirect
+	golang.org/x/sys v0.0.0-20201207223542-d4d67f95c62d // indirect
 	golang.org/x/text v0.3.4 // indirect
 	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e // indirect
 	golang.org/x/tools v0.0.0-20201207204333-a835c872fcea // indirect

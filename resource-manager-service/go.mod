@@ -10,10 +10,10 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/lib v0.0.0-20201207213751-97bb6c8e9d5f
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201207213751-97bb6c8e9d5f
-	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201207213751-97bb6c8e9d5f
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201207213751-97bb6c8e9d5f
+	github.com/Condition17/fleet-services/lib v0.0.0-20201207230256-fd5e120ba798
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201207230256-fd5e120ba798
+	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201207230256-fd5e120ba798
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201207230256-fd5e120ba798
 	github.com/golang/protobuf v1.4.3
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
