@@ -1,6 +1,9 @@
 package main
 
 import (
+	"context"
+	"github.com/Condition17/fleet-services/lib/auth"
+	"github.com/micro/go-micro/v2/server"
 	"log"
 
 	"github.com/Condition17/fleet-services/test-run-service/config"
@@ -14,6 +17,18 @@ import (
 	proto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"
 	"github.com/micro/go-plugins/broker/googlepubsub/v2"
 )
+
+func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
+	return func(ctx context.Context, req server.Request, resp interface{}) error {
+		// TestRunService.RegisterRunIssue is whitelisted
+		// this route does not need authentication or any additional information added in context
+		if req.Method() == "TestRunService.RegisterRunIssue" {
+			log.Println("Skip authenticate request")
+			return fn(ctx, req, resp)
+		}
+		return auth.AuthenticateRequest(fn, ctx, req, resp)
+	}
+}
 
 func main() {
 	var err error
@@ -38,7 +53,7 @@ func main() {
 		micro.Broker(pubsub),
 		micro.Version("latest"),
 		// auth middleware
-		//micro.WrapHandler(auth.ServiceAuthWrapper),
+		micro.WrapHandler(ServiceAuthWrapper),
 	)
 
 	// Initialise service
