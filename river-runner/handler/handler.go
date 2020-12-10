@@ -9,6 +9,7 @@ import (
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service/grpc"
 	topics "github.com/Condition17/fleet-services/lib/communication"
 	resourceManagerProto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service/grpc"
+	"github.com/Condition17/fleet-services/river-runner/config"
 	nfsModule "github.com/Condition17/fleet-services/river-runner/nfs"
 	proto "github.com/Condition17/fleet-services/river-runner/proto/river-runner"
 	riverSdk "github.com/Condition17/fleet-services/river/sdk"
@@ -39,6 +40,7 @@ func NewHandler(externalServicesConn *grpc.ClientConn, pubSubClient *pubsub.Clie
 func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.EmptyResponse, error) {
 	var fileSystemData *resourceManagerProto.FileSystem
 	var fileData *fileServiceProto.File
+	configs := config.GetConfig()
 	// get file system details for test run
 	if res, err := h.resourceManagerClient.GetFileSystem(ctx, &resourceManagerProto.FileSystemSpec{TestRunId: req.TestRunId}); err != nil {
 		log.Printf("Error encountered while retrieving file system details for the provided test run (id: %v): %v\n", req.TestRunId, err)
@@ -73,6 +75,8 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 			"-arch", "x64",
 			"-max", "1",
 			"-outputType", "textual",
+			"-outputEndpoint",
+			fmt.Sprintf("%v/testRunService/RegisterRunIssue?testRunId=%v", configs.FleetServicesHttpApiUrl, req.TestRunId),
 		)
 
 		if err != nil {
