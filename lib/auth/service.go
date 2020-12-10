@@ -16,24 +16,28 @@ import (
 	userServiceProto "github.com/Condition17/fleet-services/user-service/proto/user-service"
 )
 
+func AuthenticateRequest(fn server.HandlerFunc, ctx context.Context, req server.Request, resp interface{}) error {
+	meta, _ := metadata.FromContext(ctx)
+	var isServiceCaller bool = meta["Host"] == "" || meta["Method"] == ""
+	var reqCtx = context.WithValue(ctx, "serviceCaller", isServiceCaller)
+
+	if isServiceCaller {
+		return fn(reqCtx, req, resp)
+	}
+
+	userServiceClient := userServiceProto.NewUserService(lib.GetFullExternalServiceName("userService"), client.DefaultClient)
+
+	if _, err := userServiceClient.GetProfile(ctx, &userServiceProto.EmptyRequest{}); err != nil {
+		// The user profile was not found in our database
+		return microErrors.Unauthorized(lib.GetFullExternalServiceName("userService"), fmt.Sprintf("%v", err))
+	}
+
+	return fn(reqCtx, req, resp)
+}
+
 func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, resp interface{}) error {
-		meta, _ := metadata.FromContext(ctx)
-		var isServiceCaller bool = meta["Host"] == "" || meta["Method"] == ""
-		var reqCtx = context.WithValue(ctx, "serviceCaller", isServiceCaller)
-
-		if isServiceCaller {
-			return fn(reqCtx, req, resp)
-		}
-
-		userServiceClient := userServiceProto.NewUserService(lib.GetFullExternalServiceName("userService"), client.DefaultClient)
-
-		if _, err := userServiceClient.GetProfile(ctx, &userServiceProto.EmptyRequest{}); err != nil {
-			// The user profile was not found in our database
-			return microErrors.Unauthorized(lib.GetFullExternalServiceName("userService"), fmt.Sprintf("%v", err))
-		}
-
-		return fn(reqCtx, req, resp)
+		return AuthenticateRequest(fn, ctx, req, resp)
 	}
 }
 
