@@ -11,6 +11,7 @@ replace (
 )
 
 require (
+	cloud.google.com/go/storage v1.12.0
 	github.com/Condition17/fleet-services/file-service v0.0.0-20201207224653-a5cdb13fae6e
 	github.com/Condition17/fleet-services/lib v0.0.0-20201207231356-25fead6cea9f
 	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201207231356-25fead6cea9f

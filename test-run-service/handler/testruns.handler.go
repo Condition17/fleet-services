@@ -16,6 +16,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"reflect"
+	"time"
 )
 
 func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, res *proto.TestRunDetails) error {
@@ -139,11 +140,22 @@ func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, 
 }
 
 func (h *Handler) RegisterRunIssue(ctx context.Context, req *proto.RunIssue, res *proto.EmptyResponse) error {
-	newRunIssue := model.MarshalRunIssue(req)
-	if err := h.RunIssueRepository.Create(newRunIssue); err != nil {
-		log.Println("Error encountered while creating run issue:", err)
-		return nil
-	}
+	// Process request async
+	go func() {
+		var err error
+		var issueFileUrl string
+		// Upload as a binary file, the input bytes that determined the issue
+		bucketFileName := fmt.Sprintf("%v/%v_%v.bin", req.TestRunId, req.Issue, time.Now().Unix())
+		if issueFileUrl, err = h.cloudStorageClient.UploadBytes(runIssuesBucketName, bucketFileName, req.InputBytes); err != nil {
+			log.Fatalf("Error encountered uploading issue binary to bucket '%v' in file '%v': %v\n", runIssuesBucketName, bucketFileName, err)
+		}
+
+		newRunIssue := model.MarshalRunIssue(req)
+		newRunIssue.InputBinUrl = issueFileUrl
+		if err = h.RunIssueRepository.Create(newRunIssue); err != nil {
+			log.Fatalln("Error encountered while creating run issue:", err)
+		}
+	}()
 	return nil
 }
 

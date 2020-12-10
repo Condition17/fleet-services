@@ -17,6 +17,9 @@ import (
 )
 
 func main() {
+	var err error
+	var serviceHandler *handler.Handler
+
 	configs := config.GetConfig()
 	// Create database connection
 	db, err := database.CreateConnection()
@@ -43,8 +46,11 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	serviceHandler := handler.NewHandler(service, repository.TestRunRepository{DB: db}, repository.RunIssueRepository{DB: db})
-	proto.RegisterTestRunServiceHandler(service.Server(), &serviceHandler)
+	if serviceHandler, err = handler.NewHandler(service, repository.TestRunRepository{DB: db}, repository.RunIssueRepository{DB: db}); err != nil {
+		log.Fatal(err)
+	}
+
+	proto.RegisterTestRunServiceHandler(service.Server(), serviceHandler)
 
 	// Run service
 	if err := service.Run(); err != nil {
