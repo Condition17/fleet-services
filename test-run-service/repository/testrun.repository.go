@@ -29,7 +29,7 @@ func (r *TestRunRepository) Update(newTestRun *model.TestRun) error {
 
 func (r *TestRunRepository) GetAll(userId uint32) ([]*model.TestRun, error) {
 	var testRuns []*model.TestRun
-	if err := r.DB.Where("user_id = ?", userId).Find(&testRuns).Error; err != nil {
+	if err := r.DB.Preload("RunIssues").Where("user_id = ?", userId).Find(&testRuns).Error; err != nil {
 		return testRuns, err
 	}
 	return testRuns, nil
@@ -37,7 +37,7 @@ func (r *TestRunRepository) GetAll(userId uint32) ([]*model.TestRun, error) {
 
 func (r *TestRunRepository) GetUserTestRun(userId uint32, testRunId uint32) (*model.TestRun, error) {
 	var testRun model.TestRun
-	if err := r.DB.First(&testRun, "user_id = ? AND id = ?", userId, testRunId).Error; err != nil {
+	if err := r.DB.Preload("RunIssues").First(&testRun, "user_id = ? AND id = ?", userId, testRunId).Error; err != nil {
 		return nil, err
 	}
 	return &testRun, nil
@@ -46,7 +46,7 @@ func (r *TestRunRepository) GetUserTestRun(userId uint32, testRunId uint32) (*mo
 func (r *TestRunRepository) GetTestRunById(testRunId uint32) (*model.TestRun, error) {
 	var testRun model.TestRun
 
-	if err := r.DB.Preload("User").First(&testRun, "id = ?", testRunId).Error; err != nil {
+	if err := r.DB.Preload("RunIssues").Preload("User").First(&testRun, "id = ?", testRunId).Error; err != nil {
 		return nil, err
 	}
 	return &testRun, nil

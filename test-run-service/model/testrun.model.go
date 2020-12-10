@@ -14,6 +14,7 @@ type TestRun struct {
 	User          userModels.User
 	State         runStates.TestRunStateType
 	StateMetadata string `gorm:"type:text;default:''"`
+	RunIssues 	  []*RunIssue
 }
 
 func MarshalTestRun(testRun *proto.TestRun) *TestRun {
@@ -37,6 +38,7 @@ func UnmarshalTestRun(testRun *TestRun) *proto.TestRun {
 		},
 		State: string(testRun.State),
 		StateMetadata: testRun.StateMetadata,
+		RunIssues: UnmarshalRunIssuesCollection(testRun.RunIssues),
 	}
 }
 

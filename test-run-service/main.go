@@ -27,7 +27,7 @@ func main() {
 
 	// Automatically migrates the user struct
 	// into database columns/types etc.
-	_ = db.AutoMigrate(&model.TestRun{})
+	_ = db.AutoMigrate(&model.TestRun{}, &model.RunIssue{})
 
 	pubsub := googlepubsub.NewBroker(googlepubsub.ProjectID(configs.GoogleProjectID))
 	// New Service
@@ -43,7 +43,7 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	serviceHandler := handler.NewHandler(service, repository.TestRunRepository{DB: db})
+	serviceHandler := handler.NewHandler(service, repository.TestRunRepository{DB: db}, repository.RunIssueRepository{DB: db})
 	proto.RegisterTestRunServiceHandler(service.Server(), &serviceHandler)
 
 	// Run service

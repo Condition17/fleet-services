@@ -14,6 +14,7 @@ import (
 	runStates "github.com/Condition17/fleet-services/test-run-service/run-states"
 	microErrors "github.com/micro/go-micro/v2/errors"
 	"gorm.io/gorm"
+	"log"
 	"reflect"
 )
 
@@ -134,6 +135,15 @@ func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, 
 		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
 	}
 
+	return nil
+}
+
+func (h *Handler) RegisterRunIssue(ctx context.Context, req *proto.RunIssue, res *proto.EmptyResponse) error {
+	newRunIssue := model.MarshalRunIssue(req)
+	if err := h.RunIssueRepository.Create(newRunIssue); err != nil {
+		log.Println("Error encountered while creating run issue:", err)
+		return nil
+	}
 	return nil
 }
 

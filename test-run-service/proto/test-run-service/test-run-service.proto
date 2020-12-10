@@ -3,55 +3,65 @@ syntax = "proto3";
 package go.micro.api.testRunService;
 
 service TestRunService {
-	rpc Create(CreateTestRunRequest) returns (TestRunDetails) {}
-	rpc Get(TestRun) returns (TestRunDetails) {}
-	rpc GetById (TestRun) returns (TestRunDetails);
-	rpc List(EmptyRequest) returns (ListResponse) {}
-	rpc Delete(TestRun) returns (EmptyResponse) {}
-	rpc ChangeState(TestRunStateSpec) returns (TestRun) {}
+  rpc Create(CreateTestRunRequest) returns (TestRunDetails) {}
+  rpc Get(TestRun) returns (TestRunDetails) {}
+  rpc GetById (TestRun) returns (TestRunDetails);
+  rpc List(EmptyRequest) returns (ListResponse) {}
+  rpc Delete(TestRun) returns (EmptyResponse) {}
+  rpc ChangeState(TestRunStateSpec) returns (TestRun) {}
+  rpc RegisterRunIssue(RunIssue) returns (EmptyResponse) {}
 }
 
 message CreateTestRunRequest {
-	TestRun testRun = 1;
-	FileSpec fileSpec = 2;
+  TestRun testRun = 1;
+  FileSpec fileSpec = 2;
 }
 
 message FileSpec {
-	string id = 1;
-	string name = 2;
-	int64 size = 3;
-	uint32 maxChunkSize = 4;
+  string id = 1;
+  string name = 2;
+  int64 size = 3;
+  uint32 maxChunkSize = 4;
 }
 
 message User {
-	uint32 id = 1;
+  uint32 id = 1;
   string name = 2;
   string company = 3;
   string email = 4;
 }
 
+message RunIssue {
+  uint32 testRunId = 1;
+  string binaryPath = 2;
+  string issue = 3;
+  bytes inputBytes = 4;
+  bytes inputBytesPreview = 5;
+  string inputBinUrl = 6;
+}
 
 message TestRun {
-	uint32 id = 1;
-	string name = 2;
-	uint32 userId = 4;
-	User user = 5;
-	string state = 6;
-	string stateMetadata = 7;
+  uint32 id = 1;
+  string name = 2;
+  uint32 userId = 4;
+  User user = 5;
+  string state = 6;
+  string stateMetadata = 7;
+  repeated RunIssue runIssues = 8;
 }
 
 message TestRunDetails {
-	TestRun testRun = 1;
+  TestRun testRun = 1;
 }
 
 message ListResponse {
-	repeated TestRun testRuns = 1;
+  repeated TestRun testRuns = 1;
 }
 
 message TestRunStateSpec {
-	uint32 testRunId = 1;
-	string state = 2;
-	string stateMetadata = 3;
+  uint32 testRunId = 1;
+  string state = 2;
+  string stateMetadata = 3;
 }
 
 message EmptyRequest {};

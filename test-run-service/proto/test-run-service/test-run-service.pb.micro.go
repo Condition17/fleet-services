@@ -48,6 +48,7 @@ type TestRunService interface {
 	List(ctx context.Context, in *EmptyRequest, opts ...client.CallOption) (*ListResponse, error)
 	Delete(ctx context.Context, in *TestRun, opts ...client.CallOption) (*EmptyResponse, error)
 	ChangeState(ctx context.Context, in *TestRunStateSpec, opts ...client.CallOption) (*TestRun, error)
+	RegisterRunIssue(ctx context.Context, in *RunIssue, opts ...client.CallOption) (*EmptyResponse, error)
 }
 
 type testRunService struct {
@@ -122,6 +123,16 @@ func (c *testRunService) ChangeState(ctx context.Context, in *TestRunStateSpec, 
 	return out, nil
 }
 
+func (c *testRunService) RegisterRunIssue(ctx context.Context, in *RunIssue, opts ...client.CallOption) (*EmptyResponse, error) {
+	req := c.c.NewRequest(c.name, "TestRunService.RegisterRunIssue", in)
+	out := new(EmptyResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for TestRunService service
 
 type TestRunServiceHandler interface {
@@ -131,6 +142,7 @@ type TestRunServiceHandler interface {
 	List(context.Context, *EmptyRequest, *ListResponse) error
 	Delete(context.Context, *TestRun, *EmptyResponse) error
 	ChangeState(context.Context, *TestRunStateSpec, *TestRun) error
+	RegisterRunIssue(context.Context, *RunIssue, *EmptyResponse) error
 }
 
 func RegisterTestRunServiceHandler(s server.Server, hdlr TestRunServiceHandler, opts ...server.HandlerOption) error {
@@ -141,6 +153,7 @@ func RegisterTestRunServiceHandler(s server.Server, hdlr TestRunServiceHandler, 
 		List(ctx context.Context, in *EmptyRequest, out *ListResponse) error
 		Delete(ctx context.Context, in *TestRun, out *EmptyResponse) error
 		ChangeState(ctx context.Context, in *TestRunStateSpec, out *TestRun) error
+		RegisterRunIssue(ctx context.Context, in *RunIssue, out *EmptyResponse) error
 	}
 	type TestRunService struct {
 		testRunService
@@ -175,4 +188,8 @@ func (h *testRunServiceHandler) Delete(ctx context.Context, in *TestRun, out *Em
 
 func (h *testRunServiceHandler) ChangeState(ctx context.Context, in *TestRunStateSpec, out *TestRun) error {
 	return h.TestRunServiceHandler.ChangeState(ctx, in, out)
+}
+
+func (h *testRunServiceHandler) RegisterRunIssue(ctx context.Context, in *RunIssue, out *EmptyResponse) error {
+	return h.TestRunServiceHandler.RegisterRunIssue(ctx, in, out)
 }

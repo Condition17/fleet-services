@@ -9,11 +9,13 @@ import (
 type Handler struct {
 	baseservice.BaseHandler
 	TestRunRepository repository.TestRunRepository
+	RunIssueRepository repository.RunIssueRepository
 }
 
-func NewHandler(service micro.Service, repo repository.TestRunRepository) Handler {
+func NewHandler(service micro.Service, testRunRepo repository.TestRunRepository, runIssueRepo repository.RunIssueRepository) Handler {
 	return Handler{
 		BaseHandler:       baseservice.NewBaseHandler(service),
-		TestRunRepository: repo,
+		TestRunRepository: testRunRepo,
+		RunIssueRepository: runIssueRepo,
 	}
 }
