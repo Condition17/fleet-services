@@ -58,6 +58,7 @@ message FileAssemblySucceededEventData {
 
 message FileEvaluationFinishedEventData {
   uint32 testRunId = 1;
+  uint32 exitCode = 2;
 }
 
 message ServiceErrorEventData {

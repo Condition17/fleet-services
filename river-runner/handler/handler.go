@@ -70,7 +70,7 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 	// this block also sends run results to run state queue
 	go func() {
 		log.Println("Evaluating file with River...")
-		out, err := riverSdk.Run(path.Join(mountDirPath, fileData.Name),
+		exitCode, err := riverSdk.Run(path.Join(mountDirPath, fileData.Name),
 			"-secondsBetweenStats", "2",
 			"-arch", "x64",
 			"-max", "1",
@@ -85,7 +85,6 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 			_ = nfsModule.UmountVolume(mountDirPath)
 			return
 		}
-		log.Printf("River run successfully finished with output:\n%s\n", out)
 
 		// unmount volume
 		if err = nfsModule.UmountVolume(mountDirPath); err != nil {
@@ -94,7 +93,7 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 			return
 		}
 		// construct and send the notification message
-		eventData, _ := json.Marshal(&runControllerProto.FileEvaluationFinishedEventData{TestRunId: req.TestRunId})
+		eventData, _ := json.Marshal(&runControllerProto.FileEvaluationFinishedEventData{TestRunId: req.TestRunId, ExitCode: exitCode})
 		_ = h.sendRunStateEvent(context.Background(), runStateEvents.FileEvaluationFinished, eventData)
 	}()
 

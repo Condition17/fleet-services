@@ -6,16 +6,18 @@ import (
 )
 
 func main() {
-	output, err := riverSdk.Run(
-		"/Users/cristian_conache/Workspace/learning/river/River3/TestPrograms/crackme_xor",
+	exitCode, err := riverSdk.Run(
+		"/Users/cristian_conache/Workspace/learning/river/River3/TestPrograms/crash_detection",
 		"-secondsBetweenStats", "2",
 		"-arch", "x64",
 		"-max", "1",
 		"-outputType", "textual",
 	)
 
-	if err != nil {
+	if exitCode == 0 {
+		log.Println("Command succeeded")
+	} else {
+		log.Println("Command finished with exit code:", exitCode)
 		log.Printf("River command error: %v", err)
 	}
-	log.Printf("River command output: %s", output)
 }

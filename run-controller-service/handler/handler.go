@@ -295,6 +295,11 @@ func (h EventHandler) handleFileEvaluationFinished(ctx context.Context, event *p
 		h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Error, []byte(errors.TestRunUserBytesContextAppendError(eventData, err).Error()))
 		return
 	}
+
+	if eventData.ExitCode != 0 {
+		h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Failed, []byte{})
+		return
+	}
 	// TODO: add logic to mark test run as failed or succeeded
 	// update test run state - mark it as finished or succeeded
 	// HARDCODED succeeded for now
