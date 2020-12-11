@@ -79,13 +79,6 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 			fmt.Sprintf("%v/testRunService/RegisterRunIssue?testRunId=%v", configs.FleetServicesHttpApiUrl, req.TestRunId),
 		)
 
-		if err != nil {
-			log.Printf("[SERVICE ERROR] River run command error: %v", err)
-			_ = h.sendServiceError(context.Background(), req.TestRunId, err)
-			_ = nfsModule.UmountVolume(mountDirPath)
-			return
-		}
-
 		// unmount volume
 		if err = nfsModule.UmountVolume(mountDirPath); err != nil {
 			log.Printf("[SERVICE ERROR] Error encountered umounting volume (path: %v): %v", mountDirPath, err)
@@ -93,7 +86,7 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 			return
 		}
 		// construct and send the notification message
-		eventData, _ := json.Marshal(&runControllerProto.FileEvaluationFinishedEventData{TestRunId: req.TestRunId, ExitCode: exitCode})
+		eventData, _ := json.Marshal(&runControllerProto.FileEvaluationFinishedEventData{TestRunId: req.TestRunId, ExitCode: uint32(exitCode)})
 		_ = h.sendRunStateEvent(context.Background(), runStateEvents.FileEvaluationFinished, eventData)
 	}()
 
