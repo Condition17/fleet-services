@@ -5,8 +5,9 @@ import (
 )
 
 type Chunk struct {
-	Sha2 string `redis:"sha2"`
-	Size int64  `redis:"size"`
+	Sha2              string `redis:"sha2"`
+	Size              int64  `redis:"size"`
+	UploadedToStorage bool   `redis:"uploadedToStorage"`
 }
 
 func MarshalChunk(chunk *pb.Chunk) *Chunk {

@@ -10,10 +10,12 @@ replace (
 )
 
 require (
-	github.com/Condition17/fleet-services/lib v0.0.0-20201207230256-fd5e120ba798
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201207230256-fd5e120ba798
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201207230256-fd5e120ba798 // indirect
-	github.com/Microsoft/go-winio v0.4.15 // indirect
+	cloud.google.com/go v0.74.0 // indirect
+	cloud.google.com/go/pubsub v1.9.1 // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201211204130-f948d86320b4
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201211204130-f948d86320b4
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201211204130-f948d86320b4 // indirect
+	github.com/Microsoft/go-winio v0.4.16 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
@@ -43,16 +45,13 @@ require (
 	go.opencensus.io v0.22.5 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0 // indirect
+	golang.org/x/crypto v0.0.0-20201208171446-5f87f3452ae9 // indirect
 	golang.org/x/exp v0.0.0-20201008143054-e3b2a7f2fdc7 // indirect
-	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
-	golang.org/x/net v0.0.0-20201207224615-747e23833adb // indirect
-	golang.org/x/oauth2 v0.0.0-20201207163604-931764155e3f // indirect
-	golang.org/x/sys v0.0.0-20201207223542-d4d67f95c62d // indirect
+	golang.org/x/sys v0.0.0-20201211090839-8ad439b19e0f // indirect
 	golang.org/x/text v0.3.4 // indirect
-	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e // indirect
-	golang.org/x/tools v0.0.0-20201207204333-a835c872fcea // indirect
+	golang.org/x/tools v0.0.0-20201211185031-d93e913c1a58 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20201207150747-9ee31aac76e7 // indirect
+	google.golang.org/genproto v0.0.0-20201211151036-40ec1c210f7a // indirect
 	google.golang.org/grpc v1.34.0
 	google.golang.org/protobuf v1.25.0
 	gorm.io/driver/postgres v1.0.5 // indirect

@@ -25,29 +25,32 @@ func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) (strin
 	var hashKey string = composeChunkKey(sha2)
 
 	// check if the chunk was already uploaded for the given file
-	alreadyUploaded, err := redis.Bool(conn.Do("EXISTS", composeFileChunkBindingKey(spec.FileId, sha2)))
+	alreadyCreatedForFile, err := redis.Bool(conn.Do("EXISTS", composeFileChunkBindingKey(spec.FileId, sha2)))
 	if err != nil {
-		return "", false, err
+		return "", alreadyCreatedForFile, err
 	}
 
-	if alreadyUploaded {
-		// chunk already updated for the current file - we no longer need to perform another operations
+	if alreadyCreatedForFile {
+		// chunk already updated for the current file
+		// ensure chunk is specified as part of the file
+		if _, err := conn.Do("HSET", composeFileChunkStoreKey(spec.FileId, getStoreIndex(spec.Index)), spec.Index, sha2); err != nil {
+			return "", true, err
+		}
 		return sha2, true, nil
 	}
 
 	// the chunk was not already uploaded for the current file
 	// but we need to verify if the chunk was uploaded at all - DEDUPLICATION
-	alreadyCreated, err := redis.Bool(conn.Do("EXISTS", hashKey))
+	alreadyCreatedForAnotherFile, err := redis.Bool(conn.Do("EXISTS", hashKey))
 	if err != nil {
 		return "", false, err
 	}
 
 	conn.Send("MULTI")
-	if !alreadyCreated {
+	if !alreadyCreatedForAnotherFile {
 		// create chunk entity
 		var hashData *model.Chunk = &model.Chunk{Sha2: sha2, Size: int64(len(spec.Data))}
 		conn.Send("HSET", redis.Args{}.Add(hashKey).AddFlat(hashData)...)
-		// TODO: add data to action upload queue
 	}
 
 	// create file-chunk binding
@@ -58,10 +61,10 @@ func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) (strin
 	_, err = conn.Do("EXEC")
 
 	if err != nil {
-		return "", false, err
+		return "", alreadyCreatedForAnotherFile, err
 	}
 
-	return sha2, alreadyCreated, nil
+	return sha2, alreadyCreatedForAnotherFile, nil
 }
 
 func (r *ChunkRepository) GetByIndexInFile(ctx context.Context, fileId string, index uint64) (*model.Chunk, error) {

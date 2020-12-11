@@ -133,6 +133,18 @@ func (h EventHandler) handleTestRunInitiated(ctx context.Context, event *proto.E
 		h.changeTestRunState(ctx, eventData.TestRunSpec.Id, testRunStates.TestRunState.Error, []byte(err.Error()))
 		return
 	}
+
+	// assign the created file to the current test run
+	var assignmentDetails testRunServiceProto.AssignRequest = testRunServiceProto.AssignRequest{
+		TestRunId: eventData.TestRunSpec.Id,
+		FileId:    createFileResp.File.Id,
+	}
+	if _, err := h.TestRunService.AssignFile(ctx, &assignmentDetails); err != nil {
+		log.Printf("Error while assigning file (id: %v) to test run (id: %v):%v\n", assignmentDetails.FileId, assignmentDetails.TestRunId, err.Error())
+		h.changeTestRunState(ctx, eventData.TestRunSpec.Id, testRunStates.TestRunState.Error, []byte(errors.FileAssignError(eventData.TestRunSpec, err).Error()))
+		return
+	}
+
 	stateChangeMetadata, _ := json.Marshal(&proto.FileSpec{
 		Id:           createFileResp.File.Id,
 		Name:         fileSpec.Name,

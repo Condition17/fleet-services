@@ -123,3 +123,15 @@ resource "google_container_node_pool" "primary_cluster_nodes" {
 resource "google_storage_bucket" "chunks_bucket" {
   name = "fleet-files-chunks"
 }
+
+resource "google_storage_bucket" "fleet_external_services_deploy_bucket" {
+  name = "fleet-deploy"
+  location = "US-EAST1"
+  storage_class = "standard"
+}
+
+resource "google_storage_bucket" "fleet_runs_outputs" {
+  name = "fleet-runs"
+  location = "US-EAST1"
+  storage_class = "standard"
+}

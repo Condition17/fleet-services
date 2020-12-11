@@ -34,13 +34,13 @@ func (h *Handler) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.Em
 		return errors.BadRequest(h.Service.Name(), "Invalid chunk index for file.")
 	}
 
-	chunkSHA2, uploadedToStorage, err := h.ChunkRepository.Create(ctx, req)
+	chunkSHA2, mayExistInStorage, err := h.ChunkRepository.Create(ctx, req)
 	if err != nil {
 		return err
 	}
 
 	go func() {
-		if uploadedToStorage == true {
+		if mayExistInStorage == true {
 			if err := h.HandleChunkStorageUploadSuccess(ctx, model.UnmarshalFile(file)); err != nil {
 				log.Printf("[SERVICE ERROR]: Error while handling chunk storage upload success: %v", err)
 				h.SendServiceError(context.Background(), file.TestRunId, err)
