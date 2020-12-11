@@ -10,5 +10,5 @@
 /*/service
 /*/server
 /*/__*
-/river-runner/env/*
-/file-builder/env/*
+/river-runner/env/prod*
+/file-builder/env/prod*
