@@ -10,11 +10,17 @@ service TestRunService {
   rpc Delete(TestRun) returns (EmptyResponse) {}
   rpc ChangeState(TestRunStateSpec) returns (TestRun) {}
   rpc RegisterRunIssue(RunIssue) returns (EmptyResponse) {}
+  rpc AssignFile(AssignRequest) returns (EmptyResponse) {}
 }
 
 message CreateTestRunRequest {
   TestRun testRun = 1;
   FileSpec fileSpec = 2;
+}
+
+message AssignRequest {
+  uint32 testRunId = 1;
+  string fileId = 2;
 }
 
 message FileSpec {
@@ -43,6 +49,7 @@ message RunIssue {
 message TestRun {
   uint32 id = 1;
   string name = 2;
+  string fileId = 3;
   uint32 userId = 4;
   User user = 5;
   string state = 6;

@@ -10,6 +10,7 @@ import (
 type TestRun struct {
 	gorm.Model
 	Name          string `gorm:"not null;type:varchar(100);default:null"`
+	FileID        string `gorm:"type:varchar(100)"`
 	UserID        uint32
 	User          userModels.User
 	State         runStates.TestRunStateType
@@ -21,6 +22,7 @@ func MarshalTestRun(testRun *proto.TestRun) *TestRun {
 	return &TestRun{
 		Model:  gorm.Model{ID: uint(testRun.Id)},
 		Name:   testRun.Name,
+		FileID: string(testRun.FileId),
 	}
 }
 
@@ -29,6 +31,7 @@ func UnmarshalTestRun(testRun *TestRun) *proto.TestRun {
 	return &proto.TestRun{
 		Id:     uint32(testRun.ID),
 		Name:   testRun.Name,
+		FileId: string(testRun.FileID),
 		UserId: testRun.UserID,
 		User: &proto.User{
 			Id:      userData.Id,

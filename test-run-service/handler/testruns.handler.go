@@ -48,6 +48,29 @@ func (h *Handler) Create(ctx context.Context, req *proto.CreateTestRunRequest, r
 	return nil
 }
 
+func (h *Handler) AssignFile(ctx context.Context, req *proto.AssignRequest, res *proto.EmptyResponse) error {
+	user, _ := auth.GetUserFromDecodedToken(ctx)
+	testRun, err := h.TestRunRepository.GetUserTestRun(user.Id, req.TestRunId)
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return microErrors.NotFound(h.Service.Name(), "Test run not found")
+		}
+		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+	}
+
+	if testRun.FileID != "" {
+		return microErrors.Conflict(h.Service.Name(), "Test run already has a file assigned to it.")
+	}
+
+	testRun.FileID = req.FileId
+	if err := h.TestRunRepository.Update(testRun); err != nil {
+		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+	}
+
+	return nil
+}
+
 func (h *Handler) Get(ctx context.Context, req *proto.TestRun, res *proto.TestRunDetails) error {
 	user, _ := auth.GetUserFromDecodedToken(ctx)
 	result, err := h.TestRunRepository.GetUserTestRun(user.Id, req.Id)
