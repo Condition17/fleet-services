@@ -13,6 +13,7 @@ type runStatesEnumStruct struct {
 	AssembleFile                  TestRunStateType
 	AssembleFileDone              TestRunStateType
 	Evaluating                    TestRunStateType
+	EvaluationDone                TestRunStateType
 	Finished                      TestRunStateType
 	Error                         TestRunStateType
 }
@@ -28,6 +29,7 @@ var TestRunState = runStatesEnumStruct{
 	AssembleFile:                  "assemble_file",
 	AssembleFileDone:              "assemble_file_done",
 	Evaluating:                    "evaluating",
+	EvaluationDone:                "evaluationDone",
 	Finished:                      "finished",
 	Error:                         "error",
 }
