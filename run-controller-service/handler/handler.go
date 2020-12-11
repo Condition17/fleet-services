@@ -296,14 +296,15 @@ func (h EventHandler) handleFileEvaluationFinished(ctx context.Context, event *p
 		return
 	}
 
+	// update test run state - mark file evaluation as done
+	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.EvaluationDone, []byte{})
+
 	if eventData.ExitCode != 0 {
-		h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Failed, []byte{})
+		h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Error, []byte{})
 		return
 	}
-	// TODO: add logic to mark test run as failed or succeeded
-	// update test run state - mark it as finished or succeeded
-	// HARDCODED succeeded for now
-	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Succeeded, []byte{})
+
+	h.changeTestRunState(ctx, eventData.TestRunId, testRunStates.TestRunState.Finished, []byte{})
 }
 
 func (h EventHandler) handleServiceError(ctx context.Context, event *proto.Event) {

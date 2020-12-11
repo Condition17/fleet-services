@@ -11,13 +11,13 @@ replace (
 
 require (
 	cloud.google.com/go v0.74.0 // indirect
-	github.com/Condition17/fleet-services/file-builder v0.0.0-20201211204130-f948d86320b4
-	github.com/Condition17/fleet-services/file-service v0.0.0-20201211204130-f948d86320b4
-	github.com/Condition17/fleet-services/lib v0.0.0-20201211204130-f948d86320b4
-	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20201211204130-f948d86320b4
-	github.com/Condition17/fleet-services/river-runner v0.0.0-20201211204130-f948d86320b4
-	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201211204130-f948d86320b4
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201211204130-f948d86320b4 // indirect
+	github.com/Condition17/fleet-services/file-builder v0.0.0-20201211214847-ce92677846e7
+	github.com/Condition17/fleet-services/file-service v0.0.0-20201211214847-ce92677846e7
+	github.com/Condition17/fleet-services/lib v0.0.0-20201211214847-ce92677846e7
+	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20201211214847-ce92677846e7
+	github.com/Condition17/fleet-services/river-runner v0.0.0-20201211214847-ce92677846e7
+	github.com/Condition17/fleet-services/test-run-service v0.0.0-20201211214847-ce92677846e7
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201211214847-ce92677846e7 // indirect
 	github.com/go-git/go-git/v5 v5.2.0 // indirect
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.4 // indirect
