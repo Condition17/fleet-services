@@ -152,6 +152,10 @@ func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, 
 		stateMetadataBytes, _ = json.Marshal(map[string]string{"lastValidState": string(testRun.State), "metadata": req.StateMetadata})
 	}
 
+	if runStates.TestRunState.Error == runStates.TestRunStateType(req.State) || runStates.TestRunState.Finished == runStates.TestRunStateType(req.State) {
+		testRun.FinishedAt = time.Now()
+	}
+
 	testRun.StateMetadata = b64.StdEncoding.EncodeToString(stateMetadataBytes)
 	testRun.State = runStates.TestRunStateType(req.State)
 

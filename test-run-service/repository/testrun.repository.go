@@ -4,6 +4,7 @@ import (
 	"github.com/Condition17/fleet-services/test-run-service/model"
 	"github.com/Condition17/fleet-services/test-run-service/run-states"
 	"gorm.io/gorm"
+	"log"
 )
 
 type TestRunRepository struct {
@@ -29,9 +30,18 @@ func (r *TestRunRepository) Update(newTestRun *model.TestRun) error {
 
 func (r *TestRunRepository) GetAll(userId uint32) ([]*model.TestRun, error) {
 	var testRuns []*model.TestRun
-	if err := r.DB.Preload("RunIssues").Where("user_id = ?", userId).Find(&testRuns).Error; err != nil {
+	queryResult := r.DB.Table("test_runs").
+		Select("test_runs.*, count(run_issues.id) as run_issues_count").
+		Joins("left join run_issues on test_runs.id = run_issues.test_run_id").
+		Where("test_runs.user_id = ?", userId).
+		Group("test_runs.id").
+		Find(&testRuns)
+
+	if err := queryResult.Error; err != nil {
+		log.Println("Error encountered:", err)
 		return testRuns, err
 	}
+
 	return testRuns, nil
 }
 

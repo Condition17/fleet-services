@@ -4,18 +4,22 @@ import (
 	proto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"
 	"github.com/Condition17/fleet-services/test-run-service/run-states"
 	userModels "github.com/Condition17/fleet-services/user-service/model"
+	"github.com/golang/protobuf/ptypes"
 	"gorm.io/gorm"
+	"time"
 )
 
 type TestRun struct {
 	gorm.Model
-	Name          string `gorm:"not null;type:varchar(100);default:null"`
-	FileID        string `gorm:"type:varchar(100)"`
-	UserID        uint32
-	User          userModels.User
-	State         runStates.TestRunStateType
-	StateMetadata string `gorm:"type:text;default:''"`
-	RunIssues 	  []*RunIssue
+	FinishedAt     time.Time
+	Name           string `gorm:"not null;type:varchar(100);default:null"`
+	FileID         string `gorm:"type:varchar(100)"`
+	UserID         uint32
+	User           userModels.User
+	State          runStates.TestRunStateType
+	StateMetadata  string `gorm:"type:text;default:''"`
+	RunIssues      []*RunIssue
+	RunIssuesCount uint32 `gorm:"-"`
 }
 
 func MarshalTestRun(testRun *proto.TestRun) *TestRun {
@@ -28,6 +32,9 @@ func MarshalTestRun(testRun *proto.TestRun) *TestRun {
 
 func UnmarshalTestRun(testRun *TestRun) *proto.TestRun {
 	userData := userModels.UnmarshalUser(&testRun.User)
+	createdAtTimestamp, _ := ptypes.TimestampProto(testRun.CreatedAt)
+	finishedAtTimestamp, _ := ptypes.TimestampProto(testRun.FinishedAt)
+
 	return &proto.TestRun{
 		Id:     uint32(testRun.ID),
 		Name:   testRun.Name,
@@ -39,9 +46,12 @@ func UnmarshalTestRun(testRun *TestRun) *proto.TestRun {
 			Company: userData.Company,
 			Email:   userData.Email,
 		},
-		State: string(testRun.State),
-		StateMetadata: testRun.StateMetadata,
-		RunIssues: UnmarshalRunIssuesCollection(testRun.RunIssues),
+		State:          string(testRun.State),
+		StateMetadata:  testRun.StateMetadata,
+		RunIssuesCount: testRun.RunIssuesCount,
+		RunIssues:      UnmarshalRunIssuesCollection(testRun.RunIssues),
+		CreatedAt:      createdAtTimestamp,
+		FinishedAt:     finishedAtTimestamp,
 	}
 }
 

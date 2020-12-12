@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 package go.micro.api.testRunService;
 
 service TestRunService {
@@ -55,6 +57,9 @@ message TestRun {
   string state = 6;
   string stateMetadata = 7;
   repeated RunIssue runIssues = 8;
+  uint32 runIssuesCount = 9;
+  google.protobuf.Timestamp CreatedAt = 10;
+  google.protobuf.Timestamp FinishedAt = 11;
 }
 
 message TestRunDetails {
