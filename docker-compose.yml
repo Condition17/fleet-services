@@ -1,21 +1,32 @@
 version: '3.7'
 
 services:
-  microapigateway:
-    image: micro/micro
-    command: api --handler=rpc --address=:8080
+  microapi:
+    image: micro/micro:v2.9.3
+    command: api --handler=rpc
     ports:
       - "8080:8080"
     environment:
       MICRO_REGISTRY: "mdns"
-  
-  microweb:
-    image: micro/micro
-    command: web
+      MICRO_API_ADDRESS: ":8080"
+
+  microproxy:
+    image: micro/micro:v2.9.3
+    command: proxy
     ports:
       - "8081:8081"
     environment:
-      MICRO_WEB_ADDRESS: ":8081"
+      MICRO_REGISTRY: "mdns"
+      MICRO_PROXY_ADDRESS: ":8081"
+
+  microweb:
+    image: micro/micro:v2.9.3
+    command: web
+    ports:
+      - "8082:8082"
+    environment:
+      MICRO_REGISTRY: "mdns"
+      MICRO_WEB_ADDRESS: ":8082"
 
   redis:
     image: redis:latest
@@ -26,44 +37,125 @@ services:
     ports:
       - "6379:6379"
 
-  file-service:
+  user-service:
     restart: always
-    build: ./file-service
+    build: ./user-service
+    volumes:
+      - ./keys:/keys
+    links:
+      - postgres
     depends_on:
-      - redis
+      - postgres
     environment:
-      MICRO_SERVER_ADDRESS: ":50051"
-  
+      ENV_NAME: "compose"
+      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
+
   test-run-service:
     restart: always
     build: ./test-run-service
-    depends_on:
-      - pg-database
-      - file-service
+    volumes:
+      - ./keys:/keys
     links:
-      - pg-database
+      - postgres
+    depends_on:
+      - postgres
     environment:
-      MICRO_SERVER_ADDRESS: ":50051"
+      ENV_NAME: "compose"
+      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
+
+  file-service:
+    restart: always
+    build: ./file-service
+    volumes:
+      - ./keys:/keys
+    links:
+      - redis
+    depends_on:
+      - redis
+    environment:
+      ENV_NAME: "compose"
+      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
 
   storage-uploader-service:
     restart: always
     build: ./storage-uploader-service
+    volumes:
+      - ./keys:/keys
     environment:
-      MICRO_SERVER_ADDRESS: ":50051"
+      ENV_NAME: "compose"
+      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
+
+  resource-manager-service:
+    restart: always
+    build: ./resource-manager-service
+    volumes:
+      - ./keys:/keys
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    environment:
+      ENV_NAME: "compose"
+      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
+
+  wss:
+    restart: always
+    build: ./wss
+    volumes:
+      - ./keys:/keys
+    ports:
+      - "3001:3001"
+    environment:
+      REDIS_HOST: "redis"
+      REDIS_PORT: "6379"
+      TOKEN_SECRET: "mySuperSecretKey"
+      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
+
+  file-builder:
+    restart: always
+    build: ./file-builder
+    privileged: true
+    volumes:
+      - ./keys:/keys
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8090:8090"
+    environment:
+      ENV_NAME: "compose"
+      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
+
+  river-runner:
+    restart: always
+    build: ./river-runner
+    privileged: true
+    volumes:
+      - ./keys:/keys
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8091:8091"
+    environment:
+      ENV_NAME: "compose"
+      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
 
   run-controller-service:
     restart: always
     build: ./run-controller-service
+    volumes:
+      - ./keys:/keys
     environment:
-      MICRO_SERVER_ADDRESS: ":50051"
+      ENV_NAME: "compose"
+      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
 
-  pg-database:
+  postgres:
     image: postgres:alpine
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data/ # ensures data persistence between restarting
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=root
+      POSTGRES_DB: "fleet"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "root"
     ports:
-      - 5432:5432
+      - 5431:5432
 
 volumes:
   redis-data:

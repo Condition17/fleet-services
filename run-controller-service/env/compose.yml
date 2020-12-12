@@ -1,0 +1,2 @@
+FILE_BUILDER_SERVICE_URL: "file-builder:8090"
+RIVER_RUNNER_SERVICE_URL: "river-runner:8091"

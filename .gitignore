@@ -12,3 +12,5 @@
 /*/__*
 /river-runner/env/prod*
 /file-builder/env/prod*
+/data
+/postgres-data
