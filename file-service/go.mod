@@ -12,9 +12,9 @@ replace (
 require (
 	cloud.google.com/go v0.74.0 // indirect
 	cloud.google.com/go/pubsub v1.9.1 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20201211204130-f948d86320b4
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201211204130-f948d86320b4
-	github.com/Condition17/fleet-services/user-service v0.0.0-20201211204130-f948d86320b4 // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20201212145620-23a3a202d262
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20201212145620-23a3a202d262
+	github.com/Condition17/fleet-services/user-service v0.0.0-20201212145620-23a3a202d262 // indirect
 	github.com/Microsoft/go-winio v0.4.16 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
