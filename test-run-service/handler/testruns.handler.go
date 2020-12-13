@@ -124,12 +124,12 @@ func (h *Handler) Delete(ctx context.Context, req *proto.TestRun, res *proto.Emp
 	return nil
 }
 
-func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, res *proto.TestRun) error {
-	var isServiceCaller bool = ctx.Value("serviceCaller").(bool)
-
-	if !isServiceCaller {
-		return microErrors.Unauthorized(h.Service.Name(), "Caller not authorized for this operation")
-	}
+func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, res *proto.TestRunDetails) error {
+	//var isServiceCaller bool = ctx.Value("serviceCaller").(bool)
+	//
+	//if !isServiceCaller {
+	//	return microErrors.Unauthorized(h.Service.Name(), "Caller not authorized for this operation")
+	//}
 
 	testRun, err := h.TestRunRepository.GetTestRunById(req.TestRunId)
 	if err != nil {
@@ -163,7 +163,7 @@ func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, 
 		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
 	}
 
-	res = model.UnmarshalTestRun(testRun)
+	res.TestRun = model.UnmarshalTestRun(testRun)
 
 	return nil
 }

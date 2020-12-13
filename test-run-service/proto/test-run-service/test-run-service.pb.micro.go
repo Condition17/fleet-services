@@ -48,7 +48,7 @@ type TestRunService interface {
 	GetById(ctx context.Context, in *TestRun, opts ...client.CallOption) (*TestRunDetails, error)
 	List(ctx context.Context, in *EmptyRequest, opts ...client.CallOption) (*ListResponse, error)
 	Delete(ctx context.Context, in *TestRun, opts ...client.CallOption) (*EmptyResponse, error)
-	ChangeState(ctx context.Context, in *TestRunStateSpec, opts ...client.CallOption) (*TestRun, error)
+	ChangeState(ctx context.Context, in *TestRunStateSpec, opts ...client.CallOption) (*TestRunDetails, error)
 	RegisterRunIssue(ctx context.Context, in *RunIssue, opts ...client.CallOption) (*EmptyResponse, error)
 	AssignFile(ctx context.Context, in *AssignRequest, opts ...client.CallOption) (*EmptyResponse, error)
 }
@@ -115,9 +115,9 @@ func (c *testRunService) Delete(ctx context.Context, in *TestRun, opts ...client
 	return out, nil
 }
 
-func (c *testRunService) ChangeState(ctx context.Context, in *TestRunStateSpec, opts ...client.CallOption) (*TestRun, error) {
+func (c *testRunService) ChangeState(ctx context.Context, in *TestRunStateSpec, opts ...client.CallOption) (*TestRunDetails, error) {
 	req := c.c.NewRequest(c.name, "TestRunService.ChangeState", in)
-	out := new(TestRun)
+	out := new(TestRunDetails)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -153,7 +153,7 @@ type TestRunServiceHandler interface {
 	GetById(context.Context, *TestRun, *TestRunDetails) error
 	List(context.Context, *EmptyRequest, *ListResponse) error
 	Delete(context.Context, *TestRun, *EmptyResponse) error
-	ChangeState(context.Context, *TestRunStateSpec, *TestRun) error
+	ChangeState(context.Context, *TestRunStateSpec, *TestRunDetails) error
 	RegisterRunIssue(context.Context, *RunIssue, *EmptyResponse) error
 	AssignFile(context.Context, *AssignRequest, *EmptyResponse) error
 }
@@ -165,7 +165,7 @@ func RegisterTestRunServiceHandler(s server.Server, hdlr TestRunServiceHandler, 
 		GetById(ctx context.Context, in *TestRun, out *TestRunDetails) error
 		List(ctx context.Context, in *EmptyRequest, out *ListResponse) error
 		Delete(ctx context.Context, in *TestRun, out *EmptyResponse) error
-		ChangeState(ctx context.Context, in *TestRunStateSpec, out *TestRun) error
+		ChangeState(ctx context.Context, in *TestRunStateSpec, out *TestRunDetails) error
 		RegisterRunIssue(ctx context.Context, in *RunIssue, out *EmptyResponse) error
 		AssignFile(ctx context.Context, in *AssignRequest, out *EmptyResponse) error
 	}
@@ -200,7 +200,7 @@ func (h *testRunServiceHandler) Delete(ctx context.Context, in *TestRun, out *Em
 	return h.TestRunServiceHandler.Delete(ctx, in, out)
 }
 
-func (h *testRunServiceHandler) ChangeState(ctx context.Context, in *TestRunStateSpec, out *TestRun) error {
+func (h *testRunServiceHandler) ChangeState(ctx context.Context, in *TestRunStateSpec, out *TestRunDetails) error {
 	return h.TestRunServiceHandler.ChangeState(ctx, in, out)
 }
 

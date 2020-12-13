@@ -10,7 +10,7 @@ service TestRunService {
   rpc GetById (TestRun) returns (TestRunDetails);
   rpc List(EmptyRequest) returns (ListResponse) {}
   rpc Delete(TestRun) returns (EmptyResponse) {}
-  rpc ChangeState(TestRunStateSpec) returns (TestRun) {}
+  rpc ChangeState(TestRunStateSpec) returns (TestRunDetails) {}
   rpc RegisterRunIssue(RunIssue) returns (EmptyResponse) {}
   rpc AssignFile(AssignRequest) returns (EmptyResponse) {}
 }
