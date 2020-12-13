@@ -155,12 +155,14 @@ func (h EventHandler) handleTestRunInitiated(ctx context.Context, event *proto.E
 }
 
 func (h EventHandler) changeTestRunState(ctx context.Context, testRunId uint32, newState testRunStates.TestRunStateType, stateMetadata []byte) {
+	var err error
+	var newTestRunDetails *testRunServiceProto.TestRunDetails
 	var newStateSpec testRunServiceProto.TestRunStateSpec = testRunServiceProto.TestRunStateSpec{
 		TestRunId:     testRunId,
 		State:         string(newState),
 		StateMetadata: string(stateMetadata),
 	}
-	if _, err := h.TestRunService.ChangeState(ctx, &newStateSpec); err != nil {
+	if newTestRunDetails, err = h.TestRunService.ChangeState(ctx, &newStateSpec); err != nil {
 		if newState != testRunStates.TestRunState.Error {
 			// Modify test run state if encountered an error while interacting with test run service
 			// Do this only if the initial (un-transmitted) state as not an error state
@@ -172,6 +174,7 @@ func (h EventHandler) changeTestRunState(ctx context.Context, testRunId uint32, 
 	}
 
 	// Send state change data to WSS
+	newStateSpec.StateMetadata = newTestRunDetails.TestRun.StateMetadata
 	newStateSpecBytes, _ := json.Marshal(&newStateSpec)
 	h.SendEventToWssQueue(ctx, events.WssTestRunStateChanged, newStateSpecBytes)
 }
