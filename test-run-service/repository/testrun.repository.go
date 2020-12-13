@@ -42,6 +42,8 @@ func (r *TestRunRepository) GetAll(userId uint32) ([]*model.TestRun, error) {
 		return testRuns, err
 	}
 
+	log.Println("test runs:", testRuns)
+
 	return testRuns, nil
 }
 
