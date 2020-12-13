@@ -163,6 +163,8 @@ func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, 
 		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
 	}
 
+	res = model.UnmarshalTestRun(testRun)
+
 	return nil
 }
 
