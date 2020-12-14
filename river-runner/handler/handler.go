@@ -70,7 +70,7 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 	// this block also sends run results to run state queue
 	go func() {
 		log.Println("Evaluating file with River...")
-		exitCode, err := riverSdk.Run(path.Join(mountDirPath, fileData.Name),
+		exitCode, err := riverSdk.Run(path.Join(mountDirPath, fmt.Sprintf("/%v", req.TestRunId), fileData.Name),
 			"-secondsBetweenStats", "2",
 			"-arch", "x64",
 			"-max", "1",

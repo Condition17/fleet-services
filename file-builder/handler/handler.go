@@ -76,7 +76,7 @@ func (h *Handler) AssembleFile(ctx context.Context, req *proto.FileAssembleReque
 			Name:             fileData.Name,
 			TotalChunksCount: fileData.TotalChunksCount,
 			MaxChunkSize:     fileData.MaxChunkSize,
-			ParentDir:        mountDirPath,
+			ParentDir:        path.Join(mountDirPath, fmt.Sprintf("/%v", req.TestRunId)),
 		})
 		select {
 		case <-feedback.SuccessChan:

@@ -6,14 +6,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	runStateEvents "github.com/Condition17/fleet-services/run-controller-service/events"
+	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"math"
 	"time"
 
 	"github.com/Condition17/fleet-services/resource-manager-service/config"
 	"github.com/Condition17/fleet-services/resource-manager-service/model"
 	proto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service"
-	runStateEvents "github.com/Condition17/fleet-services/run-controller-service/events"
-	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	microErrors "github.com/micro/go-micro/v2/errors"
 	"google.golang.org/api/file/v1"
 	"gorm.io/gorm"
@@ -38,6 +38,7 @@ func (h *Handler) GetFileSystem(ctx context.Context, req *proto.FileSystemSpec, 
 func (h *Handler) ProvisionFileSystem(ctx context.Context, req *proto.FileSystemSpec, res *proto.EmptyResponse) error {
 	var requestedSizeGb int64 = int64(math.Round(float64(req.SizeInBytes)/float64(math.Pow10(9)) + 0.5))
 	var neededFsCapacityGb = int64(math.Max(float64(MinFilestoreCapacityGb), float64(requestedSizeGb)))
+	var locationPath = fmt.Sprintf("projects/%s/locations/%s", config.GetConfig().GoogleProjectID, config.GetConfig().ResourcesDeployLocations)
 
 	if neededFsCapacityGb > MaxFilestoreCapacityGb {
 		return errors.New(fmt.Sprintf(
@@ -48,11 +49,17 @@ func (h *Handler) ProvisionFileSystem(ctx context.Context, req *proto.FileSystem
 		))
 	}
 
+	// TODO: we may consider to remove it | also, handle the case when the existent instance is pending
+	fsInstancesListCall := h.CloudFileStoreService.Projects.Locations.Instances.List(locationPath)
+	if fsInstanceListResponse, err := fsInstancesListCall.Do(); err != nil {
+		return errors.New(fmt.Sprintf("Error while listing filestore instances: %v", err))
+	} else if len(fsInstanceListResponse.Instances) > 0 {
+		go h.createFsEntryInDb(req.TestRunId, fsInstanceListResponse.Instances[0])
+		return nil
+	}
+
 	var fsInstanceConfig *file.Instance = h.buildFSInstanceConfig(neededFsCapacityGb)
-	createFsInstanceCall := h.CloudFileStoreService.Projects.Locations.Instances.Create(
-		fmt.Sprintf("projects/%s/locations/%s", config.GetConfig().GoogleProjectID, config.GetConfig().ResourcesDeployLocations),
-		fsInstanceConfig,
-	)
+	createFsInstanceCall := h.CloudFileStoreService.Projects.Locations.Instances.Create(locationPath, fsInstanceConfig)
 
 	var instanceIdMd5 [16]byte = md5.Sum([]byte(fmt.Sprintf("%v-%v-%v", time.Now().Unix(), neededFsCapacityGb, req.TestRunId)))
 	createFsInstanceCall.InstanceId(fmt.Sprintf("instance-%x", instanceIdMd5))
@@ -75,14 +82,18 @@ func (h *Handler) executePostFSCreateOperationSteps(testRunId uint32, op *file.O
 		return
 	}
 
-	var fsInstance file.Instance
-	if err := json.Unmarshal(finishedOperation.Response, &fsInstance); err != nil {
+	var fsInstance *file.Instance
+	if err := json.Unmarshal(finishedOperation.Response, fsInstance); err != nil {
 		fmt.Printf("Error encountered while unmarshalling operation response: %v", err)
 		h.SendServiceError(context.Background(), testRunId, err)
 		return
 	}
 
-	_, err = h.FileSystemRepository.Create(&model.FileSystem{
+	h.createFsEntryInDb(testRunId, fsInstance);
+}
+
+func (h *Handler) createFsEntryInDb(testRunId uint32, fsInstance *file.Instance) {
+	_, err := h.FileSystemRepository.Create(&model.FileSystem{
 		IP:                  fsInstance.Networks[0].IpAddresses[0],
 		Name:                fsInstance.Name,
 		FileShareCapacityGb: fsInstance.FileShares[0].CapacityGb,
@@ -99,6 +110,7 @@ func (h *Handler) executePostFSCreateOperationSteps(testRunId uint32, op *file.O
 	// send data to run controller service
 	fsProvisionedEventData, _ := json.Marshal(&runControllerProto.FileSystemProvisionedEventData{TestRunId: testRunId})
 	h.SendRunStateEvent(context.Background(), runStateEvents.FileSystemProvisioned, fsProvisionedEventData)
+	return
 }
 
 func (h *Handler) waitForFSOperationToFinish(op *file.Operation) (*file.Operation, error) {

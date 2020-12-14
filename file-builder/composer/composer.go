@@ -81,6 +81,8 @@ func NewComposer(chunksStorageClient chunksStorage.Client, fileServiceClient fil
 }
 
 func (c *Composer) ComposeFile(fileSpec *FileSpec) ComposeOperationFeedback {
+	// Ensure parent directory is created and ignore any other issue
+	_ = os.Mkdir(fileSpec.ParentDir, 0777)
 	// Ensure requested target file is created before composing it
 	fileSpec.FileOnDisk, _ = os.OpenFile(path.Join(fileSpec.ParentDir, fileSpec.Name), os.O_CREATE|os.O_RDWR, 0666)
 	// Create channels needed in the compose processes
