@@ -83,13 +83,13 @@ func (h *Handler) executePostFSCreateOperationSteps(testRunId uint32, op *file.O
 	}
 
 	var fsInstance *file.Instance
-	if err := json.Unmarshal(finishedOperation.Response, fsInstance); err != nil {
+	if err := json.Unmarshal(finishedOperation.Response, &fsInstance); err != nil {
 		fmt.Printf("Error encountered while unmarshalling operation response: %v", err)
 		h.SendServiceError(context.Background(), testRunId, err)
 		return
 	}
 
-	h.createFsEntryInDb(testRunId, fsInstance);
+	h.createFsEntryInDb(testRunId, fsInstance)
 }
 
 func (h *Handler) createFsEntryInDb(testRunId uint32, fsInstance *file.Instance) {
