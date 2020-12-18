@@ -6,7 +6,6 @@ import (
 	userModels "github.com/Condition17/fleet-services/user-service/model"
 	"github.com/golang/protobuf/ptypes"
 	"gorm.io/gorm"
-	"log"
 	"time"
 )
 
@@ -20,7 +19,7 @@ type TestRun struct {
 	State          runStates.TestRunStateType
 	StateMetadata  string `gorm:"type:text;default:''"`
 	RunIssues      []*RunIssue
-	RunIssuesCount uint32 `gorm:"-"`
+	RunIssuesCount uint32 `sql:"-"`
 }
 
 func MarshalTestRun(testRun *proto.TestRun) *TestRun {
@@ -35,8 +34,6 @@ func UnmarshalTestRun(testRun *TestRun) *proto.TestRun {
 	userData := userModels.UnmarshalUser(&testRun.User)
 	createdAtTimestamp, _ := ptypes.TimestampProto(testRun.CreatedAt)
 	finishedAtTimestamp, _ := ptypes.TimestampProto(testRun.FinishedAt)
-
-	log.Println("Test run:", *testRun)
 
 	return &proto.TestRun{
 		Id:     uint32(testRun.ID),

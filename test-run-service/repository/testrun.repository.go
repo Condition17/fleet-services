@@ -42,16 +42,22 @@ func (r *TestRunRepository) GetAll(userId uint32) ([]*model.TestRun, error) {
 		return testRuns, err
 	}
 
-	log.Println("test runs:", testRuns)
-
 	return testRuns, nil
 }
 
 func (r *TestRunRepository) GetUserTestRun(userId uint32, testRunId uint32) (*model.TestRun, error) {
 	var testRun model.TestRun
-	if err := r.DB.Preload("RunIssues").First(&testRun, "user_id = ? AND id = ?", userId, testRunId).Error; err != nil {
+	queryResult := r.DB.Preload("RunIssues").Table("test_runs").
+		Select("test_runs.*, count(run_issues.id) as run_issues_count").
+		Joins("left join run_issues on test_runs.id = run_issues.test_run_id").
+		Where("test_runs.user_id = ? AND test_runs.id = ?", userId, testRunId).
+		Group("test_runs.id").
+		Find(&testRun)
+
+	if err := queryResult.Error; err != nil {
 		return nil, err
 	}
+
 	return &testRun, nil
 }
 
