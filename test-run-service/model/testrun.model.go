@@ -6,6 +6,7 @@ import (
 	userModels "github.com/Condition17/fleet-services/user-service/model"
 	"github.com/golang/protobuf/ptypes"
 	"gorm.io/gorm"
+	"log"
 	"time"
 )
 
@@ -34,6 +35,8 @@ func UnmarshalTestRun(testRun *TestRun) *proto.TestRun {
 	userData := userModels.UnmarshalUser(&testRun.User)
 	createdAtTimestamp, _ := ptypes.TimestampProto(testRun.CreatedAt)
 	finishedAtTimestamp, _ := ptypes.TimestampProto(testRun.FinishedAt)
+
+	log.Println("Test run:", *testRun)
 
 	return &proto.TestRun{
 		Id:     uint32(testRun.ID),

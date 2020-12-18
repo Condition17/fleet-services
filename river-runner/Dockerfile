@@ -7,9 +7,13 @@ WORKDIR /app
 
 ENV GO111MODULE=on
 
-COPY . .
+# Steps that will be cached
+COPY go.mod .
+COPY go.sum .
 
 RUN go mod download
+
+COPY . .
 RUN GOOS=linux GOARCH=amd64 go build -o service -v .
 
 # Run container
