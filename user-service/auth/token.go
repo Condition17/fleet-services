@@ -48,7 +48,7 @@ func (s *TokenService) Decode(tokenStr string) (*CustomClaims, error) {
 func (s *TokenService) Encode(user *proto.User) (string, error) {
 	tokenExpireTime := time.Now().Add(time.Hour * 24 * 30 * 12).Unix()
 
-	// Create the Claimsxww
+	// Create the Claims
 	claims := CustomClaims{
 		user,
 		jwt.StandardClaims{
