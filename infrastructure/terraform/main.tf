@@ -130,8 +130,13 @@ resource "google_storage_bucket" "fleet_external_services_deploy_bucket" {
   storage_class = "standard"
 }
 
-resource "google_storage_bucket" "fleet_runs_outputs" {
-  name = "fleet-runs"
-  location = "US-EAST1"
+resource "google_storage_bucket" "fleet_runs_inputs" {
+  name = "fleet-runs-inputs"
   storage_class = "standard"
+}
+
+resource "google_storage_bucket_access_control" "public_rule" {
+  bucket = google_storage_bucket.fleet_runs_inputs.name
+  role   = "READER"
+  entity = "allUsers"
 }
