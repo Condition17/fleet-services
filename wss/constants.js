@@ -1,3 +1,3 @@
 module.exports = {
-  wssSubscriptionName: "wss-events",
+  wssSubscriptionName: "wss-subscription",
 }

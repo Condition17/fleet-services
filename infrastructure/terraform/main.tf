@@ -127,12 +127,12 @@ resource "google_storage_bucket" "chunks_bucket" {
 resource "google_storage_bucket" "fleet_external_services_deploy_bucket" {
   name = "fleet-deploy"
   location = "US-EAST1"
-  storage_class = "standard"
+  storage_class = "STANDARD"
 }
 
 resource "google_storage_bucket" "fleet_runs_inputs" {
   name = "fleet-runs-inputs"
-  storage_class = "standard"
+  storage_class = "STANDARD"
 }
 
 resource "google_storage_bucket_access_control" "public_rule" {
