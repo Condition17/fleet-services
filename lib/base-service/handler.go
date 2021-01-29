@@ -65,8 +65,7 @@ func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string,
 }
 
 func (h *BaseHandler) publishMessage(topic string, message *broker.Message) {
-	log.Printf("Topic data: %s\n",  string(message.Body)[:80])
-	//log.Printf("Writing to topic %s: %s...\n\n\n", topic, string(message.Body)[:80])
+	log.Printf("Writing to topic %s: %s...\n\n\n", topic, string(message.Body)[:80])
 	if err := h.MessagesBroker.Publish(topic, message); err != nil {
 		log.Printf("[Messages Broker] Failed to publish message on create. Encountered error: %v", err)
 	}
