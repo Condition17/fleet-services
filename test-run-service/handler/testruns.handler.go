@@ -143,23 +143,7 @@ func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, 
 		return microErrors.BadRequest(h.Service.Name(), fmt.Sprintf("State '%v' not recognized as a valid state", req.State))
 	}
 
-	// if the new state is an error one, store the last valid state in it's associated metadata
-	var stateMetadataBytes []byte
-	if runStates.TestRunState.Error != runStates.TestRunStateType(req.State) {
-		stateMetadataBytes = []byte(req.StateMetadata)
-		testRun.StateMetadata = b64.StdEncoding.EncodeToString([]byte(req.StateMetadata))
-	} else {
-		stateMetadataBytes, _ = json.Marshal(map[string]string{"lastValidState": string(testRun.State), "metadata": req.StateMetadata})
-	}
-
-	if runStates.TestRunState.Error == runStates.TestRunStateType(req.State) || runStates.TestRunState.Finished == runStates.TestRunStateType(req.State) {
-		testRun.FinishedAt = time.Now()
-	}
-
-	testRun.StateMetadata = b64.StdEncoding.EncodeToString(stateMetadataBytes)
-	testRun.State = runStates.TestRunStateType(req.State)
-
-	if err := h.TestRunRepository.Update(testRun); err != nil {
+	if err := h.updateState(testRun, runStates.TestRunStateType(req.State), req.StateMetadata); err != nil {
 		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
 	}
 
@@ -167,6 +151,28 @@ func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, 
 
 	return nil
 }
+
+func (h *Handler) ForceStop(ctx context.Context, req *proto.ForceStopRequest, res *proto.EmptyResponse) error {
+	fmt.Println("Force stop test run:", req.TestRunId)
+
+	testRun, err := h.TestRunRepository.GetTestRunById(req.TestRunId)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return microErrors.NotFound(h.Service.Name(), "Test run not found")
+		}
+		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+	}
+
+	if testRun.State != runStates.TestRunState.Initiated && testRun.State != runStates.TestRunState.FileUpload {
+		return nil
+	}
+
+	if err := h.updateState(testRun, runStates.TestRunState.Error, "Force-stopped"); err != nil {
+		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+	}
+	return nil
+}
+
 
 func (h *Handler) RegisterRunIssue(ctx context.Context, req *proto.RunIssue, res *proto.EmptyResponse) error {
 	// Process request async
@@ -197,4 +203,28 @@ func isValidTestRunState(state string) bool {
 	}
 
 	return false
+}
+
+func (h *Handler) updateState(testRun *model.TestRun, newState runStates.TestRunStateType, newStateMetadata string) error {
+	// if the new state is an error one, store the last valid state in it's associated metadata
+	var stateMetadataBytes []byte
+	if runStates.TestRunState.Error != newState {
+		stateMetadataBytes = []byte(newStateMetadata)
+		testRun.StateMetadata = b64.StdEncoding.EncodeToString([]byte(newStateMetadata))
+	} else {
+		stateMetadataBytes, _ = json.Marshal(map[string]string{"lastValidState": string(testRun.State), "metadata": newStateMetadata})
+	}
+
+	if runStates.TestRunState.Error == newState || runStates.TestRunState.Finished == newState {
+		testRun.FinishedAt = time.Now()
+	}
+
+	testRun.StateMetadata = b64.StdEncoding.EncodeToString(stateMetadataBytes)
+	testRun.State = newState
+
+	if err := h.TestRunRepository.Update(testRun); err != nil {
+		return err
+	}
+
+	return nil
 }

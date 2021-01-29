@@ -13,6 +13,12 @@ service TestRunService {
   rpc ChangeState(TestRunStateSpec) returns (TestRunDetails) {}
   rpc RegisterRunIssue(RunIssue) returns (EmptyResponse) {}
   rpc AssignFile(AssignRequest) returns (EmptyResponse) {}
+  rpc ForceStop(ForceStopRequest) returns (EmptyResponse) {}
+}
+
+message ForceStopRequest {
+  uint32 testRunId = 1;
+  string authorization = 2;
 }
 
 message CreateTestRunRequest {

@@ -51,6 +51,7 @@ type TestRunService interface {
 	ChangeState(ctx context.Context, in *TestRunStateSpec, opts ...client.CallOption) (*TestRunDetails, error)
 	RegisterRunIssue(ctx context.Context, in *RunIssue, opts ...client.CallOption) (*EmptyResponse, error)
 	AssignFile(ctx context.Context, in *AssignRequest, opts ...client.CallOption) (*EmptyResponse, error)
+	ForceStop(ctx context.Context, in *ForceStopRequest, opts ...client.CallOption) (*EmptyResponse, error)
 }
 
 type testRunService struct {
@@ -145,6 +146,16 @@ func (c *testRunService) AssignFile(ctx context.Context, in *AssignRequest, opts
 	return out, nil
 }
 
+func (c *testRunService) ForceStop(ctx context.Context, in *ForceStopRequest, opts ...client.CallOption) (*EmptyResponse, error) {
+	req := c.c.NewRequest(c.name, "TestRunService.ForceStop", in)
+	out := new(EmptyResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for TestRunService service
 
 type TestRunServiceHandler interface {
@@ -156,6 +167,7 @@ type TestRunServiceHandler interface {
 	ChangeState(context.Context, *TestRunStateSpec, *TestRunDetails) error
 	RegisterRunIssue(context.Context, *RunIssue, *EmptyResponse) error
 	AssignFile(context.Context, *AssignRequest, *EmptyResponse) error
+	ForceStop(context.Context, *ForceStopRequest, *EmptyResponse) error
 }
 
 func RegisterTestRunServiceHandler(s server.Server, hdlr TestRunServiceHandler, opts ...server.HandlerOption) error {
@@ -168,6 +180,7 @@ func RegisterTestRunServiceHandler(s server.Server, hdlr TestRunServiceHandler, 
 		ChangeState(ctx context.Context, in *TestRunStateSpec, out *TestRunDetails) error
 		RegisterRunIssue(ctx context.Context, in *RunIssue, out *EmptyResponse) error
 		AssignFile(ctx context.Context, in *AssignRequest, out *EmptyResponse) error
+		ForceStop(ctx context.Context, in *ForceStopRequest, out *EmptyResponse) error
 	}
 	type TestRunService struct {
 		testRunService
@@ -210,4 +223,8 @@ func (h *testRunServiceHandler) RegisterRunIssue(ctx context.Context, in *RunIss
 
 func (h *testRunServiceHandler) AssignFile(ctx context.Context, in *AssignRequest, out *EmptyResponse) error {
 	return h.TestRunServiceHandler.AssignFile(ctx, in, out)
+}
+
+func (h *testRunServiceHandler) ForceStop(ctx context.Context, in *ForceStopRequest, out *EmptyResponse) error {
+	return h.TestRunServiceHandler.ForceStop(ctx, in, out)
 }
