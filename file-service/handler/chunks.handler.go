@@ -51,7 +51,7 @@ func (h *Handler) CreateChunk(ctx context.Context, req *pb.ChunkSpec, res *pb.Em
 
 		uploadData, _ := json.Marshal(&pb.ChunkDataMessage{
 			Sha2:          chunkSHA2,
-			Data:          req.Data,
+			Data:          []byte(req.Data),
 			FileId:        req.FileId,
 			TestRunId:     file.TestRunId,
 			Authorization: auth.GetAuthorizationBytesFromContext(ctx),

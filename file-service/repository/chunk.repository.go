@@ -21,7 +21,7 @@ func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) (strin
 	conn := r.DB.Get()
 	defer conn.Close()
 
-	var sha2 string = fmt.Sprintf("%x", sha256.Sum256(spec.Data))
+	var sha2 string = fmt.Sprintf("%x", sha256.Sum256([]byte(spec.Data)))
 	var hashKey string = composeChunkKey(sha2)
 
 	// check if the chunk was already uploaded for the given file
