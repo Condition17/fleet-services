@@ -153,7 +153,7 @@ func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, 
 }
 
 func (h *Handler) ForceStop(ctx context.Context, req *proto.ForceStopRequest, res *proto.EmptyResponse) error {
-	fmt.Println("Force stop test run:", req.TestRunId)
+	log.Println("Force stop test run:", req.TestRunId)
 
 	testRun, err := h.TestRunRepository.GetTestRunById(req.TestRunId)
 	if err != nil {
@@ -206,6 +206,10 @@ func isValidTestRunState(state string) bool {
 }
 
 func (h *Handler) updateState(testRun *model.TestRun, newState runStates.TestRunStateType, newStateMetadata string) error {
+	if testRun.State == runStates.TestRunState.Error {
+		return errors.New(fmt.Sprintf("Could not change state from '%s' to '%s': testrun %s has a fixed error state."))
+	}
+
 	// if the new state is an error one, store the last valid state in it's associated metadata
 	var stateMetadataBytes []byte
 	if runStates.TestRunState.Error != newState {
