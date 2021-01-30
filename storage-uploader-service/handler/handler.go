@@ -1,16 +1,16 @@
 package handler
 
 import (
+	"cloud.google.com/go/pubsub"
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 
-	baseservice "github.com/Condition17/fleet-services/lib/base-service"
-	"github.com/micro/go-micro/v2"
-	"github.com/micro/go-micro/v2/broker"
-
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
+	baseservice "github.com/Condition17/fleet-services/lib/base-service"
 	cloudstorage "github.com/Condition17/fleet-services/storage-uploader-service/storage"
+	"github.com/micro/go-micro/v2"
 )
 
 type ChunkDataHandler struct {
@@ -30,7 +30,7 @@ func (h ChunkDataHandler) HandleChunkDataMessage(chunkDataMessage *fileServicePr
 	h.SendStorageUploadedChunkData(context.Background(), uploadedChunkData)
 }
 
-func NewHandler(service micro.Service) func(broker.Event) error {
+func NewHandler(service micro.Service) func(context.Context, *pubsub.Message) {
 	var storageClient *cloudstorage.GcsClient
 
 	// Initialize Cloud storage client
@@ -39,19 +39,22 @@ func NewHandler(service micro.Service) func(broker.Event) error {
 		log.Fatal(e)
 	}
 
-	var handler ChunkDataHandler = ChunkDataHandler{
+	var handler = ChunkDataHandler{
 		BaseHandler:   baseservice.NewBaseHandler(service),
 		StorageClient: storageClient,
 	}
 
-	return func(e broker.Event) error {
+	return func(c context.Context, msg *pubsub.Message) {
 		var chunkDataMessage *fileServiceProto.ChunkDataMessage
-		if err := json.Unmarshal(e.Message().Body, &chunkDataMessage); err != nil {
-			return err
+
+		msg.Ack()
+		//fmt.Printf("Received message: '%s'\n", msg.Data)
+		if err := json.Unmarshal(msg.Data, &chunkDataMessage); err != nil {
+			fmt.Printf("Error encountered while unmarshalling message: %v", err)
+			return
 		}
 
 		handler.HandleChunkDataMessage(chunkDataMessage)
 
-		return nil
 	}
 }

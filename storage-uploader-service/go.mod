@@ -11,7 +11,7 @@ replace (
 
 require (
 	cloud.google.com/go v0.75.0 // indirect
-	cloud.google.com/go/pubsub v1.9.1 // indirect
+	cloud.google.com/go/pubsub v1.9.1
 	cloud.google.com/go/storage v1.12.0
 	github.com/Condition17/fleet-services/file-service v0.0.0-20210130185112-f3be30688cdf
 	github.com/Condition17/fleet-services/lib v0.0.0-20210130185112-f3be30688cdf
