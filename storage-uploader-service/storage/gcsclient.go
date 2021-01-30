@@ -23,15 +23,22 @@ func InitClient() (*GcsClient, error) {
 	return &GcsClient{storage: client}, nil
 }
 
-func (gcsClient *GcsClient) UploadChunk(chunkName string, content []byte) error {
+func (gcsClient *GcsClient) UploadChunk(chunkName string, content string) error {
 	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, time.Second*50)
+	ctx, cancel := context.WithTimeout(ctx, time.Second*100)
 	defer cancel()
 
 	bucket := gcsClient.storage.Bucket(bucketName)
 	obj := bucket.Object(chunkName)
 	w := obj.NewWriter(ctx)
-	w.Write(content)
+
+	if _, err := fmt.Fprintf(w, content); err != nil {
+		return err
+	}
+
+	if err := w.Close(); err != nil {
+		return err
+	}
 
 	if err := w.Close(); err != nil {
 		fmt.Println("Error encountered writing chunk :", err)
