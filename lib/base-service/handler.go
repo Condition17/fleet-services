@@ -4,14 +4,12 @@ import (
 	"cloud.google.com/go/pubsub"
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/Condition17/fleet-services/lib/auth"
 	topics "github.com/Condition17/fleet-services/lib/communication"
 	runStateEvents "github.com/Condition17/fleet-services/run-controller-service/events"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"github.com/micro/go-micro/v2"
 	"log"
-	"time"
 )
 
 const GoogleProjectId = "fleet-295921"
@@ -78,7 +76,7 @@ func (h *BaseHandler) publishMessage(topic string, msgData []byte) {
 	t := h.PubSubClient.Topic(topic)
 	res := t.Publish(context.Background(), &pubsub.Message{
 		Data: msgData,
-		OrderingKey: fmt.Sprintf("%v", time.Now().Unix()),
+		//OrderingKey: fmt.Sprintf("%v", time.Now().Unix()),
 	})
 
 	go func(res *pubsub.PublishResult) {
