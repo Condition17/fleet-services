@@ -35,6 +35,10 @@ class SocketStreamHandler {
   }
 
   handle(event) {
+    if (!event.target) {
+      console.log("Unhandled event - no target");
+      return;
+    }
     const targetSocketId = socketIdByUser[event.target.id];
     delete event.target;
 

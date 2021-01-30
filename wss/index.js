@@ -5,6 +5,12 @@ const socketStreamHandler = require("./src/handlers/SocketStreamHandler");
 
 const formatRecevedEvent = (e) => {
   const event = JSON.parse(e);
+  console.log("Received event:", e);
+  if (!event.target) {
+    console.log("Received event has no specified 'target' key.");
+    return event
+  }
+
   event.target = JSON.parse(Buffer.from(event.target, 'base64').toString());
 
   return event;

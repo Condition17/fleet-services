@@ -98,20 +98,20 @@ services:
 #      ENV_NAME: "compose"
 #      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
 
-  wss:
-    restart: always
-    build: ./wss
-    volumes:
-      - ./keys:/keys
-    ports:
-      - "3001:3001"
-    depends_on:
-      - redis
-    environment:
-      REDIS_HOST: "redis"
-      REDIS_PORT: "6379"
-      TOKEN_SECRET: "mySuperSecretKey"
-      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
+#  wss:
+#    restart: always
+#    build: ./wss
+#    volumes:
+#      - ./keys:/keys
+#    ports:
+#      - "3001:3001"
+#    depends_on:
+#      - redis
+#    environment:
+#      REDIS_HOST: "redis"
+#      REDIS_PORT: "6379"
+#      TOKEN_SECRET: "mySuperSecretKey"
+#      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
 
 #  file-builder:
 #    restart: always

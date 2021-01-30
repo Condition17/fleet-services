@@ -18,9 +18,8 @@ class EventsSubscriber {
     this.subscription = await this.pubSubClient.subscription(wssSubscriptionName)
     console.log(`Subscription was setup - subscription '${wssSubscriptionName}'`);
     this.subscription.on("message", (message) => {
-      console.log("Received message on subscription:", message.data.toString())
-      this.emitter.emit(events.EVENT_RECEIVED, message.data.toString());
       message.ack();
+      this.emitter.emit(events.EVENT_RECEIVED, message.data.toString());
     })
   }
 

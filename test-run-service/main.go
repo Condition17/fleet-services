@@ -20,7 +20,6 @@ import (
 
 func ServiceAuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, resp interface{}) error {
-		log.Println("Req method:", req.Method())
 		// TestRunService.RegisterRunIssue is whitelisted
 		// this route does not need authentication or any additional information added in context
 		if req.Method() == "TestRunService.RegisterRunIssue" || req.Method() == "TestRunService.ForceStop"{
