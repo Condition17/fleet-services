@@ -1,25 +1,34 @@
 package baseservice
 
 import (
+	"cloud.google.com/go/pubsub"
 	"context"
 	"encoding/json"
-	"log"
-
+	"fmt"
 	"github.com/Condition17/fleet-services/lib/auth"
 	topics "github.com/Condition17/fleet-services/lib/communication"
 	runStateEvents "github.com/Condition17/fleet-services/run-controller-service/events"
 	runControllerProto "github.com/Condition17/fleet-services/run-controller-service/proto/run-controller-service"
 	"github.com/micro/go-micro/v2"
-	"github.com/micro/go-micro/v2/broker"
+	"log"
+	"time"
 )
 
+const GoogleProjectId = "fleet-295921"
 type BaseHandler struct {
 	Service        micro.Service
-	MessagesBroker broker.Broker
+	PubSubClient  *pubsub.Client
 }
 
-func NewBaseHandler(service micro.Service) BaseHandler {
-	return BaseHandler{Service: service, MessagesBroker: service.Server().Options().Broker}
+func NewBaseHandler(service micro.Service, pubSubClient *pubsub.Client) BaseHandler {
+	pubSubClient, err := pubsub.NewClient(context.Background(), GoogleProjectId)
+
+	if err != nil {
+		log.Fatalf("Error initializing pubsub client for google project id %v\n", GoogleProjectId)
+		return BaseHandler{}
+	}
+
+	return BaseHandler{Service: service, PubSubClient: pubSubClient}
 }
 
 func (h *BaseHandler) SendServiceError(ctx context.Context, testRunId uint32, err error) {
@@ -28,7 +37,7 @@ func (h *BaseHandler) SendServiceError(ctx context.Context, testRunId uint32, er
 }
 
 func (h *BaseHandler) SendRunStateEvent(ctx context.Context, eventType string, data []byte) {
-	msgBody, _ := json.Marshal(
+	msgData, _ := json.Marshal(
 		&runControllerProto.Event{
 			Type: eventType,
 			Meta: &runControllerProto.EventMetadata{
@@ -36,15 +45,15 @@ func (h *BaseHandler) SendRunStateEvent(ctx context.Context, eventType string, d
 			},
 			Data: data,
 		})
-	h.publishMessage(topics.RunStateTopic, &broker.Message{Body: msgBody})
+	h.publishMessage(topics.RunStateTopic, msgData)
 }
 
 func (h *BaseHandler) SendChunkDataToUploadQueue(ctx context.Context, data []byte) {
-	h.publishMessage(topics.ChunksUploadQueueTopic, &broker.Message{Body: data})
+	h.publishMessage(topics.ChunksUploadQueueTopic, data)
 }
 
 func (h *BaseHandler) SendStorageUploadedChunkData(ctx context.Context, data []byte) {
-	h.publishMessage(topics.StorageUploadedChunksTopic, &broker.Message{Body: data})
+	h.publishMessage(topics.StorageUploadedChunksTopic, data)
 }
 
 func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string, data []byte) {
@@ -55,18 +64,27 @@ func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string,
 		userBytes = auth.GetUserBytesFromDecodedToken(ctx)
 	}
 
-	msgBody, _ := json.Marshal(
+	msgData, _ := json.Marshal(
 		&runControllerProto.WssEvent{
 			Type:   eventType,
 			Target: userBytes,
 			Data:   data,
 		})
-	h.publishMessage(topics.WssTopic, &broker.Message{Body: msgBody, Header: map[string]string{"orderingKey": "wssEventKey"}})
+	h.publishMessage(topics.WssTopic, msgData)
 }
 
-func (h *BaseHandler) publishMessage(topic string, message *broker.Message) {
-	log.Printf("Writing to topic %s: %s...\n\n\n", topic, string(message.Body)[:80])
-	if err := h.MessagesBroker.Publish(topic, message); err != nil {
-		log.Printf("[Messages Broker] Failed to publish message on create. Encountered error: %v", err)
-	}
+func (h *BaseHandler) publishMessage(topic string, msgData []byte) {
+	log.Printf("Writing to topic %s: %s...\n\n\n", topic, string(msgData)[:80])
+	t := h.PubSubClient.Topic(topic)
+	res := t.Publish(context.Background(), &pubsub.Message{
+		Data: msgData,
+		OrderingKey: fmt.Sprintf("%v", time.Now().Unix()),
+	})
+
+	go func(res *pubsub.PublishResult) {
+		if _, err := res.Get(context.Background()); err != nil {
+			log.Printf("[PubSub] Failed to publish message . Encountered error: %v", err)
+			return
+		}
+	}(res)
 }
