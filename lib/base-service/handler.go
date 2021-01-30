@@ -20,7 +20,7 @@ type BaseHandler struct {
 	PubSubClient  *pubsub.Client
 }
 
-func NewBaseHandler(service micro.Service, pubSubClient *pubsub.Client) BaseHandler {
+func NewBaseHandler(service micro.Service) BaseHandler {
 	pubSubClient, err := pubsub.NewClient(context.Background(), GoogleProjectId)
 
 	if err != nil {
