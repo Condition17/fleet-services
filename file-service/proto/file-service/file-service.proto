@@ -12,7 +12,7 @@ service FileService {
 message ChunkSpec {
   string fileId = 1;
   uint64 index = 2;
-  repeated uint32 data = 3;
+  bytes data = 3;
 }
 
 message Chunk {
@@ -28,7 +28,7 @@ message ChunkDataMessage {
   string fileId = 1;
   uint32 testRunId = 2;
   string sha2 = 3;
-  repeated uint32 data = 4;
+  bytes data = 4;
   bytes authorization = 5;
 }
 
