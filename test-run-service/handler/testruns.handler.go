@@ -125,11 +125,11 @@ func (h *Handler) Delete(ctx context.Context, req *proto.TestRun, res *proto.Emp
 }
 
 func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, res *proto.TestRunDetails) error {
-	var isServiceCaller bool = ctx.Value("serviceCaller").(bool)
-
-	if !isServiceCaller {
-		return microErrors.Unauthorized(h.Service.Name(), "Caller not authorized for this operation")
-	}
+	//var isServiceCaller bool = ctx.Value("serviceCaller").(bool)
+	//
+	//if !isServiceCaller {
+	//	return microErrors.Unauthorized(h.Service.Name(), "Caller not authorized for this operation")
+	//}
 
 	testRun, err := h.TestRunRepository.GetTestRunById(req.TestRunId)
 	if err != nil {
@@ -144,7 +144,7 @@ func (h *Handler) ChangeState(ctx context.Context, req *proto.TestRunStateSpec, 
 	}
 
 	if err := h.updateState(testRun, runStates.TestRunStateType(req.State), req.StateMetadata); err != nil {
-		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
+		return microErrors.Forbidden(h.Service.Name(), fmt.Sprintf("%v", err))
 	}
 
 	res.TestRun = model.UnmarshalTestRun(testRun)
@@ -207,7 +207,7 @@ func isValidTestRunState(state string) bool {
 
 func (h *Handler) updateState(testRun *model.TestRun, newState runStates.TestRunStateType, newStateMetadata string) error {
 	if testRun.State == runStates.TestRunState.Error {
-		return errors.New(fmt.Sprintf("Could not change state from '%s' to '%s': testrun %s has a fixed error state."))
+		return errors.New(fmt.Sprintf("Could not change state from '%s' to '%s': testrun %d has a fixed error state.", testRun.State, newState, testRun.ID))
 	}
 
 	// if the new state is an error one, store the last valid state in it's associated metadata
