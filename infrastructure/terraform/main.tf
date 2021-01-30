@@ -57,10 +57,32 @@ resource "google_pubsub_topic" "chunk_upload_topic" {
   name = "chunk-gcs-upload"
 }
 
-# test-run-state
+resource "google_pubsub_subscription" "chunk_upload_subscription" {
+  name = "chunk-gcs-upload-subs"
+  topic = google_pubsub_topic.chunk_upload_topic.name
+  enable_message_ordering = true
+}
 
-resource "google_pubsub_topic" "test-run-state" {
+# storage-uploaded-chunks
+resource "google_pubsub_topic" "storage_uploaded_chunks_topic" {
+  name = "storage-uploaded-chunks"
+}
+
+resource "google_pubsub_subscription" "storage_uploaded_chunks_subscription" {
+  name = "storage-uploaded-chunks-subs"
+  topic = google_pubsub_topic.storage_uploaded_chunks_topic.name
+  enable_message_ordering = true
+}
+
+# test-run-state
+resource "google_pubsub_topic" "test_run_state_topic" {
   name = "test-run-state"
+}
+
+resource "google_pubsub_subscription" "test_run_state_subscription" {
+  name = "test-run-state-subs"
+  topic = google_pubsub_topic.test_run_state_topic.name
+  enable_message_ordering = true
 }
 
 # wss-events
@@ -72,11 +94,6 @@ resource "google_pubsub_subscription" "wss-subscription" {
   name = "wss-subscription"
   topic = google_pubsub_topic.wss-events.name
   enable_message_ordering = true
-}
-
-# storage-uploaded-chunks
-resource "google_pubsub_topic" "storage-uploaded-chunks" {
-  name = "storage-uploaded-chunks"
 }
 
 # Setup GKE
@@ -133,10 +150,4 @@ resource "google_storage_bucket" "fleet_external_services_deploy_bucket" {
 resource "google_storage_bucket" "fleet_runs_inputs" {
   name = "fleet-runs-inputs"
   storage_class = "STANDARD"
-}
-
-resource "google_storage_bucket_access_control" "public_rule" {
-  bucket = google_storage_bucket.fleet_runs_inputs.name
-  role   = "READER"
-  entity = "allUsers"
 }

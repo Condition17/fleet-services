@@ -43,9 +43,9 @@ services:
     volumes:
       - ./keys:/keys
     links:
-      - postgres
+      - "postgres"
     depends_on:
-      - postgres
+      - "postgres"
     environment:
       ENV_NAME: "compose"
       GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
@@ -56,9 +56,9 @@ services:
     volumes:
       - ./keys:/keys
     links:
-      - postgres
+      - "postgres"
     depends_on:
-      - postgres
+      - "postgres"
     environment:
       ENV_NAME: "compose"
       GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
@@ -85,18 +85,18 @@ services:
       ENV_NAME: "compose"
       GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
 
-#  resource-manager-service:
-#    restart: always
-#    build: ./resource-manager-service
-#    volumes:
-#      - ./keys:/keys
-#    links:
-#      - postgres
-#    depends_on:
-#      - postgres
-#    environment:
-#      ENV_NAME: "compose"
-#      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
+  resource-manager-service:
+    restart: always
+    build: ./resource-manager-service
+    volumes:
+      - ./keys:/keys
+    links:
+      - "postgres"
+    depends_on:
+      - "postgres"
+    environment:
+      ENV_NAME: "compose"
+      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
 
   wss:
     restart: always
@@ -106,7 +106,7 @@ services:
     ports:
       - "3001:3001"
     depends_on:
-      - redis
+      - "redis"
     environment:
       REDIS_HOST: "redis"
       REDIS_PORT: "6379"

@@ -11,10 +11,10 @@ replace (
 
 require (
 	cloud.google.com/go v0.75.0 // indirect
-	cloud.google.com/go/pubsub v1.9.1 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20210129205841-3118c743e89b
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20210129205841-3118c743e89b
-	github.com/Condition17/fleet-services/user-service v0.0.0-20210129205841-3118c743e89b // indirect
+	cloud.google.com/go/pubsub v1.9.1
+	github.com/Condition17/fleet-services/lib v0.0.0-20210130234853-9ee45ad119e1
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20210130234853-9ee45ad119e1
+	github.com/Condition17/fleet-services/user-service v0.0.0-20210130234853-9ee45ad119e1 // indirect
 	github.com/Microsoft/go-winio v0.4.16 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
@@ -35,7 +35,7 @@ require (
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
 	github.com/micro/go-plugins/registry/kubernetes/v2 v2.9.1
-	github.com/miekg/dns v1.1.35 // indirect
+	github.com/miekg/dns v1.1.37 // indirect
 	github.com/mitchellh/hashstructure v1.1.0 // indirect
 	github.com/nats-io/nats.go v1.10.0 // indirect
 	github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0 // indirect
@@ -53,12 +53,11 @@ require (
 	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
 	golang.org/x/text v0.3.5 // indirect
 	golang.org/x/tools v0.1.0 // indirect
-	google.golang.org/api v0.37.0 // indirect
+	google.golang.org/api v0.38.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20210126160654-44e461bb6506 // indirect
 	google.golang.org/grpc v1.35.0
 	google.golang.org/protobuf v1.25.0
-	gorm.io/driver/postgres v1.0.5 // indirect
 	honnef.co/go/tools v0.0.1-2020.1.6 // indirect
 	rsc.io/quote/v3 v3.1.0 // indirect
 )

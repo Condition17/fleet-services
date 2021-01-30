@@ -10,8 +10,8 @@ replace (
 require (
 	cloud.google.com/go v0.75.0 // indirect
 	cloud.google.com/go/pubsub v1.9.1 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20210129205841-3118c743e89b
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20210129205841-3118c743e89b // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20210130234853-9ee45ad119e1
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20210130234853-9ee45ad119e1 // indirect
 	github.com/Microsoft/go-winio v0.4.16 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gogo/protobuf v1.3.2 // indirect
@@ -22,7 +22,7 @@ require (
 	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
-	github.com/miekg/dns v1.1.35 // indirect
+	github.com/miekg/dns v1.1.37 // indirect
 	github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0 // indirect
 	github.com/tkanos/gonfig v0.0.0-20181112185242-896f3d81fadf
 	github.com/xanzy/ssh-agent v0.3.0 // indirect
@@ -34,7 +34,7 @@ require (
 	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
 	golang.org/x/text v0.3.5 // indirect
 	golang.org/x/tools v0.1.0 // indirect
-	google.golang.org/api v0.37.0 // indirect
+	google.golang.org/api v0.38.0 // indirect
 	google.golang.org/genproto v0.0.0-20210126160654-44e461bb6506 // indirect
 	google.golang.org/grpc v1.35.0 // indirect
 	google.golang.org/protobuf v1.25.0

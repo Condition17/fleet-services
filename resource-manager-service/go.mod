@@ -11,16 +11,17 @@ replace (
 
 require (
 	cloud.google.com/go v0.75.0 // indirect
-	github.com/Condition17/fleet-services/lib v0.0.0-20210129205841-3118c743e89b
-	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20210129205841-3118c743e89b
-	github.com/Condition17/fleet-services/test-run-service v0.0.0-20210129205841-3118c743e89b
-	github.com/Condition17/fleet-services/user-service v0.0.0-20210129205841-3118c743e89b // indirect
+	github.com/Condition17/fleet-services/lib v0.0.0-20210130234853-9ee45ad119e1
+	github.com/Condition17/fleet-services/run-controller-service v0.0.0-20210130234853-9ee45ad119e1
+	github.com/Condition17/fleet-services/test-run-service v0.0.0-20210130234853-9ee45ad119e1
+	github.com/Condition17/fleet-services/user-service v0.0.0-20210130234853-9ee45ad119e1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.4.3
 	github.com/google/uuid v1.2.0 // indirect
 	github.com/jackc/pgproto3/v2 v2.0.7 // indirect
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/broker/googlepubsub/v2 v2.9.1
+	github.com/miekg/dns v1.1.37 // indirect
 	github.com/ozonru/etcd/v3 v3.3.0-rc.0-grpc1.30.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	go.opencensus.io v0.22.6 // indirect
@@ -31,7 +32,7 @@ require (
 	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
 	golang.org/x/text v0.3.5 // indirect
 	golang.org/x/tools v0.1.0 // indirect
-	google.golang.org/api v0.37.0
+	google.golang.org/api v0.38.0
 	google.golang.org/genproto v0.0.0-20210126160654-44e461bb6506 // indirect
 	google.golang.org/grpc v1.35.0
 	google.golang.org/protobuf v1.25.0

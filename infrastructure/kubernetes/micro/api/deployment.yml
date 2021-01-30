@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: micro-api
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: micro-api

@@ -48,7 +48,7 @@ func NewHandler(service micro.Service) func(context.Context, *pubsub.Message) {
 		var chunkDataMessage *fileServiceProto.ChunkDataMessage
 
 		msg.Ack()
-		//fmt.Printf("Received message: '%s'\n", msg.Data)
+		fmt.Printf("Received message: '%s'\n", msg.Data)
 		if err := json.Unmarshal(msg.Data, &chunkDataMessage); err != nil {
 			fmt.Printf("Error encountered while unmarshalling message: %v", err)
 			return

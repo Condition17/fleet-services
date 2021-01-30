@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"cloud.google.com/go/pubsub"
 	"context"
 	"encoding/json"
+	"fmt"
 	fileBuilderProto "github.com/Condition17/fleet-services/file-builder/proto/file-builder"
 	fileServiceProto "github.com/Condition17/fleet-services/file-service/proto/file-service"
 	"github.com/Condition17/fleet-services/lib"
@@ -16,7 +18,6 @@ import (
 	testRunServiceProto "github.com/Condition17/fleet-services/test-run-service/proto/test-run-service"
 	testRunStates "github.com/Condition17/fleet-services/test-run-service/run-states"
 	"github.com/micro/go-micro/v2"
-	"github.com/micro/go-micro/v2/broker"
 	"github.com/micro/go-micro/v2/client"
 	"github.com/micro/go-micro/v2/metadata"
 	"google.golang.org/grpc"
@@ -32,22 +33,22 @@ type EventHandler struct {
 	RiverRunnerService     riverRunnerProto.RiverRunnerClient
 }
 
-func NewHandler(service micro.Service) func(broker.Event) error {
+func NewHandler(service micro.Service) EventHandler {
 	var err error
 	var fileBuilderServiceClient fileBuilderProto.FileBuilderClient
 	var riverRunnerServiceClient riverRunnerProto.RiverRunnerClient
 
 	if fileBuilderServiceClient, err = getFileBuilderServiceClient(); err != nil {
 		log.Fatalln("Error encountered while setting up connection with file builder service:", err)
-		return nil
+		return EventHandler{}
 	}
 
 	if riverRunnerServiceClient, err = getRiverRunnerServiceClient(); err != nil {
 		log.Fatalln("Error encountered while setting up connection to river runner service:", err)
-		return nil
+		return EventHandler{}
 	}
 
-	var handler EventHandler = EventHandler{
+	return EventHandler{
 		BaseHandler:            baseService.NewBaseHandler(service),
 		FileService:            fileServiceProto.NewFileService(lib.GetFullExternalServiceName("fileService"), client.DefaultClient),
 		TestRunService:         testRunServiceProto.NewTestRunService(lib.GetFullExternalServiceName("testRunService"), client.DefaultClient),
@@ -55,16 +56,20 @@ func NewHandler(service micro.Service) func(broker.Event) error {
 		FileBuilderService:     fileBuilderServiceClient,
 		RiverRunnerService:     riverRunnerServiceClient,
 	}
+}
 
-	return func(e broker.Event) error {
+func (h EventHandler) GetPubSubMessageHandler() func(context.Context, *pubsub.Message) {
+	return func(c context.Context, msg *pubsub.Message) {
+		msg.Ack()
+		log.Printf("Received message: '%s'\n", msg.Data)
+
 		var event *proto.Event
-
-		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
-			return err
+		if err := json.Unmarshal(msg.Data, &event); err != nil {
+			fmt.Printf("Error encountered while unmarshalling message: %v\n", err)
+			return
 		}
-		handler.HandleEvent(event)
 
-		return nil
+		h.HandleEvent(event)
 	}
 }
 

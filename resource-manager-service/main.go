@@ -11,7 +11,6 @@ import (
 	log "github.com/micro/go-micro/v2/logger"
 
 	proto "github.com/Condition17/fleet-services/resource-manager-service/proto/resource-manager-service"
-	"github.com/micro/go-plugins/broker/googlepubsub/v2"
 )
 
 func main() {
@@ -27,11 +26,9 @@ func main() {
 	// into database columns/types etc.
 	db.AutoMigrate(&model.FileSystem{}, &model.ExecutorInstance{})
 
-	pubsub := googlepubsub.NewBroker(googlepubsub.ProjectID(configs.GoogleProjectID))
 	// New Service
 	service := micro.NewService(
 		micro.Name(configs.ServiceName),
-		micro.Broker(pubsub),
 		micro.Version("latest"),
 	)
 
