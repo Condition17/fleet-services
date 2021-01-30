@@ -72,7 +72,14 @@ func (h *BaseHandler) SendEventToWssQueue(ctx context.Context, eventType string,
 }
 
 func (h *BaseHandler) publishMessage(topic string, msgData []byte) {
-	log.Printf("Writing to topic %s: %s...\n\n\n", topic, string(msgData)[:80])
+	var msgPreview string
+	if len(msgData) < 80 {
+		msgPreview = string(msgData)
+	} else {
+		msgPreview = string(msgData[:80])
+	}
+	log.Printf("Writing to topic %s: %s...\n\n\n", topic, msgPreview)
+
 	t := h.PubSubClient.Topic(topic)
 	res := t.Publish(context.Background(), &pubsub.Message{
 		Data: msgData,
