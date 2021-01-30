@@ -4,6 +4,8 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
+	"log"
+	"time"
 
 	"github.com/Condition17/fleet-services/file-service/model"
 	pb "github.com/Condition17/fleet-services/file-service/proto/file-service"
@@ -21,7 +23,11 @@ func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) (strin
 	conn := r.DB.Get()
 	defer conn.Close()
 
-	var sha2 string = fmt.Sprintf("%x", sha256.Sum256([]byte(spec.Data)))
+
+	start := time.Now()
+	var sha2 string = fmt.Sprintf("%x", sha256.Sum256([]byte(fmt.Sprintf("%v", spec.Data))))
+	log.Println("SHA2 Duration:", time.Since(start))
+
 	var hashKey string = composeChunkKey(sha2)
 
 	// check if the chunk was already uploaded for the given file
