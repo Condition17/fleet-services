@@ -2,8 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: micro-api
+  namespace: default
 spec:
-  replicas: 3
   selector:
     matchLabels:
       app: micro-api
@@ -15,6 +15,10 @@ spec:
       containers:
         - name: micro-api
           image: micro/micro:v2.9.3
+          resources:
+            requests:
+              memory: "200Mi"
+              cpu: "100m"
           imagePullPolicy: Always
           args:
             - api
