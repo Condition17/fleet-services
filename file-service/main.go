@@ -6,6 +6,7 @@ import (
 	"github.com/Condition17/fleet-services/file-service/handler"
 	"github.com/Condition17/fleet-services/file-service/repository"
 	baseservice "github.com/Condition17/fleet-services/lib/base-service"
+	"runtime"
 
 	"github.com/micro/go-micro/v2"
 	"log"
@@ -58,9 +59,12 @@ func main() {
 	// Subscribe to storage uploaded chunks topic
 	go func() {
 		log.Printf("Subscribing to '%s'\n", storageUploadedChunksSubscription)
+		sub := serviceHandler.PubSubClient.Subscription(storageUploadedChunksSubscription)
+		sub.ReceiveSettings.Synchronous = false
+		sub.ReceiveSettings.NumGoroutines = runtime.NumCPU()
 		ctx, cancel := context.WithCancel(context.Background())
-		err := serviceHandler.PubSubClient.Subscription(storageUploadedChunksSubscription).Receive(ctx, serviceHandler.GetEventsHandler())
 		defer cancel()
+		err := sub.Receive(ctx, serviceHandler.GetEventsHandler())
 
 		if err != nil {
 			log.Fatalf("Subscribe error: %v", err)

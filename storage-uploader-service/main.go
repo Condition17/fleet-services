@@ -1,14 +1,12 @@
 package main
 
 import (
-	"cloud.google.com/go/pubsub"
 	"context"
-	"log"
-
-	"github.com/Condition17/fleet-services/storage-uploader-service/handler"
-
 	"github.com/Condition17/fleet-services/storage-uploader-service/config"
+	"github.com/Condition17/fleet-services/storage-uploader-service/handler"
 	"github.com/micro/go-micro/v2"
+	"log"
+	"runtime"
 )
 
 const gcsUploadSubscription string = "chunk-gcs-upload-subs"
@@ -23,24 +21,21 @@ func main() {
 
 	// Initialise service
 	service.Init()
-
-	// Get PubSub client
-	client, err := pubsub.NewClient(context.Background(), configs.GoogleProjectID)
-	if err != nil {
-		log.Fatalf("Failed to creacte PubSub client: %v", err)
-	}
+	serviceHandler := handler.NewHandler(service)
 
 	// Subscribe to topic
 	go func() {
 		log.Printf("Subscribing to '%s'\n", gcsUploadSubscription)
+		sub := serviceHandler.PubSubClient.Subscription(gcsUploadSubscription)
+		sub.ReceiveSettings.Synchronous = false
+		sub.ReceiveSettings.NumGoroutines = runtime.NumCPU()
 		cctx, cancel := context.WithCancel(context.Background())
-		err = client.Subscription(gcsUploadSubscription).Receive(cctx, handler.NewHandler(service))
 		defer cancel()
+		err := sub.Receive(cctx, serviceHandler.GetPubSubMessageHandler())
+		if err != nil {
+			log.Fatalf("Subscribe error: %v", err)
+		}
 	}()
-
-	if err != nil {
-		log.Fatalf("Subscribe error: %v", err)
-	}
 
 	// Run service
 	if err := service.Run(); err != nil {

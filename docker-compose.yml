@@ -157,7 +157,7 @@ services:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "root"
     ports:
-      - 5431:5432
+      - 5433:5432
 
 volumes:
   redis-data:
