@@ -13,13 +13,13 @@ require (
 	cloud.google.com/go v0.75.0 // indirect
 	cloud.google.com/go/pubsub v1.9.1
 	github.com/Condition17/fleet-services/binary-builder v0.0.0-20201124203551-1694b744d0ab // indirect
-	github.com/Condition17/fleet-services/file-builder v0.0.0-20210130234853-9ee45ad119e1
-	github.com/Condition17/fleet-services/file-service v0.0.0-20210130234853-9ee45ad119e1
-	github.com/Condition17/fleet-services/lib v0.0.0-20210130234853-9ee45ad119e1
-	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20210130234853-9ee45ad119e1
-	github.com/Condition17/fleet-services/river-runner v0.0.0-20210130234853-9ee45ad119e1
-	github.com/Condition17/fleet-services/test-run-service v0.0.0-20210130234853-9ee45ad119e1
-	github.com/Condition17/fleet-services/user-service v0.0.0-20210130234853-9ee45ad119e1 // indirect
+	github.com/Condition17/fleet-services/file-builder v0.0.0-20210131003915-3bf9dc271c8c
+	github.com/Condition17/fleet-services/file-service v0.0.0-20210131003915-3bf9dc271c8c
+	github.com/Condition17/fleet-services/lib v0.0.0-20210131003915-3bf9dc271c8c
+	github.com/Condition17/fleet-services/resource-manager-service v0.0.0-20210131003915-3bf9dc271c8c
+	github.com/Condition17/fleet-services/river-runner v0.0.0-20210131003915-3bf9dc271c8c
+	github.com/Condition17/fleet-services/test-run-service v0.0.0-20210131003915-3bf9dc271c8c
+	github.com/Condition17/fleet-services/user-service v0.0.0-20210131003915-3bf9dc271c8c // indirect
 	github.com/go-git/go-git/v5 v5.2.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.4.3

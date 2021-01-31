@@ -60,8 +60,8 @@ func NewHandler(service micro.Service) EventHandler {
 
 func (h EventHandler) GetPubSubMessageHandler() func(context.Context, *pubsub.Message) {
 	return func(c context.Context, msg *pubsub.Message) {
+		log.Printf("Received message: '%s'\n", msg.Data)
 		msg.Ack()
-		//log.Printf("Received message: '%s'\n", msg.Data)
 
 		var event *proto.Event
 		if err := json.Unmarshal(msg.Data, &event); err != nil {
