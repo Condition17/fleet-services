@@ -21,7 +21,6 @@ spec:
               "./service",
               "--selector=static",
               "--server_address=:8080",
-              "--broker=googlepubsub",
             ]
           envFrom:
             - configMapRef:
