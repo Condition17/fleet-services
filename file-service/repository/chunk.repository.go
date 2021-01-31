@@ -25,7 +25,7 @@ func (r *ChunkRepository) Create(ctx context.Context, spec *pb.ChunkSpec) (strin
 
 
 	start := time.Now()
-	var sha2 = fmt.Sprintf("%x", sha256.Sum256(spec.Data))
+	var sha2 = fmt.Sprintf("%x", sha256.Sum256([]byte(spec.Data)))
 	log.Println("SHA2 Duration:", time.Since(start))
 
 	var hashKey string = composeChunkKey(sha2)
