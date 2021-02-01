@@ -11,6 +11,7 @@ type User struct {
 	Email    string `gorm:"unique;uniqueIndex"`
 	Company  string `gorm:"not null"`
 	Password string `gorm:"not null"`
+	Picture  string `gorm:"default:null"`
 }
 
 func MarshalUser(user *proto.User) *User {
@@ -19,6 +20,7 @@ func MarshalUser(user *proto.User) *User {
 		Email:    user.Email,
 		Company:  user.Company,
 		Password: user.Password,
+		Picture:  user.Picture,
 	}
 }
 
@@ -29,5 +31,6 @@ func UnmarshalUser(user *User) *proto.User {
 		Email:    user.Email,
 		Company:  user.Company,
 		Password: "",
+		Picture:  user.Picture,
 	}
 }

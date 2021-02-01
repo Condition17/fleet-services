@@ -15,6 +15,7 @@ message User {
   string company = 3;
   string email = 4;
   string password = 5;
+  string picture = 6;
 }
 
 message EmptyRequest {};
