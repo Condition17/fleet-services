@@ -14,7 +14,7 @@ type TestRunRepository struct {
 }
 
 func (r *TestRunRepository) Create(testRun *model.TestRun) (*model.TestRun, error) {
-	testRun.State = runStates.TestRunState.Initiated
+	testRun.State = runStates.TestRunState.InitiatedDone
 	if err := r.DB.Create(testRun).Error; err != nil {
 		return nil, err
 	}

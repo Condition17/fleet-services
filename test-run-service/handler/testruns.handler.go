@@ -163,7 +163,7 @@ func (h *Handler) ForceStop(ctx context.Context, req *proto.ForceStopRequest, re
 		return microErrors.InternalServerError(h.Service.Name(), fmt.Sprintf("%v", err))
 	}
 
-	if testRun.State != runStates.TestRunState.Initiated && testRun.State != runStates.TestRunState.FileUpload {
+	if testRun.State != runStates.TestRunState.InitiatedDone && testRun.State != runStates.TestRunState.FileUpload {
 		return nil
 	}
 

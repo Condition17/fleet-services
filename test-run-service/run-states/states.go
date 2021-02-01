@@ -4,6 +4,7 @@ type TestRunStateType string
 
 type runStatesEnumStruct struct {
 	Initiated                     TestRunStateType
+	InitiatedDone                 TestRunStateType
 	FileUpload                    TestRunStateType
 	FileUploadDone                TestRunStateType
 	ProvisionFs                   TestRunStateType
@@ -20,6 +21,7 @@ type runStatesEnumStruct struct {
 
 var TestRunState = runStatesEnumStruct{
 	Initiated:                     "initiated",
+	InitiatedDone:                 "initiated_done",
 	FileUpload:                    "file_upload",
 	FileUploadDone:                "file_upload_done",
 	ProvisionFs:                   "provision_fs",
