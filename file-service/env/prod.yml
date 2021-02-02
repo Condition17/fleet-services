@@ -1,1 +1,1 @@
-REDIS_URL: redis:6379
+REDIS_URL: redis-0:6379
