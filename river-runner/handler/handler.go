@@ -73,7 +73,7 @@ func (h *Handler) RunRiver(ctx context.Context, req *proto.RunRequest) (*proto.E
 		exitCode, err := riverSdk.Run(path.Join(mountDirPath, fmt.Sprintf("/%v", req.TestRunId), fileData.Name),
 			"-secondsBetweenStats", "2",
 			"-arch", "x64",
-			"-max", "1000000",
+			"-max", "1000",
 			"-outputType", "textual",
 			"-outputEndpoint",
 			fmt.Sprintf("%v/testRunService/RegisterRunIssue?testRunId=%v", configs.FleetServicesHttpApiUrl, req.TestRunId),
