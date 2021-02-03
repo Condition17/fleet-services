@@ -1,39 +1,42 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: redis-master
+  name: redis-slave
 spec:
-  serviceName: redis-master
+  serviceName: redis-slave
   replicas: 1
   selector:
     matchLabels:
-      app: redis-master
+      app: redis-slave
   template:
     metadata:
       labels:
-        app: redis-master
+        app: redis-slave
     spec:
-      priorityClassName: high-priority
       initContainers:
         - name: config
           image: redis:6.0-alpine
+          imagePullPolicy: "IfNotPresent"
           command: [ "sh", "-c" ]
           args:
             - |
               cp /tmp/redis/redis.conf /etc/redis/redis.conf
+              echo "updating redis.conf..."
+              echo "slaveof redis 6379" >> /etc/redis/redis.conf
           volumeMounts:
             - name: redis-config
               mountPath: /etc/redis/
             - name: config
               mountPath: /tmp/redis/
       containers:
-        - name: redis
+        - name: redis-slave
           image: redis:6.0-alpine
+          imagePullPolicy: "IfNotPresent"
           command: ["redis-server"]
           args: ["/etc/redis/redis.conf"]
           ports:
             - containerPort: 6379
-              name: redis-master
+              name: redis-slave
           volumeMounts:
             - name: data
               mountPath: /data
@@ -54,15 +57,3 @@ spec:
         resources:
           requests:
             storage: 5Gi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: redis
-spec:
-  clusterIP: None
-  ports:
-    - port: 6379
-      targetPort: redis-master
-  selector:
-    app: redis-master
