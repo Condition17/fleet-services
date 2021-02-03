@@ -85,18 +85,18 @@ services:
       ENV_NAME: "compose"
       GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
 
-#  resource-manager-service:
-#    restart: always
-#    build: ./resource-manager-service
-#    volumes:
-#      - ./keys:/keys
-#    links:
-#      - "postgres"
-#    depends_on:
-#      - "postgres"
-#    environment:
-#      ENV_NAME: "compose"
-#      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
+  resource-manager-service:
+    restart: always
+    build: ./resource-manager-service
+    volumes:
+      - ./keys:/keys
+    links:
+      - "postgres"
+    depends_on:
+      - "postgres"
+    environment:
+      ENV_NAME: "compose"
+      GOOGLE_APPLICATION_CREDENTIALS: "/keys/app_user.key.json"
 
   wss:
     restart: always

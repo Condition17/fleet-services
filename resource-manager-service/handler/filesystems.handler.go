@@ -49,12 +49,9 @@ func (h *Handler) ProvisionFileSystem(ctx context.Context, req *proto.FileSystem
 		))
 	}
 
-	// TODO: we may consider to remove it | also, handle the case when the existent instance is pending
-	fsInstancesListCall := h.CloudFileStoreService.Projects.Locations.Instances.List(locationPath)
-	if fsInstanceListResponse, err := fsInstancesListCall.Do(); err != nil {
-		return errors.New(fmt.Sprintf("Error while listing filestore instances: %v", err))
-	} else if len(fsInstanceListResponse.Instances) > 0 {
-		go h.createFsEntryInDb(req.TestRunId, fsInstanceListResponse.Instances[0])
+	alreadyCreatedInstance, err := h.getCreatedFSInstance(locationPath)
+	if alreadyCreatedInstance != nil {
+		go h.createFsEntryInDb(req.TestRunId, alreadyCreatedInstance)
 		return nil
 	}
 
@@ -72,6 +69,27 @@ func (h *Handler) ProvisionFileSystem(ctx context.Context, req *proto.FileSystem
 	go h.executePostFSCreateOperationSteps(req.TestRunId, createOperation)
 
 	return nil
+}
+
+func (h *Handler) getCreatedFSInstance(locationPath string) (*file.Instance, error){
+	fsInstancesListCall := h.CloudFileStoreService.Projects.Locations.Instances.List(locationPath)
+	fsInstanceListResponse, err := fsInstancesListCall.Do()
+
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Error while listing filestore instances: %v", err))
+	}
+
+	if len(fsInstanceListResponse.Instances) < 2 {
+		return nil, nil
+	}
+
+	for _, instance := range fsInstanceListResponse.Instances {
+		if instance.State == "READY" {
+			return instance, nil
+		}
+	}
+
+	return nil, nil
 }
 
 func (h *Handler) executePostFSCreateOperationSteps(testRunId uint32, op *file.Operation) {
